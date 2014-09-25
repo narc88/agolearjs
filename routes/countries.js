@@ -3,6 +3,7 @@ var StateModel = require('../models/state').StateModel;
 var CityModel = require('../models/city').CityModel;
 var CheckAuth = require('../middleware/checkAuth');
 var _ = require('underscore');
+
 module.exports = function(app){
 
 	// RESTful routes

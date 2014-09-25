@@ -2,6 +2,7 @@
 
 /* Controllers */
 
+/*Main*/
 function main($scope, $http) {
   $http.get('/api/countries').
     success(function(data, status, headers, config) {
@@ -10,7 +11,7 @@ function main($scope, $http) {
     });
 }
 
-
+/*Users*/
 function users_index($scope, $http) {
   $http.get('/api/users').
     success(function(data, status, headers, config) {
@@ -20,7 +21,7 @@ function users_index($scope, $http) {
 
 function users_add($scope, $http, $location) {
   $scope.form = {};
-  $scope.submitPost = function () {
+  $scope.submitUser = function () {
     $http.post('/api/users', $scope.form).
       success(function(data) {
         $location.path('/');
@@ -31,7 +32,7 @@ function users_add($scope, $http, $location) {
 function users_view($scope, $http, $routeParams) {
   $http.get('/api/users/' + $routeParams.id).
     success(function(data) {
-      $scope.post = data.post;
+      $scope.user = data;
     });
 }
 
@@ -39,7 +40,7 @@ function users_edit($scope, $http, $location, $routeParams) {
   $scope.form = {};
   $http.get('/api/users/' + $routeParams.id).
     success(function(data) {
-      $scope.form = data.post;
+      $scope.form = data;
     });
 
   $scope.editPost = function () {
@@ -53,11 +54,70 @@ function users_edit($scope, $http, $location, $routeParams) {
 function user_delete($scope, $http, $location, $routeParams) {
   $http.get('/api/users/' + $routeParams.id).
     success(function(data) {
-      $scope.post = data.post;
+      $scope.post = data;
     });
 
-  $scope.deletePost = function () {
+  $scope.deleteUser = function () {
     $http.delete('/api/users/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+
+
+/*Leagues*/
+function leagues_index($scope, $http) {
+  $http.get('/api/leagues').
+    success(function(data, status, headers, config) {
+      $scope.leagues = data;
+    });
+}
+
+function leagues_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitLeague = function () {
+    $http.post('/api/leagues', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function leagues_view($scope, $http, $routeParams) {
+  $http.get('/api/leagues/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+}
+
+function leagues_edit($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/leagues/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data;
+    });
+
+  $scope.editLeague = function () {
+    $http.put('/api/leagues/' + $routeParams.id, $scope.form).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function league_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/leagues/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteLeague = function () {
+    $http.delete('/api/leagues/' + $routeParams.id).
       success(function(data) {
         $location.url('/');
       });

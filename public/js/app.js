@@ -13,16 +13,36 @@ angular.module('agolear', ['agolear.filters', 'agolear.services', 'agolear.direc
         controller: users_add
       }).
       when('/users/:id', {
-        templateUrl: '../../partials/users/view',
+        templateUrl: '/partials/users/view.jade',
         controller: users_view
       }).
       when('/users/edit/:id', {
-        templateUrl: '../partials/users/edit',
+        templateUrl: '/partials/users/edit.jade',
         controller: users_edit
       }).
-      when('/users/:id', {
-        templateUrl: '../partials/users/delete',
+      when('/users/delete/:id', {
+        templateUrl: '/partials/users/delete.jade',
         controller: user_delete
+      }).
+      when('/leagues', {
+        templateUrl: '/partials/leagues/index.jade',
+        controller: leagues_index
+      }).
+      when('/leagues/add', {
+        templateUrl: '/partials/leagues/form.jade',
+        controller: leagues_add
+      }).
+      when('/leagues/:id', {
+        templateUrl: '/partials/leagues/view.jade',
+        controller: leagues_view
+      }).
+      when('/leagues/edit/:id', {
+        templateUrl: '/partials/leagues/edit.jade',
+        controller: leagues_edit
+      }).
+      when('/leagues/delete/:id', {
+        templateUrl: '/partials/leagues/delete.jade',
+        controller: league_delete
       }).
       otherwise({
         redirectTo: '/'

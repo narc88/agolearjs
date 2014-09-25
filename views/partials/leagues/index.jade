@@ -1,0 +1,10 @@
+.col-md-9
+	h3 Lista de Ligas
+	br
+	.col-md-8
+		table.table.table-condensed.table-hover
+			tr(ng-repeat="league in leagues") 
+				td
+					h5 Nombre: {{league.name}} {{league.slogan}}
+					h5 Usuario: 
+						a(class="btn btn-primary", role="button", href="/leagues/{{league._id}}") Ver

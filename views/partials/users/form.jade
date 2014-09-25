@@ -54,7 +54,7 @@
 				.form-group
 					label.col-md-5.control-label *Páis:
 					.col-md-7
-						select(name='user[country]',ng-model="default_country", ng-options="country.name for country in countries").form-control.required.col-md-8.input-sm
+						select(name='user[country]',ng-model="default_country", ng-options="country._id as country.name for country in countries").form-control.required.col-md-8.input-sm
 				.form-group
 					label.col-md-5.control-label *Provincia:
 					.col-md-7

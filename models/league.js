@@ -1,7 +1,7 @@
 var validator = require('validator');
 var mongoose = require('mongoose');
 
-var BankAccountSchema = new mongoose.Schema({
+var LeagueSchema = new mongoose.Schema({
 	name	: { 
 				type: String,
 				trim: true,
@@ -54,9 +54,10 @@ var BankAccountSchema = new mongoose.Schema({
                      'Nombre invalido'
                  	]
                 },
+    tournaments : [{ type: mongoose.Schema.ObjectId, ref: 'Tournament' }],
 	user		: { type: mongoose.Schema.ObjectId, ref: 'User' },
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }
 });
 
-exports.BankAccountModel = mongoose.model('BankAccount', BankAccountSchema);
+exports.LeagueModel = mongoose.model('League', LeagueSchema);
