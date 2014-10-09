@@ -110,7 +110,7 @@ module.exports = function(app){
 			 	participants.push(zone.participants[i]._id);
 			}; 
 			if(participants.length%2 != 0){
-				participants.push("0");
+				//participants.push("0");
 			}
 			var num_matchdays = participants.length - 1;
 	    	var num_matches = participants.length / 2 - 1;
@@ -118,6 +118,7 @@ module.exports = function(app){
 	    	for (var i = num_matchdays; i > 0; i--) {
 	    		Things[i]
 	    	};
+	    	MatchdayModel.createMatchdayWithMatches(participants);
 	    	var matchday = new MatchdayModel(req.body.matchday);
 			matchday.save(function(err){
 				if(err) throw err;
