@@ -47,7 +47,7 @@ var TournamentSchema = new mongoose.Schema({
     suspension_increment : {
                 type: Boolean
                 },
-    groups : [{ type: mongoose.Schema.ObjectId, ref: 'Group' }],
+    zones : [{ type: mongoose.Schema.ObjectId, ref: 'Zone' }],
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }
 });
