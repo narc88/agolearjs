@@ -1,4 +1,4 @@
-// Creación de la Conexión
+
 var mongoose = require('mongoose');
 
 var ImageSchema =  exports.ImageSchema = new mongoose.Schema({
