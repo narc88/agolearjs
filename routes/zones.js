@@ -1,5 +1,7 @@
 var ZoneModel = require('../models/zone').ZoneModel;
 var ImageModel 	= require('../models/image').ImageModel;
+var MatchdayModel = require('../models/matchday').MatchdayModel;
+var MatchModel = require('../models/match').MatchModel;
 
 var mongoose = require('mongoose');
 
@@ -54,15 +56,15 @@ module.exports = function(app){
 	//End of RESTful routes
 
 	//Routes for embedded elements
+
 	app.post('/api/zones/:id/participations', function(req, res){
-		var participation = new ParticipationModel(req.body.participation);
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
-			req.send(goal);
+			req.send(true);
 		}
 		ZoneModel.update(
 		    { _id: req.params.id}, 
-		    {$push: {"participations": participation}, callback}
+		    {$push: {"participations": { $each: req.body.participations }}, callback}
 		)
 	});
 
@@ -99,80 +101,50 @@ module.exports = function(app){
 
 	//Create matchdays (tournament structure)
 	app.post('/api/zones/:id/create_fixture', function(req, res){
-		//Reemplaza un equipo con otro entre los participantes
 		ZoneModel.findById(req.params.id).exec( function(err, zone){
 			if (err) throw err;
-			
-		
-		
 			var participants = [];
 			for (var i = zone.participants.length - 1; i >= 0; i--) {
 			 	participants.push(zone.participants[i]._id);
 			}; 
-			if(participants.length%2 != 0){
-				//participants.push("0");
-			}
-			var num_matchdays = participants.length - 1;
-	    	var num_matches = participants.length / 2 - 1;
-
-	    	for (var i = num_matchdays; i > 0; i--) {
-	    		Things[i]
+			var num_matches, num_matchdays;
+		    if(participants.length%2 != 0){
+		        num_matches = (participants.length-1)/2;
+		    }else{
+		        num_matches = (participants.length)/2;
+		    }
+		    if(zone.double_match){
+		    	num_matchdays = (participants.length - 1)*2;
+		    }else{
+		    	num_matchdays = participants.length - 1;
+		    }
+	    	for (var j = num_matchdays; j > 0; j--) {
+			    var matchday = new MatchdayModel();
+			    matchday.number = number;
+			    for (var i = 0; i < num_matches; i++) {
+		            var match = new MatchModel();
+		            match.visitor_team = participants[num_matchdays-i];
+		            match.local_team = participants[i];
+		            match.matchday = matchday._id
+		            match.save(function(err){
+		            	if(err) throw err;
+		            });
+			    	matchday.matches.push(match._id);
+			    }
+			    zone.matchdays.push(matchday);
+	    		var moved_participant = participants.shift();
+	    		participants.push(moved_participant);
 	    	};
-	    	MatchdayModel.createMatchdayWithMatches(participants);
-	    	var matchday = new MatchdayModel(req.body.matchday);
-			matchday.save(function(err){
-				if(err) throw err;
-				for j in (0..num_matches)
-			        var match = new MatchModel();
-			        match.visitor_team = participants[num_matchdays - j]
-			        match.local_team = participants[j]
-			        match.matchday = matchday._id
-			        match.save  
-			    end
-			});
+	    	if(zone.matchdays.length === num_matchdays){
+	    		zone.save(function(err){
+	    			if(err) throw err;
+	    			res.send(zone);
+	    		})
+	    	}else{
+	    		res.send("ERROR")
+	    	}
 		});
 	});
-	//Rails Function
-	/*#Por si son impares
-	  set_zone
-	  participants = Array.new()
-	  @zone.teams.each{|x| participants << x.id }
-	  if participants.length % 2 == 1
-	   participants << 0
-	  end
-	    matchdays_home = []
-	   # matchdays_away = []
-	    num_matchdays = participants.length - 1
-	    num_matches = participants.length / 2 - 1
-	  
-	    for i in (1..num_matchdays)
-	      @matchday = Matchday.new()
-	      @matchday.dispute_day = Date.today
-	      @matchday.matchday_number = i
-	      @matchday.zone_id = @zone.id
-	      @matchday.save
-	      
-	      matches_home = []
-	    #  matches_away = []
-	      for j in (0..num_matches)
-	      #  matches_home << [participants[j], participants[num_matchdays - j + 1]] #Home match
-	        #Crear partido.
-	        @match = Match.new()
-	        @match.visitor_team_id = participants[num_matchdays - j]
-	        @match.local_team_id = participants[j]
-	        @match.matchday_id = @matchday.id
-	        @match.save 
-	        # matches_away << [participants[num_matchdays - j + 1], participants[j]] #Away match 
-	      end
-	      matchdays_home << matches_home
-	      #matchdays_away << matches_away
-	      #rotating the teams
-	      last = participants.pop 
-	      participants.insert(1, last)
-	    end
-	    @participants = participants
-	   # matchdays_away.each { |x| matchdays_home << x}
-	    
-	 */
+	
 
 }

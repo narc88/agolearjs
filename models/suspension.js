@@ -1,7 +1,6 @@
 var validator = require('validator');
 var mongoose = require('mongoose');
 
-
 var SuspensionSchema = new mongoose.Schema({
     reason    : { 
                 type: String,
