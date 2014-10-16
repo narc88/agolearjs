@@ -127,3 +127,61 @@ function league_delete($scope, $http, $location, $routeParams) {
     $location.url('/');
   };
 }
+
+/*Zones*/
+function zones_index($scope, $http) {
+  $http.get('/api/zones').
+    success(function(data, status, headers, config) {
+      $scope.zones = data;
+    });
+}
+
+function zones_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitZone = function () {
+    $http.post('/api/zones', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function zones_view($scope, $http, $routeParams) {
+  $http.get('/api/zones/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+}
+
+function zones_edit($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/zones/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data;
+    });
+
+  $scope.editZone = function () {
+    $http.put('/api/zones/' + $routeParams.id, $scope.form).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function league_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/zones/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteZone = function () {
+    $http.delete('/api/zones/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
