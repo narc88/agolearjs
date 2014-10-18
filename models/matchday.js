@@ -7,7 +7,7 @@ var MatchdaySchema = new mongoose.Schema({
 				required:true
             },
     dispute_day     : {type: Date, default: Date.now },
-    matches     : [{type: mongoose.Schema.ObjectId, ref: 'Match' }]
+    matches     : [{type: mongoose.Schema.ObjectId, ref: 'Match' }],
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }
 });

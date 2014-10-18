@@ -14,12 +14,25 @@ block body
         a(href='/users/5420e1ae2730632e26001b0f') Ver Usuario
       li
         a(href='/leagues') Lista de Ligas
+      li
+        a(href='/teams') Lista de Equipos
+      li
+        a(href='/players') Lista de Jugadores
+      li
+        a(href='/tournaments') Lista de Torneos
 
     div(ng-view)
 
+  //Javascript
   script(src='js/lib/angular/angular.js')
   script(src='js/app.js')
   script(src='js/services.js')
   script(src='js/controllers.js')
   script(src='js/filters.js')
   script(src='js/directives.js')
+
+  script(src='js/lib/bootstrap/bootstrap.min.js')
+
+  //Css
+  link(rel='stylesheet', href='/css/bootstrap/bootstrap.min.css')
+  link(rel='stylesheet', href='/css/bootstrap/bootstrap-theme.min.css')
