@@ -24,6 +24,26 @@ angular.module('agolear', ['agolear.filters', 'agolear.services', 'agolear.direc
         templateUrl: '/partials/users/delete.jade',
         controller: user_delete
       }).
+      when('/zones', {
+        templateUrl: '/partials/zones/index.jade',
+        controller: zones_index
+      }).
+      when('/zones/add', {
+        templateUrl: '/partials/zones/form.jade',
+        controller: zones_add
+      }).
+      when('/zones/:id', {
+        templateUrl: '/partials/zones/view.jade',
+        controller: zones_view
+      }).
+      when('/zones/edit/:id', {
+        templateUrl: '/partials/zones/edit.jade',
+        controller: zones_edit
+      }).
+      when('/zones/delete/:id', {
+        templateUrl: '/partials/zones/delete.jade',
+        controller: league_delete
+      }).
       when('/leagues', {
         templateUrl: '/partials/leagues/index.jade',
         controller: leagues_index
