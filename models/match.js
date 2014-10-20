@@ -11,12 +11,12 @@ var MatchSchema = new mongoose.Schema({
     local_team_goals  	: [GoalSchema],
     visitor_team_goals	: [GoalSchema],
     turn     			: {type: mongoose.Schema.ObjectId, ref: 'Turn' },
-    incidents			: [IncidentSchema]
+    incidents			: [IncidentSchema],
     mvp     			: {type: mongoose.Schema.ObjectId, ref: 'Player' },
     //Players who assisted to the match
     local_team_players  : [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
     visitor_team_players: [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
-    referees			: [RefereeSchema]
+    //referees			: [RefereeSchema],
     matchday   			: {type: mongoose.Schema.ObjectId, ref: 'Matchday' },
     played				: {
                				 type: Boolean

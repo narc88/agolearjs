@@ -64,7 +64,7 @@ module.exports = function(app){
 		}
 		ZoneModel.update(
 		    { _id: req.params.id}, 
-		    {$push: {"participations": { $each: req.body.participations }}, callback}
+		    {$push: {"participations": { $each: req.body.participations }}}, callback
 		)
 	});
 
@@ -77,14 +77,13 @@ module.exports = function(app){
 		}
 		ZoneModel.update(
 		    { _id: req.params.id}, 
-		    {$push: {"participations": participation}, 
+		    {$push: {"participations": participation}}, 
 			    function(err, numAffected, status){
 			    	 ZoneModel.update(
 					    { "participations._id": req.body.replaced_id}, 
-					    {$pull: {"participations" :{_id : req.params.id }}, callback}
+					    {$pull: {"participations" :{_id : req.params.id }}}, callback
 					)
 			    }
-			}
 		)
 	});
 
@@ -95,7 +94,7 @@ module.exports = function(app){
 		}
 		ZoneModel.update(
 		    { "participations._id": req.params.id}, 
-		    {$pull: {"participations" :{_id : req.params.id }}, callback}
+		    {$pull: {"participations" :{_id : req.params.id }}}, callback
 		)
 	});
 

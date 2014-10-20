@@ -11,7 +11,7 @@ var PlayerSchema = new mongoose.Schema({
                      'Nombre invalido, no se aceptan numeros ni simbolos'
                  	]
                 },
-    lname	: { 
+    last_name	: { 
 				type: String,
 				trim: true,
 				required:true,

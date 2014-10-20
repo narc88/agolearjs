@@ -185,3 +185,121 @@ function league_delete($scope, $http, $location, $routeParams) {
     $location.url('/');
   };
 }
+
+
+/*players*/
+function players_index($scope, $http) {
+  $http.get('/api/players').
+    success(function(data, status, headers, config) {
+      $scope.players = data;
+    });
+}
+
+function players_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitPlayer = function () {
+    $http.post('/api/players', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function players_view($scope, $http, $routeParams) {
+  $http.get('/api/players/' + $routeParams.id).
+    success(function(data) {
+      $scope.player = data;
+    });
+}
+
+function players_edit($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/players/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data;
+    });
+
+  $scope.editPlayer = function () {
+    $http.put('/api/players/' + $routeParams.id, $scope.form).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function player_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/players/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deletePlayer = function () {
+    $http.delete('/api/players/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+
+
+/*teams*/
+function teams_index($scope, $http) {
+  $http.get('/api/teams').
+    success(function(data, status, headers, config) {
+      $scope.teams = data;
+    });
+}
+
+function teams_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitTeam = function () {
+    $http.post('/api/teams', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function teams_view($scope, $http, $routeParams) {
+  $http.get('/api/teams/' + $routeParams.id).
+    success(function(data) {
+      $scope.team = data;
+    });
+}
+
+function teams_edit($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/teams/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data;
+    });
+
+  $scope.editTeam = function () {
+    $http.put('/api/teams/' + $routeParams.id, $scope.form).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function player_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/teams/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteTeam = function () {
+    $http.delete('/api/teams/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}

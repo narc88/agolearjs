@@ -1,6 +1,4 @@
-div(class="media")
-	a(class="pull-left", href="#")
-		img(class="media-object" src="..." alt="...")
-	div(class="media-body")
-	h4(class="media-heading")
-		span Media heading
+h3 Jugador
+div(ng-show="player")
+	include partial_view
+	a(class="btn btn-primary", role="button", href="/players/{{player._id}}") Ver
