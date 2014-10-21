@@ -1,0 +1,6 @@
+h3 Lista de Torneos
+table.table.table-condensed.table-hover
+	tr(ng-repeat="tournament in tournaments") 
+		td
+			include partial_view
+			a(class="btn btn-primary", role="button", href="/tournaments/{{tournament._id}}") Ver

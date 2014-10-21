@@ -286,7 +286,7 @@ function teams_edit($scope, $http, $location, $routeParams) {
   };
 }
 
-function player_delete($scope, $http, $location, $routeParams) {
+function teams_delete($scope, $http, $location, $routeParams) {
   $http.get('/api/teams/' + $routeParams.id).
     success(function(data) {
       $scope.league = data;
@@ -294,6 +294,64 @@ function player_delete($scope, $http, $location, $routeParams) {
 
   $scope.deleteTeam = function () {
     $http.delete('/api/teams/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+
+/*tournaments*/
+function tournaments_index($scope, $http) {
+  $http.get('/api/tournaments').
+    success(function(data, status, headers, config) {
+      $scope.tournaments = data;
+    });
+}
+
+function tournaments_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitTournament = function () {
+    $http.post('/api/tournaments', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function tournaments_view($scope, $http, $routeParams) {
+  $http.get('/api/tournaments/' + $routeParams.id).
+    success(function(data) {
+      $scope.tournament = data;
+    });
+}
+
+function tournaments_edit($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/tournaments/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data;
+    });
+
+  $scope.editTournament = function () {
+    $http.put('/api/tournaments/' + $routeParams.id, $scope.form).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function player_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/tournaments/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteTournament = function () {
+    $http.delete('/api/tournaments/' + $routeParams.id).
       success(function(data) {
         $location.url('/');
       });
