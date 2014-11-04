@@ -8,6 +8,7 @@ var MatchdaySchema = new mongoose.Schema({
             },
     dispute_day     : {type: Date, default: Date.now },
     matches     : [{type: mongoose.Schema.ObjectId, ref: 'Match' }],
+    closed		:  {type:Boolean, default: false},
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }
 });

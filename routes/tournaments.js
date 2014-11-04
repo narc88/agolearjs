@@ -16,7 +16,7 @@ module.exports = function(app){
 	});
 
 	app.get('/api/tournaments/:id', function(req, res, next){
-		TournamentModel.findOne({ _id: req.params.id }).exec( function(err, tournament){
+		TournamentModel.findOne({ _id: req.params.id }).populate({path:'zones', select: 'name'}).exec( function(err, tournament){
 			if (err) throw err;
 			res.send(tournament);
 		});

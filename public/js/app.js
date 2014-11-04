@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('agolear', ['agolear.filters', 'agolear.services', 'agolear.directives']).
+angular.module('agolear', ['agolear.filters', 'agolear.services', 'agolear.directives','ngOrderObjectBy']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
       when('/users', {
@@ -122,6 +122,26 @@ angular.module('agolear', ['agolear.filters', 'agolear.services', 'agolear.direc
       }).
       when('/tournaments/delete/:id', {
         templateUrl: '/partials/tournaments/delete.jade',
+        controller: teams_delete
+      }).
+       when('/matchdays', {
+        templateUrl: '/partials/matchdays/index.jade',
+        controller: matchdays_index
+      }).
+      when('/matchdays/add', {
+        templateUrl: '/partials/matchdays/form.jade',
+        controller: matchdays_add
+      }).
+      when('/matchdays/:id', {
+        templateUrl: '/partials/matchdays/view.jade',
+        controller: matchdays_view
+      }).
+      when('/matchdays/edit/:id', {
+        templateUrl: '/partials/matchdays/edit.jade',
+        controller: matchdays_edit
+      }).
+      when('/matchdays/delete/:id', {
+        templateUrl: '/partials/matchdays/delete.jade',
         controller: teams_delete
       }).
       otherwise({

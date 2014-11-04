@@ -149,7 +149,7 @@ function zones_add($scope, $http, $location) {
 function zones_view($scope, $http, $routeParams) {
   $http.get('/api/zones/' + $routeParams.id).
     success(function(data) {
-      $scope.league = data;
+      $scope.zone = data;
     });
 }
 

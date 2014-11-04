@@ -1,4 +1,5 @@
 var MatchdayModel = require('../models/matchday').MatchdayModel;
+var MatchModel = require('../models/match').MatchModel;
 var ImageModel 	= require('../models/image').ImageModel;
 
 var mongoose = require('mongoose');
@@ -14,8 +15,9 @@ module.exports = function(app){
 		});
 	});
 
+	//Retrieve matches from a given matchday
 	app.get('/api/matchdays/:id', function(req, res, next){
-		MatchdayModel.findOne({ _id: req.params.id }).exec( function(err, matchday){
+		MatchesModel.findOne({ "matchday": req.params.id }).exec( function(err, matchday){
 			if (err) throw err;
 			res.send(matchday);
 		});

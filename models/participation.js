@@ -1,12 +1,13 @@
 var validator = require('validator');
 var mongoose = require('mongoose');
-var GoalSchema = require('./goal').GoalSchema;
+var PlayerSchema = require('./player').PlayerSchema;
 var IncidentSchema = require('./incident').IncidentSchema;
 
 var PaticipationSchema = new mongoose.Schema({
     team     		    : {type: mongoose.Schema.ObjectId, ref: 'Team' },
     //Needs to be updated
     team_name	 	    : {type: String},
+    players             : [PlayerSchema],
     //own_goals
     own_goals : { type: Number, default:0},
     //other_goals

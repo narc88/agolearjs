@@ -1,4 +1,7 @@
 h3 Torneo
 div(ng-show="tournament")
 	include partial_view
+	p Zones
+	div(ng-repeat="zone in tournament.zones") 
+		include ../zones/partial_view
 	a(class="btn btn-primary", role="button", href="/tournaments/{{tournament._id}}") Ver
