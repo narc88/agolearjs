@@ -42,6 +42,7 @@ table.table.table-condensed.table-hover
 		td {{matchday.matchday_number}}
 		td {{ matchday.dispute_day | date:'yyyy-MM-dd' }}
 		td
-			a(href="/matchday/{{matchday._id}}")
+			a(href="/matches?matchday={{matchday._id}}") Ver
+			a(href="/matches") Sin param
 		td
 			a(href="/matchday/edit/{{matchday._id}}")

@@ -361,3 +361,120 @@ function player_delete($scope, $http, $location, $routeParams) {
     $location.url('/');
   };
 }
+
+/*matchdays*/
+function matchdays_index($scope, $http) {
+  $http.get('/api/matchdays').
+    success(function(data, status, headers, config) {
+      $scope.matchdays = data;
+    });
+}
+
+function matchdays_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitMatchday = function () {
+    $http.post('/api/matchdays', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function matchdays_view($scope, $http, $routeParams) {
+  $http.get('/api/matchdays/' + $routeParams.id).
+    success(function(data) {
+      $scope.match = data;
+    });
+}
+
+function matchdays_edit($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/matchdays/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data;
+    });
+
+  $scope.editMatchday = function () {
+    $http.put('/api/matchdays/' + $routeParams.id, $scope.form).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function player_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/matchdays/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteMatchday = function () {
+    $http.delete('/api/matchdays/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+
+/*matches*/
+function matches_index($scope, $http, $location, $routeParams) {
+  var queryString = $.param( $routeParams );
+  $http.get('/api/matches'+'?'+queryString).
+    success(function(data, status, headers, config) {
+      $scope.matches = data;
+    });
+}
+
+function matches_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitMatch = function () {
+    $http.post('/api/matches', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function matches_view($scope, $http, $routeParams) {
+  $http.get('/api/matches/' + $routeParams.id).
+    success(function(data) {
+      $scope.match = data;
+    });
+}
+
+function matches_edit($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/matches/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data;
+    });
+
+  $scope.editMatch = function () {
+    $http.put('/api/matches/' + $routeParams.id, $scope.form).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function player_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/matches/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteMatch = function () {
+    $http.delete('/api/matches/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}

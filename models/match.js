@@ -17,6 +17,9 @@ var MatchSchema = new mongoose.Schema({
     local_team_players  : [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
     visitor_team_players: [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
     //referees			: [RefereeSchema],
+    //Turn?.
+    //turn                : [TurnSchema],
+    
     matchday   			: {type: mongoose.Schema.ObjectId, ref: 'Matchday' },
     played				: {
                				 type: Boolean

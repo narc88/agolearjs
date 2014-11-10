@@ -124,6 +124,7 @@ angular.module('agolear', ['agolear.filters', 'agolear.services', 'agolear.direc
         templateUrl: '/partials/tournaments/delete.jade',
         controller: teams_delete
       }).
+      /*
        when('/matchdays', {
         templateUrl: '/partials/matchdays/index.jade',
         controller: matchdays_index
@@ -142,6 +143,26 @@ angular.module('agolear', ['agolear.filters', 'agolear.services', 'agolear.direc
       }).
       when('/matchdays/delete/:id', {
         templateUrl: '/partials/matchdays/delete.jade',
+        controller: teams_delete
+      }).*/
+      when('/matches', {
+        templateUrl: '/partials/matches/index.jade',
+        controller: matches_index
+      }).
+      when('/matches/add', {
+        templateUrl: '/partials/matches/form.jade',
+        controller: matches_add
+      }).
+      when('/matches/:id', {
+        templateUrl: '/partials/matches/view.jade',
+        controller: matches_view
+      }).
+      when('/matches/edit/:id', {
+        templateUrl: '/partials/matches/edit.jade',
+        controller: matches_edit
+      }).
+      when('/matches/delete/:id', {
+        templateUrl: '/partials/matches/delete.jade',
         controller: teams_delete
       }).
       otherwise({

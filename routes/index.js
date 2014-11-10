@@ -8,6 +8,8 @@ var players = require('./players');
 var images = require('./images');
 var zones = require('./zones');
 var teams = require('./teams');
+var matchdays = require('./matchdays');
+var matches = require('./matches');
 
 var errors = require('./errors');
 
@@ -31,8 +33,8 @@ module.exports = function(app){
 	players(app);
 	zones(app);
 	teams(app);
-//	matchdays(app);
-//	matches(app);
+	matchdays(app);
+	matches(app);
 	images(app);
 	
 	// Error handlers

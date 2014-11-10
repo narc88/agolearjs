@@ -8,7 +8,9 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/matches', function(req, res, next){
-		MatchModel.find().exec( function(err, matches){
+		console.log("Query")
+		console.log(req.query)
+		MatchModel.find(req.query).populate("visitor_team").populate("local_team").exec( function(err, matches){
 			if (err) throw err;
 			res.send(matches);
 		});
@@ -22,6 +24,7 @@ module.exports = function(app){
 	});
 
 	app.post('/api/matches', function(req, res){
+		
 		var match = new MatchModel(req.body.match);
 		match.save(function(err){
 			if(err) throw err;
@@ -70,7 +73,7 @@ module.exports = function(app){
 		}
 		MatchModel.update(
 		    { _id: req.params.id}, 
-		    {$push: {team_role: goal}, callback}
+		    {$push: {team_role: goal}}, callback
 		)
 	});
 
@@ -90,7 +93,7 @@ module.exports = function(app){
 		var field = team_role + "._id"
 		MatchModel.update(
 		    { field: req.params.id}, 
-		    {$pull: {team_role :{_id : req.params.id }}, callback}
+		    {$pull: {team_role :{_id : req.params.id }}}, callback
 		)
 	});
 
@@ -102,7 +105,7 @@ module.exports = function(app){
 		}
 		MatchModel.update(
 		    { _id: req.params.id}, 
-		    {$push: {team_role: incident}, callback}
+		    {$push: {team_role: incident}}, callback
 		)
 	});
 
@@ -114,7 +117,7 @@ module.exports = function(app){
 		var field = team_role + "._id"
 		MatchModel.update(
 		    { "incidents._id": req.params.id}, 
-		    {$pull: {"incidents" :{_id : req.params.id }}, callback}
+		    {$pull: {"incidents" :{_id : req.params.id }}}, callback
 		)
 	});
 
@@ -134,7 +137,7 @@ module.exports = function(app){
 		}
 		MatchModel.update(
 		    { _id: req.params.id}, 
-		    {$push: {$each:{team_role: req.body.players}}, callback}
+		    {$push: {$each:{team_role: req.body.players}}}, callback
 		)
 	});
 
@@ -152,7 +155,7 @@ module.exports = function(app){
 		}
 		MatchModel.update(
 		    { "_id": req.params.match_id}, 
-		    {$pull: {team_role : req.params.id }, callback}
+		    {$pull: {team_role : req.params.id }}, callback
 		)
 	});
 }
