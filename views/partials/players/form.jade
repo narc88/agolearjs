@@ -1,0 +1,37 @@
+form(name="addTeam", ng-submit="submitPlayer(addPlayer)")
+	.form-group
+		label(for="name") Nombre
+		input(ng-model='form.player.name', name='name', id="name", type='text').form-control.input-sm
+		div(ng-show="addPlayer['name'].$error.mongoose", style="color: red") {{addPlayer.name.$error.mongoose}}
+	.form-group
+		label(for="last_name") Apellido
+		input(ng-model='form.player.last_name', name='last_name', id="last_name", type='text').form-control.input-sm
+		div(ng-show="addPlayer['last_name'].$error.mongoose", style="color: red") {{addPlayer.last_name.$error.mongoose}}
+	.form-group
+		label(for="dni") Dni
+		input(ng-model='form.player.dni', name='dni', id="dni", type='text').form-control.input-sm
+		div(ng-show="addPlayer['dni'].$error.mongoose", style="color: red") {{addPlayer.dni.$error.mongoose}}
+	.form-group
+		label(for="email") Email
+		input(ng-model='form.player.email', name='email', id="email", type='text').form-control.input-sm
+		div(ng-show="addPlayer['email'].$error.mongoose", style="color: red") {{addPlayer.email.$error.mongoose}}
+	.form-group
+		label(for="phone") Telefono
+		input(ng-model='form.player.phone', name='phone', id="phone", type='text').form-control.input-sm
+		div(ng-show="addPlayer['phone'].$error.mongoose", style="color: red") {{addPlayer.phone.$error.mongoose}}
+	.form-group
+		label(for="birthdate") Fecha de nacimiento
+		.div(class='input-group date', id='datetimepicker1')
+			inpu(ng-model='form.player.dni',type='text', class="form-control")
+				span(class="input-group-addon")
+					span(class="glyphicon glyphicon-calendar")
+	.form-group
+		label(for="address") Dirección
+		input(ng-model='form.player.address', name='address', id="address", type='text').form-control.input-sm
+		div(ng-show="addPlayer['address'].$error.mongoose", style="color: red") {{addPlayer.address.$error.mongoose}}
+	.form-group
+		label(for="blood_type") Grupo Sanguíneo
+		input(ng-model='form.player.blood_type', name='blood_type', id="blood_type", type='text').form-control.input-sm
+		div(ng-show="addPlayer['blood_type'].$error.mongoose", style="color: red") {{addPlayer.blood_type.$error.mongoose}}
+	.form-group
+		input(type="Submit", value="Guardar").btn.btn-primary

@@ -1,5 +1,6 @@
 
 var mongoose = require('mongoose');
+var ImageSchema = require('../models/image').ImageSchema;
 
 var UserSchema = new mongoose.Schema({
 	username	: { 
@@ -65,7 +66,7 @@ var UserSchema = new mongoose.Schema({
 	address		: { type: String},
 	city		: { type: mongoose.Schema.ObjectId, ref: 'City' },
 	zip			: { type: String},
-	images 		: [{ type: mongoose.Schema.ObjectId, ref: 'Image' }],
+	images 		: [ImageSchema],
 	roles 		: [{type:String}],
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }

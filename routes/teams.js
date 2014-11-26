@@ -22,10 +22,17 @@ module.exports = function(app){
 	});
 
 	app.post('/api/teams', function(req, res){
-		var team = new TeamModel(req.body.team);
-		team.save(function(err){
-			if(err) throw err;
-			req.send(team);
+		console.log(req.body)
+		var team = new TeamModel(req.body);
+		team.validate(function(error) {
+		    if (error) {
+		      	res.send({ error : error });
+		    } else {
+		    	team.save(function(err){
+					if(err) throw err;
+					res.send(team);
+				});
+			}
 		});
 	});
 

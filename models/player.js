@@ -1,5 +1,6 @@
 var validator = require('validator');
 var mongoose = require('mongoose');
+var ImageSchema = require('../models/image').ImageSchema;
 
 var PlayerSchema = new mongoose.Schema({
 	name	: { 
@@ -7,7 +8,7 @@ var PlayerSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAlpha(v); },
+                     function(v) { return validator.isAlpha(v.replace(/\s/g, '')); },
                      'Nombre invalido, no se aceptan numeros ni simbolos'
                  	]
                 },
@@ -16,7 +17,7 @@ var PlayerSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAlpha(v); },
+                     function(v) { return validator.isAlpha(v.replace(/\s/g, '')); },
                      'Nombre invalido, no se aceptan numeros ni simbolos'
                  	]
                 },
@@ -25,7 +26,7 @@ var PlayerSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isNumeric(v); },
+                     function(v) { return validator.isNumeric(v.replace(/\s/g, '')); },
                      'El dni solo debe estar compuesto por numeros'
                  	]
                 },
@@ -33,7 +34,7 @@ var PlayerSchema = new mongoose.Schema({
     			type: String, 
     			required: true,
     			validate : [
-                     function(v) { return validator.isEmail(v); },
+                     function(v) { return validator.isEmail(v.replace(/\s/g, '')); },
                      'Email inválido'
                  	]
     		},
@@ -63,6 +64,7 @@ var PlayerSchema = new mongoose.Schema({
                      'Grupo sanguíneo debe tener entre uno y 5 caracteres'
                     ]
                 },
+    images      : [ImageSchema],
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }
 });

@@ -1,5 +1,6 @@
 var validator = require('validator');
 var mongoose = require('mongoose');
+var ImageSchema = require('../models/image').ImageSchema;
 
 var TournamentSchema = new mongoose.Schema({
 	name	: { 
@@ -47,6 +48,7 @@ var TournamentSchema = new mongoose.Schema({
     suspension_increment : {
                 type: Boolean
                 },
+    images      : [ImageSchema],
     zones : [{ type: mongoose.Schema.ObjectId, ref: 'Zone' }],
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }

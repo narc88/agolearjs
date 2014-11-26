@@ -1,5 +1,6 @@
 var validator = require('validator');
 var mongoose = require('mongoose');
+var ImageSchema = require('../models/image').ImageSchema;
 
 var LeagueSchema = new mongoose.Schema({
 	name	: { 
@@ -56,6 +57,7 @@ var LeagueSchema = new mongoose.Schema({
                 },
     tournaments : [{ type: mongoose.Schema.ObjectId, ref: 'Tournament' }],
 	user		: { type: mongoose.Schema.ObjectId, ref: 'User' },
+    images      : [ImageSchema],
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }
 });

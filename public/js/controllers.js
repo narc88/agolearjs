@@ -200,7 +200,17 @@ function players_add($scope, $http, $location) {
   $scope.submitPlayer = function () {
     $http.post('/api/players', $scope.form).
       success(function(data) {
-        $location.path('/');
+        if (data.error) {
+          for (var object in data.error.errors) {
+            if(object){
+              if (data.error.errors.hasOwnProperty(object)) {
+                form[object].$error.mongoose = data.error.errors[object].message;
+              }
+            }
+          }
+        } else{
+          $location.path('/');
+        }        
       });
   };
 }
@@ -256,10 +266,21 @@ function teams_index($scope, $http) {
 
 function teams_add($scope, $http, $location) {
   $scope.form = {};
-  $scope.submitTeam = function () {
-    $http.post('/api/teams', $scope.form).
+  $scope.submitTeam = function (form) {
+    $http.post('/api/teams', $scope.team).
       success(function(data) {
-        $location.path('/');
+        if (data.error) {
+          for (var object in data.error.errors) {
+            if(object){
+              if (data.error.errors.hasOwnProperty(object)) {
+                form[object].$error.mongoose = data.error.errors[object].message;
+              }
+            }
+          }
+        } else{
+          $location.path('/');
+        }
+        
       });
   };
 }

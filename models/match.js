@@ -2,6 +2,8 @@ var validator = require('validator');
 var mongoose = require('mongoose');
 var GoalSchema = require('./goal').GoalSchema;
 var IncidentSchema = require('./incident').IncidentSchema;
+var TurnSchema = require('./turn').TurnSchema;
+var ImageSchema = require('../models/image').ImageSchema;
 
 var MatchSchema = new mongoose.Schema({
     start_datetime     : {type: Date, default: Date.now },
@@ -18,9 +20,9 @@ var MatchSchema = new mongoose.Schema({
     visitor_team_players: [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
     //referees			: [RefereeSchema],
     //Turn?.
-    //turn                : [TurnSchema],
-    
+    turn                : [TurnSchema],
     matchday   			: {type: mongoose.Schema.ObjectId, ref: 'Matchday' },
+    images              : [ImageSchema],
     played				: {
                				 type: Boolean
                			 },

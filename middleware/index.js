@@ -28,6 +28,7 @@ module.exports = function(app){
 	app.use(express.session({
 		store :  sessionStore 
 	}));
+	
 	app.use(express.bodyParser());
 	app.use(function (req, res, next) {
 		// expose session to views

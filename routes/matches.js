@@ -1,6 +1,6 @@
 var MatchModel = require('../models/match').MatchModel;
 var ImageModel 	= require('../models/image').ImageModel;
-
+var SoccerFieldModel = require('../models/soccer_field').SoccerFieldModel;
 var mongoose = require('mongoose');
 
 module.exports = function(app){
@@ -8,11 +8,12 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/matches', function(req, res, next){
-		console.log("Query")
-		console.log(req.query)
 		MatchModel.find(req.query).populate("visitor_team").populate("local_team").exec( function(err, matches){
 			if (err) throw err;
-			res.send(matches);
+			var callback = function(){
+				res.send(matches);
+			}
+			SoccerFieldModel.populate(matches, { path: 'turn.soccer_field', select: 'name'},callback);
 		});
 	});
 

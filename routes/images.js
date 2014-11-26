@@ -1,5 +1,11 @@
 var ImageModel = require('../models/image').ImageModel;
 var UserModel = require('../models/user').UserModel;
+var TeamModel = require('../models/team').TeamModel;
+var PlayerModel = require('../models/player').PlayerModel;
+var LeagueModel = require('../models/league').LeagueModel;
+var MatchModel = require('../models/match').MatchModel;
+var MatchdayModel = require('../models/matchday').MatchdayModel;
+var TournamentModel = require('../models/tournament').TournamentModel;
 var fs = require('fs');
 
 module.exports = function(app){
@@ -8,6 +14,24 @@ module.exports = function(app){
 		switch(model_name){
 			case "users":
 				Model = UserModel;
+			break;
+			case "team":
+				Model = TeamModel;
+			break;
+			case "player":
+				Model = PlayerModel;
+			break;
+			case "league":
+				Model = LeagueModel;
+			break;
+			case "match":
+				Model = MatchModel;
+			break;
+			case "matchday":
+				Model = MatchdayModel;
+			break;
+			case "tournament":
+				Model = TournamentModel;
 			break;
 			default:
 				console.log(req.params)
@@ -27,11 +51,18 @@ module.exports = function(app){
 				imageName = img.name;
 			}
 			var source_file = img.path;
-			var destination_file = dir+"/"+req.params.param+"/"+imageName;
+
+			//Revisar path
+			var destination_file = dir+"/"+req.params.param+"/"+req.param.elem_id+"/"+imageName;
 
 			var is = fs.createReadStream(source_file);
 			var os = fs.createWriteStream(destination_file);
+			var mkdirp = require('mkdirp');
+			//crear carpeta
+			mkdirp('/tmp/some/path/foo', function(err) { 
+			    // path was created unless there was error
 
+			});
 			is.pipe(os);
 			is.on('end',function(err) {
 				fs.unlinkSync(source_file);
@@ -41,51 +72,18 @@ module.exports = function(app){
 				}
 				var image = new ImageModel();
 				image.filename =  imageName;
-				image.save(function(err){
-					console.log(image);
-					if(err) throw err;
-					Model.findOne({"_id" : req.params.elem_id }).exec(function(err, model){
-						model.images.push(image._id)
-						model.save(function(err){
-							if(err) throw err;
-							res.redirect("back");
-						})
-						
+				Model.findOne({"_id" : req.params.elem_id }).exec(function(err, model){
+					model.images.push(image);
+					model.save(function(err){
+						if(err) throw err;
+						res.send(image);
 					});
-					
 				});
 			});
-
-/*
-
-			fs.rename(img.path, dir+"/"+req.params.param+"/"+ imageName, function(err){
-				if(err){
-					console.log('Image Writing ERROR!');
-					console.log(err);
-				}
-				var image = new ImageModel();
-				image.filename =  imageName;
-				image.save(function(err){
-					console.log(image);
-					if(err) throw err;
-					Model.findOne({"_id" : req.params.elem_id }).exec(function(err, model){
-						model.images.push(image._id)
-						model.save(function(err){
-							if(err) throw err;
-							res.redirect("back");
-						})
-						
-					});
-					
-				});
-			})
-
-*/
-			
 		}
 	}
 
-	app.post('/images/upload/:param/:elem_id', save_image(app.get('photos')));
+	app.post('/images/:param/:elem_id', save_image(app.get('photos')));
 
 	var delete_image = function(dir){
 		return function(req,res){
@@ -96,14 +94,11 @@ module.exports = function(app){
 				  { _id: req.params.param_id },
 				  { $pull: { 'images': req.params.image_id } }
 				).exec(function(){
-					
-				res.redirect("back")
-				})
-			
-			
+					res.send(true)
+				})			
 		}
 	}
 
-	app.get('/images/delete/:param/:param_id/:image_id', delete_image(app.get('photos')));
+	app.get('/images/:param/:param_id/:image_id', delete_image(app.get('photos')));
 }
 
