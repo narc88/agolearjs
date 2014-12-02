@@ -1,0 +1,46 @@
+//Incindent and Goals container
+a(href="/zones/{{zone._id}}") Volver
+div(class="result col-md-12")
+	div(class="local col-md-6")
+		div(class="col-md-2")
+			a(href="#", class="thumbnail")
+				img(src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjE0LjUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==", style="width: 64px; height: 64px;", alt="...")
+		div(class="col-md-9")
+			p {{match.local_team.name}}
+			span {{match.local_goals.length}}
+	div(class="visitor col-md-6")
+		div(class="col-md-9")
+			p {{match.visitor_team.name}}
+			span {{match.visitor_goals.length}}
+		div(class="col-md-2")
+			a(href="#", class="thumbnail")
+				img(src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjE0LjUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==", style="width: 64px; height: 64px;", alt="...")
+h2 Goles e Incidentes
+div(class="incidents col-md-12")
+	div(class="local col-md-6")
+		ul
+			li(ng-repeat="goal in match.local_goals")
+				span {{goal.player.name}} {{goal.player.last_name}}
+			li(ng-repeat="goal in match.local_incidents")
+				span {{goal.player.name}} {{goal.player.last_name}}
+			a()
+	div(class="visitor col-md-6")
+		ul
+			li(ng-repeat="goal in match.visitor_goals")
+				span {{goal.player.name}} {{goal.player.last_name}}
+			li(ng-repeat="goal in match.visitor_incidents")
+				span {{goal.player.name}} {{goal.player.last_name}}
+h2 Horario y Cancha
+div(class="time")
+	span {{match.turn[0].field.name}}
+	span {{match.turn[0].hour}}
+	span {{match.turn[0].minute}}
+h2 Jugadores
+div(class="players")
+	div(class="local")
+	div(class="visitor")
+
+a(ng-model="collapsed", ng-click="collapsed=!collapsed")
+	span Click here to Toggle (show/hide) description
+div(ng-show="collapsed")
+	span I am description for the above title, which was collapsed by default

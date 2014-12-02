@@ -59,27 +59,37 @@ module.exports = function(app){
 			var os = fs.createWriteStream(destination_file);
 			var mkdirp = require('mkdirp');
 			//crear carpeta
-			mkdirp('/tmp/some/path/foo', function(err) { 
-			    // path was created unless there was error
-
+			mkdirp(dir+'/'+req.params.param+'/'+req.param.elem_id, function(err) { 
+			    console.log(err);
+			    	easyimg.resize({
+								     src:source_file, dst:destination_file,
+								     width:500, height:500,
+								  }).then(
+								  function(image) {
+								  	/*is.pipe(os);
+									is.on('end',function(err) {
+										fs.unlinkSync(source_file);
+										if(err){
+											console.log('Image Writing ERROR!');
+											console.log(err);
+										}
+										var image = new ImageModel();
+										image.filename =  imageName;
+										Model.findOne({"_id" : req.params.elem_id }).exec(function(err, model){
+											model.images.push(image);
+											model.save(function(err){
+												if(err) throw err;
+												res.send(image);
+											});
+										});
+									});*/
+								  },
+								  function (err) {
+								    console.log(err);
+								  }
+								);
 			});
-			is.pipe(os);
-			is.on('end',function(err) {
-				fs.unlinkSync(source_file);
-				if(err){
-					console.log('Image Writing ERROR!');
-					console.log(err);
-				}
-				var image = new ImageModel();
-				image.filename =  imageName;
-				Model.findOne({"_id" : req.params.elem_id }).exec(function(err, model){
-					model.images.push(image);
-					model.save(function(err){
-						if(err) throw err;
-						res.send(image);
-					});
-				});
-			});
+			
 		}
 	}
 

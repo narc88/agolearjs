@@ -146,11 +146,17 @@ function zones_add($scope, $http, $location) {
   };
 }
 
-function zones_view($scope, $http, $routeParams) {
-  $http.get('/api/zones/' + $routeParams.id).
-    success(function(data) {
-      $scope.zone = data;
+function zones_view($scope, $http, $routeParams, $rootScope) {
+  if((typeof $rootScope.zone === "undefined") || ($routeParams.id != $rootScope.zone.id)){
+    $http.get('/api/zones/' + $routeParams.id).
+      success(function(data) {
+        $scope.zone = data;
+        $rootScope.zone = data;
     });
+  }else{
+    $scope.zone = $rootScope.zone
+  }
+  
 }
 
 function zones_edit($scope, $http, $location, $routeParams) {
@@ -302,7 +308,7 @@ function teams_edit($scope, $http, $location, $routeParams) {
   $scope.editTeam = function () {
     $http.put('/api/teams/' + $routeParams.id, $scope.form).
       success(function(data) {
-        $location.url('/readPost/' + $routeParams.id);
+        $location.url('/teams/' + $routeParams.id);
       });
   };
 }
@@ -460,10 +466,27 @@ function matches_add($scope, $http, $location) {
   };
 }
 
-function matches_view($scope, $http, $routeParams) {
+function matches_view($scope, $http, $routeParams, $rootScope) {
   $http.get('/api/matches/' + $routeParams.id).
     success(function(data) {
       $scope.match = data;
+      //$scope.match = $rootScope.zone;
+      $scope.submitGoal = function (form) {
+        $http.post('/api/goals', $scope.goal).
+          success(function(data) {
+            if (data.error) {
+              for (var object in data.error.errors) {
+                if(object){
+                  if (data.error.errors.hasOwnProperty(object)) {
+                    form[object].$error.mongoose = data.error.errors[object].message;
+                  }
+                }
+              }
+            } else{
+              $location.path('/');
+            }
+          });
+      };
     });
 }
 

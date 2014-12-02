@@ -1,6 +1,7 @@
 var MatchModel = require('../models/match').MatchModel;
 var ImageModel 	= require('../models/image').ImageModel;
-var SoccerFieldModel = require('../models/soccer_field').SoccerFieldModel;
+var FieldModel = require('../models/field').FieldModel;
+var PlayerModel = require('../models/player').PlayerModel;
 var mongoose = require('mongoose');
 
 module.exports = function(app){
@@ -13,14 +14,24 @@ module.exports = function(app){
 			var callback = function(){
 				res.send(matches);
 			}
-			SoccerFieldModel.populate(matches, { path: 'turn.soccer_field', select: 'name'},callback);
+			FieldModel.populate(matches, { path: 'turn.field', select: 'name'},callback);
 		});
 	});
 
 	app.get('/api/matches/:id', function(req, res, next){
-		MatchModel.findOne({ _id: req.params.id }).exec( function(err, match){
-			if (err) throw err;
-			res.send(match);
+		MatchModel.findOne({ _id: req.params.id }).populate("visitor_team").populate("local_team").exec( function(err, match){
+			if (err) throw err
+			FieldModel.populate(match, { path: 'turn.field', select: 'name'}, function(){
+				PlayerModel.populate(match, { path: 'visitor_goals.player', select: 'name last_name'}, function(){
+					PlayerModel.populate(match, { path: 'local_goals.player', select: 'name last_name'}, function(){
+						PlayerModel.populate(match, { path: 'local_incidents.player', select: 'name last_name'}, function(){
+							PlayerModel.populate(match, { path: 'visitor_incidents.player', select: 'name last_name'}, function(){
+								res.send(match);
+							});
+						});
+					});
+				});
+			});
 		});
 	});
 
