@@ -344,7 +344,17 @@ function tournaments_add($scope, $http, $location) {
   $scope.submitTournament = function () {
     $http.post('/api/tournaments', $scope.form).
       success(function(data) {
-        $location.path('/');
+        if (data.error) {
+          for (var object in data.error.errors) {
+            if(object){
+              if (data.error.errors.hasOwnProperty(object)) {
+                form[object].$error.mongoose = data.error.errors[object].message;
+              }
+            }
+          }
+        } else{
+          $location.path('/');
+        }        
       });
   };
 }

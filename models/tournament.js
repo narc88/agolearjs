@@ -8,7 +8,7 @@ var TournamentSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAlpha(v); },
+                     function(v) { return validator.isAlphanumeric(v); },
                      'Nombre invalido, no se aceptan numeros ni simbolos'
                  	]
                 },
@@ -22,9 +22,6 @@ var TournamentSchema = new mongoose.Schema({
                 type: Number
                 },
     yellow_card_limit : { 
-                type: Number
-                },
-    winner_points : { 
                 type: Number
                 },
     winner_points : { 

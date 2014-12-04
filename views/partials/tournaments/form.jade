@@ -1,0 +1,47 @@
+form(name="addTournament", ng-submit="submitTeam(addTournament)")
+	.form-group
+		label(for="name") Nombre
+		input(ng-model='tournament.name', name='name', id="name", type='text').form-control.input-sm
+		div(ng-show="addTournament['name'].$error.mongoose", style="color: red") {{addTournament.name.$error.mongoose}}
+	.form-group
+		label(for="number_of_teams") Cantidad de equipos
+		input(ng-model='tournament.number_of_teams', name='number_of_teams', id="number_of_teams", type='text').form-control.input-sm
+		div(ng-show="addTournament['number_of_teams'].$error.mongoose", style="color: red") {{addTournament.number_of_teams.$error.mongoose}}
+	.form-group
+		label(for="number_of_zones") Cantidad de zonas
+		input(ng-model='tournament.number_of_zones', name='number_of_zones', id="number_of_zones", type='text').form-control.input-sm
+		div(ng-show="addTournament['number_of_zones'].$error.mongoose", style="color: red") {{addTournament.number_of_zones.$error.mongoose}}
+	.form-group
+		label(for="tournament_type") Tipo de torneo
+		input(ng-model='tournament.tournament_type', name='tournament_type', id="tournament_type", type='text').form-control.input-sm
+		div(ng-show="addTournament['tournament_type'].$error.mongoose", style="color: red") {{addTournament.tournament_type.$error.mongoose}}
+	.form-group
+		label(for="yellow_card_limit") Limite de amarillas
+		input(ng-model='tournament.yellow_card_limit', name='yellow_card_limit', id="yellow_card_limit", type='text').form-control.input-sm
+		div(ng-show="addTournament['yellow_card_limit'].$error.mongoose", style="color: red") {{addTournament.yellow_card_limit.$error.mongoose}}
+	.form-group
+		label(for="winner_points") Puntos por partido ganado
+		input(ng-model='tournament.winner_points', name='winner_points', id="winner_points", type='text').form-control.input-sm
+		div(ng-show="addTournament['winner_points'].$error.mongoose", style="color: red") {{addTournament.winner_points.$error.mongoose}}
+	.form-group
+		label(for="tied_points") Puntos por partido empatado
+		input(ng-model='tournament.tied_points', name='tied_points', id="tied_points", type='text').form-control.input-sm
+		div(ng-show="addTournament['tied_points'].$error.mongoose", style="color: red") {{addTournament.tied_points.$error.mongoose}}
+	.form-group
+		label(for="presentation_points") Puntos por partido disputado
+		input(ng-model='tournament.presentation_points', name='presentation_points', id="presentation_points", type='text').form-control.input-sm
+		div(ng-show="addTournament['presentation_points'].$error.mongoose", style="color: red") {{addTournament.presentation_points.$error.mongoose}}
+	.form-group
+		label(for="cant_teams_for_next_round") Cantidad de equipos en la proxima ronda
+		input(ng-model='tournament.cant_teams_for_next_round', name='cant_teams_for_next_round', id="cant_teams_for_next_round", type='text').form-control.input-sm
+		div(ng-show="addTournament['cant_teams_for_next_round'].$error.mongoose", style="color: red") {{addTournament.cant_teams_for_next_round.$error.mongoose}}
+	.form-group
+		label(for="double_playoff_match") Partido de Ida y Vuelta
+		input(ng-model='tournament.double_playoff_match', name='double_playoff_match', id="double_playoff_match", type='text').form-control.input-sm
+		div(ng-show="addTournament['double_playoff_match'].$error.mongoose", style="color: red") {{addTournament.double_playoff_match.$error.mongoose}}
+	.form-group
+		label(for="suspension_increment") Suspensión incremental
+		input(ng-model='tournament.suspension_increment', name='suspension_increment', id="suspension_increment", type='text').form-control.input-sm
+		div(ng-show="addTournament['suspension_increment'].$error.mongoose", style="color: red") {{addTournament.suspension_increment.$error.mongoose}}
+	.form-group
+		input(type="submit", value="Guardar").btn.btn-primary
