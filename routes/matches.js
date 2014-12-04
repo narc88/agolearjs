@@ -26,7 +26,11 @@ module.exports = function(app){
 					PlayerModel.populate(match, { path: 'local_goals.player', select: 'name last_name'}, function(){
 						PlayerModel.populate(match, { path: 'local_incidents.player', select: 'name last_name'}, function(){
 							PlayerModel.populate(match, { path: 'visitor_incidents.player', select: 'name last_name'}, function(){
-								res.send(match);
+								PlayerModel.populate(match, { path: 'visitor_players', select: 'name last_name'}, function(){
+									PlayerModel.populate(match, { path: 'local_players', select: 'name last_name'}, function(){
+										res.send(match);
+									});
+								});
 							});
 						});
 					});
