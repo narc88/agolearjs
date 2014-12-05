@@ -22,8 +22,8 @@ block body
         a(href='/players') Lista de Jugadores
       li
         a(href='/tournaments') Lista de Torneos
-      li
-        a(href="/zones/544850b62730632c7b002498") One zone
+        //textarea(id="some-textarea")
+      include partials/chronicles/form.jade
     div(ng-view)
 
   //Javascript
@@ -38,7 +38,13 @@ block body
   script(src='js/directives.js')
 
   script(src='js/lib/bootstrap/bootstrap.min.js')
+  script(src='js/editor.js')
+  script(src='js/index.js')
+
+
 
   //Css
   link(rel='stylesheet', href='/css/bootstrap/bootstrap.min.css')
   link(rel='stylesheet', href='/css/bootstrap/bootstrap-theme.min.css')
+  link(rel='stylesheet', href='/css/editor.css')
+  link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")

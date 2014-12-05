@@ -1,0 +1,15 @@
+form(name="addChronicle", ng-submit="submitChronicle(addChronicle)")
+	.form-group
+		label(for="title") Titulo
+		input(ng-model='team.title', name='title', id="title", type='text').form-control.input-sm
+		div(ng-show="addChronicle['title'].$error.mongoose", style="color: red") {{addChronicle.title.$error.mongoose}}
+	.form-group
+		label(for="summary") Resumen
+		textarea(ng-model='team.summary', name='summary', id="summary", type='text').form-control.input-sm
+		div(ng-show="addChronicle['summary'].$error.mongoose", style="color: red") {{addChronicle.summary.$error.mongoose}}
+	.form-group
+		label(for="chronicle") Crónica
+		textarea(ng-model='team.chronicle', name='chronicle', id="chronicle", type='text').form-control.input-sm
+		div(ng-show="addChronicle['chronicle'].$error.mongoose", style="color: red") {{addChronicle.name.$error.mongoose}}
+	.form-group
+		input(type="submit", value="Guardar").btn.btn-primary

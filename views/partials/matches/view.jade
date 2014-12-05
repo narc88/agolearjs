@@ -1,5 +1,5 @@
 //Incindent and Goals container
-a(href="/zones/{{zone._id}}") Volver
+a(href="/zones/{{zone._id}}") Volver a la zona
 div(class="result col-md-12")
 	div(class="local col-md-6")
 		div(class="col-md-2")
@@ -23,13 +23,20 @@ div(class="incidents col-md-12")
 				span {{goal.player.name}} {{goal.player.last_name}}
 			li(ng-repeat="goal in match.local_incidents")
 				span {{goal.player.name}} {{goal.player.last_name}}
-			a()
+			-var role = "local"
+			div(class="panel-group", id="accordion#{role}", role="tablist", aria-multiselectable="true")
+				include ../goals/form.jade
+				include ../incidents/form.jade
 	div(class="visitor col-md-6")
 		ul
 			li(ng-repeat="goal in match.visitor_goals")
 				span {{goal.player.name}} {{goal.player.last_name}}
 			li(ng-repeat="goal in match.visitor_incidents")
 				span {{goal.player.name}} {{goal.player.last_name}}
+			-var role = "visitor"
+			div(class="panel-group", id="accordion#{role}", role="tablist", aria-multiselectable="true")
+				include ../goals/form.jade
+				include ../incidents/form.jade
 h2 Horario y Cancha
 div(class="time")
 	span {{match.turn[0].field.name}}

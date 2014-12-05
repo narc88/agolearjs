@@ -1,0 +1,18 @@
+div(class="panel panel-default")
+	div(class="panel-heading", role="tab", id="headingIncident#{role}")
+		h4(class="panel-title")
+			a(data-toggle="collapse", data-parent="#accordion#{role}", data-target="#incident#{role}Collapse", aria-expanded="true", aria-controls="collapseOne") Incidente
+	div(id="incident#{role}Collapse", class="panel-collapse collapse in", role="tabpanel", aria-labelledby="headingIncident#{role}")
+		div(class="panel-body")
+			form(name="addIncident", ng-submit="submitIncident(addIncident)")
+				.form-group
+					label(for="player") Jugador
+					select(ng-model='incident.player', name='player', id="player",  ng-options="player.name for player in match.local_players").form-control.input-sm
+				.form-group
+					label(for="minute") Minute
+					input(ng-model='incident.minute', name='minute', id="minute", type='text').form-control.input-sm
+				.form-group
+					label(for="incident_type") Tipo
+					select(ng-model='incident.incident_type', name='incident_type', id="incident_type" ,  ng-options="player.name for player in match.local_players").form-control
+				.form-group
+					input(type="submit", value="Guardar").btn.btn-primary
