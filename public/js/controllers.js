@@ -497,6 +497,22 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             }
           });
       };
+      $scope.submitIncident = function (form) {
+        $http.post('/api/incidents', $scope.incident).
+          success(function(data) {
+            if (data.error) {
+              for (var object in data.error.errors) {
+                if(object){
+                  if (data.error.errors.hasOwnProperty(object)) {
+                    form[object].$error.mongoose = data.error.errors[object].message;
+                  }
+                }
+              }
+            } else{
+              $location.path('/');
+            }
+          });
+      };
     });
 }
 
@@ -515,7 +531,7 @@ function matches_edit($scope, $http, $location, $routeParams) {
   };
 }
 
-function player_delete($scope, $http, $location, $routeParams) {
+function matches_delete($scope, $http, $location, $routeParams) {
   $http.get('/api/matches/' + $routeParams.id).
     success(function(data) {
       $scope.league = data;
@@ -523,6 +539,66 @@ function player_delete($scope, $http, $location, $routeParams) {
 
   $scope.deleteMatch = function () {
     $http.delete('/api/matches/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+
+
+/*chronicle*/
+function chronicles_index($scope, $http, $location, $routeParams) {
+  var queryString = $.param( $routeParams );
+  $http.get('/api/chronicles'+'?'+queryString).
+    success(function(data, status, headers, config) {
+      $scope.chronicles = data;
+    });
+}
+
+function chronicles_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitChronicle = function () {
+    $http.post('/api/chronicles', $scope.chronicle).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function chronicles_view($scope, $http, $routeParams, $rootScope) {
+  $http.get('/api/chronicles/' + $routeParams.id).
+    success(function(data) {
+      $scope.chronicle = data;
+    });
+}
+
+function chronicles_edit($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/chronicles/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data;
+    });
+
+  $scope.editChronicle = function () {
+    $http.put('/api/chronicles/' + $routeParams.id, $scope.form).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function chronicles_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/chronicles/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteChronicle = function () {
+    $http.delete('/api/chronicles/' + $routeParams.id).
       success(function(data) {
         $location.url('/');
       });

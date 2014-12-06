@@ -10,7 +10,7 @@ var zones = require('./zones');
 var teams = require('./teams');
 var matchdays = require('./matchdays');
 var matches = require('./matches');
-
+var chronicles = require('./chronicles');
 var errors = require('./errors');
 
 module.exports = function(app){
@@ -36,7 +36,7 @@ module.exports = function(app){
 	matchdays(app);
 	matches(app);
 	images(app);
-	
+	chronicles(app);
 	// Error handlers
 	errors(app);
 
