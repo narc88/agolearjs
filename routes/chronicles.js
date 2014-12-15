@@ -22,10 +22,10 @@ module.exports = function(app){
 	});
 
 	app.post('/api/chronicles', function(req, res){
-		var chronicle = new ChronicleModel(req.body.chronicle);
+		var chronicle = new ChronicleModel(req.body)
 		chronicle.save(function(err){
 			if(err) throw err;
-			req.send(chronicle);
+			res.send(chronicle);
 		});
 	});
 

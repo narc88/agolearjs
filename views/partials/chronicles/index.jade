@@ -1,0 +1,9 @@
+.col-md-9
+	h3 Lista de Crónicas
+	br
+	.col-md-8
+		table.table.table-condensed.table-hover
+			tr(ng-repeat="chronicle in chronicles") 
+				td
+					p {{chronicle.title}} 
+					a(class="btn btn-primary", role="button", href="/chronicles/{{chronicle._id}}") Ver

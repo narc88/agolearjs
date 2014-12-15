@@ -562,6 +562,7 @@ function chronicles_index($scope, $http, $location, $routeParams) {
 function chronicles_add($scope, $http, $location) {
   $scope.form = {};
   $scope.submitChronicle = function () {
+    $scope.chronicle.content  = $("#contentarea").html();
     $http.post('/api/chronicles', $scope.chronicle).
       success(function(data) {
         $location.path('/');
@@ -577,14 +578,15 @@ function chronicles_view($scope, $http, $routeParams, $rootScope) {
 }
 
 function chronicles_edit($scope, $http, $location, $routeParams) {
-  $scope.form = {};
+  $scope.chronicle = {};
   $http.get('/api/chronicles/' + $routeParams.id).
     success(function(data) {
-      $scope.form = data;
+      $scope.chronicle = data;
     });
 
   $scope.editChronicle = function () {
-    $http.put('/api/chronicles/' + $routeParams.id, $scope.form).
+    $scope.chronicle.content  = $("#contentarea").html();
+    $http.put('/api/chronicles/' + $routeParams.id, $scope.chronicle).
       success(function(data) {
         $location.url('/readPost/' + $routeParams.id);
       });

@@ -21,16 +21,13 @@ module.exports = function(app){
 	app.get('/api/matches/:id', function(req, res, next){
 		MatchModel.findOne({ _id: req.params.id }).populate("visitor_team").populate("local_team").exec( function(err, match){
 			if (err) throw err
+			console.log(match)
 			FieldModel.populate(match, { path: 'turn.field', select: 'name'}, function(){
 				PlayerModel.populate(match, { path: 'visitor_goals.player', select: 'name last_name'}, function(){
 					PlayerModel.populate(match, { path: 'local_goals.player', select: 'name last_name'}, function(){
 						PlayerModel.populate(match, { path: 'local_incidents.player', select: 'name last_name'}, function(){
 							PlayerModel.populate(match, { path: 'visitor_incidents.player', select: 'name last_name'}, function(){
-								PlayerModel.populate(match, { path: 'visitor_players', select: 'name last_name'}, function(){
-									PlayerModel.populate(match, { path: 'local_players', select: 'name last_name'}, function(){
-										res.send(match);
-									});
-								});
+								res.send(match)
 							});
 						});
 					});
@@ -46,6 +43,8 @@ module.exports = function(app){
 			if(err) throw err;
 			req.send(match);
 		});
+
+		//TODO: Cada vez que guardo necesito levantar los partidos jugados para esta zona y actualizar los valores.
 	});
 
 	app.put('/api/matches/:id', function(req, res, next){
@@ -60,6 +59,7 @@ module.exports = function(app){
 				});
 			}
 		});
+		//TODO: Cada vez que guardo necesito levantar los partidos jugados para esta zona y actualizar los valores.
 	});
 
 	app.delete('/api/matches/:id', function(req, res, next){
@@ -73,13 +73,13 @@ module.exports = function(app){
 	//End of RESTful routes
 
 	//Routes for embedded elements
-	app.post('/api/matches/:id/goals', function(req, res){
+	app.post('/api/matches/:team_role/:id/goals', function(req, res){
 		var team_role = ""
 		var goal = new GoalModel(req.body.goal);
-		if(req.body.team_role === "Local"){
+		if(req.params.team_role === "Local"){
 			team_role = "local_goals";
 		}else{			
-			if(req.body.team_role === "Visitor"){
+			if(req.params.team_role === "Visitor"){
 				team_role = "visitor_goals";
 			}
 		}
@@ -113,7 +113,15 @@ module.exports = function(app){
 		)
 	});
 
-	app.post('/api/matches/:id/incidents', function(req, res){
+	app.post('/api/matches/:team_role/:id/incidents', function(req, res){
+		var team_role = ""
+		if(req.params.team_role === "Local"){
+			team_role = "local_goals";
+		}else{
+			if(req.params.team_role === "Visitor"){
+				team_role = "visitor_goals";
+			}			
+		}
 		var incident = new IncidentModel(req.body.incident);
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
@@ -125,7 +133,15 @@ module.exports = function(app){
 		)
 	});
 
-	app.delete('/api/matches/incidents/:id', function(req, res, next){
+	app.delete('/api/matches/incidents/:team_role/:id', function(req, res, next){
+		var team_role = ""
+		if(req.params.team_role === "Local"){
+			team_role = "local_goals";
+		}else{
+			if(req.params.team_role === "Visitor"){
+				team_role = "visitor_goals";
+			}			
+		}
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
 			req.send(goal);
@@ -137,19 +153,18 @@ module.exports = function(app){
 		)
 	});
 
-	//No convendria guardarlo con los nombres? Habria que usar el objeto embebido 
-	//en el modelo de participaciones para el form y mandar los datos necesarios
-	app.post('/api/matches/:id/players', function(req, res){
+	app.post('/api/matches/:team_role/:id/players', function(req, res){
+		var team_role = ""
+		if(req.params.team_role === "Local"){
+			team_role = "local_goals";
+		}else{
+			if(req.params.team_role === "Visitor"){
+				team_role = "visitor_goals";
+			}			
+		}
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
 			req.send(true);
-		}
-		if(req.body.team_role === "Local"){
-			team_role = "local_players";
-		}else{			
-			if(req.body.team_role === "Visitor"){
-				team_role = "visitor_players";
-			}
 		}
 		MatchModel.update(
 		    { _id: req.params.id}, 
@@ -157,7 +172,7 @@ module.exports = function(app){
 		)
 	});
 
-	app.delete('/api/matches/incidents/:match_id/:team_role/:id', function(req, res, next){
+	app.delete('/api/matches/:team_role/:id/players/:player_id', function(req, res, next){
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
 			req.send(true);

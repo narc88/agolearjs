@@ -3,28 +3,30 @@ extends layout
 block body
   div
     h2 My Blog
-    ul
-      li
-        a(href='/') Inicio
-      li
-        a(href='/users/add') Nuevo usuario
-      li
-        a(href='/users') Lista de usuarios
-      li
-        a(href='/users/5420e1ae2730632e26001b0f') Ver Usuario
-      li
-        a(href='/leagues') Lista de Ligas
-      li
-        a(href='/teams') Lista de Equipos
-      li
-        a(href='/teams/add') Agregar Equipo
-      li
-        a(href='/players') Lista de Jugadores
-      li
-        a(href='/tournaments') Lista de Torneos
-      li
-        a(href='/chronicles/add') Nueva cronica
-    div(ng-view)
+    div(class="col-md-3")
+      ul
+        li
+          a(href='/') Inicio
+        li
+          a(href='/users/add') Nuevo usuario
+        li
+          a(href='/users') Lista de usuarios
+        li
+          a(href='/leagues') Lista de Ligas
+        li
+          a(href='/teams') Lista de Equipos
+        li
+          a(href='/teams/add') Agregar Equipo
+        li
+          a(href='/players') Lista de Jugadores
+        li
+          a(href='/tournaments') Lista de Torneos
+        li
+          a(href='/chronicles/add') Nueva cronica
+        li
+          a(href='/chronicles') Cronicas
+    div(class="col-md-9")
+      div(ng-view)
 
   //Javascript
   script(src='js/jquery.min.js')

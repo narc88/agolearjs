@@ -715,7 +715,7 @@ You should have received a copy of the GNU General Public License along with thi
 												}
 												else{
 												    methods.restoreSelection.apply(this, [targetText]);																																		
-													document.execCommand('createLink',false,targetURL);
+													document.execCommand('CreateLink',false,targetURL);
 												}
 												$('#contentarea').find('a[href="'+targetURL+'"]').each(function(){ $(this).attr("target", "_blank"); });												
 												$(".alert").alert("close");
@@ -951,9 +951,9 @@ You should have received a copy of the GNU General Public License along with thi
 							  'textformats': ['indent', 'outdent', 'block_quote', 'ol', 'ul'],
 							  'fonteffects' : ['fonts', 'styles', 'font_size'],
 							  'actions' : ['undo', 'redo'],
-							  'insertoptions' : ['insert_link', 'unlink', 'insert_img', 'insert_table'],
+							  'insertoptions' : ['insert_link', 'insert_table'],
 							  'extraeffects' : ['strikeout', 'hr_line', 'splchars'],
-							  'advancedoptions' : ['print', 'rm_format', 'select_all', 'source'],
+							  'advancedoptions' : ['rm_format', 'select_all', 'source'],
 							  'screeneffects' : ['togglescreen']
 							};
 
@@ -979,8 +979,6 @@ You should have received a copy of the GNU General Public License along with thi
 				'c_align':true,
 				'justify':true,
 				'insert_link':true,
-				'unlink':true,
-				'insert_img':true,
 				'hr_line':true,
 				'block_quote':true,
 				'source':true,
@@ -1311,7 +1309,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 		createModal: function(modalId, modalHeader, modalBody, onSave){
 			//Create a Modal for the button.		
-			var modalTrigger = $('<a/>',{	href:"#"+modalId,
+			var modalTrigger = $('<a/>',{	"data-target":"#"+modalId,
 											role:"button",
 											class:"btn btn-default",
 											"data-toggle":"modal"

@@ -4,6 +4,13 @@ var GoalSchema = require('./goal').GoalSchema;
 var IncidentSchema = require('./incident').IncidentSchema;
 var TurnSchema = require('./turn').TurnSchema;
 var ImageSchema = require('../models/image').ImageSchema;
+var PlayerParticipationSchema = require('../models/player_participation').PlayerParticipationSchema;
+
+var ParticipationPlayer = new mongoose.Schema({
+    _id     : {type: mongoose.Schema.ObjectId, ref: 'Player' }
+  , name      : String
+  , last_name      : String
+})
 
 var MatchSchema = new mongoose.Schema({
     start_datetime     : {type: Date, default: Date.now },
@@ -17,8 +24,8 @@ var MatchSchema = new mongoose.Schema({
     visitor_incidents   : [IncidentSchema],
     mvp     			: {type: mongoose.Schema.ObjectId, ref: 'Player' },
     //Players who assisted to the match
-    local_players       : [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
-    visitor_players     : [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
+    local_players       : [PlayerParticipationSchema],
+    visitor_players     : [PlayerParticipationSchema],
     //referees			: [RefereeSchema],
     turn                : [TurnSchema],
     matchday   			: {type: mongoose.Schema.ObjectId, ref: 'Matchday' },
