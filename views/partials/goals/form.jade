@@ -4,7 +4,7 @@ div(class="panel panel-default")
 			a(data-toggle="collapse", data-parent="#accordion#{role}", data-target="#goal#{role}Collapse", aria-expanded="true", aria-controls="collapseOne") Gol
 	div(id="goal#{role}Collapse", class="panel-collapse collapse in", role="tabpanel", aria-labelledby="headingGoal#{role}")
 		div(class="panel-body")
-			form(name="addGoal", ng-submit="submitGoal(addGoal)")
+			form(name="addGoal", ng-submit="submitGoal(addGoal, '#{role}')")
 				.form-group
 					label(for="player") Jugador
 					select(ng-model='goal.player', name='player', id="player").form-control.input-sm

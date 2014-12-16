@@ -480,9 +480,15 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
   $http.get('/api/matches/' + $routeParams.id).
     success(function(data) {
       $scope.match = data;
-      //$scope.match = $rootScope.zone;
-      $scope.submitGoal = function (form) {
-        $http.post('/api/goals', $scope.goal).
+      var searchPlayer = function(key, array){
+        for (var i = array.length - 1; i >= 0; i--) {
+          if(key == array[i]._id){
+            return array[i];
+          }
+        };
+      }
+      $scope.submitGoal = function (form, role) {
+        $http.post('/api/matches/goals/'+role+"/"+$scope.match._id, $scope.goal).
           success(function(data) {
             if (data.error) {
               for (var object in data.error.errors) {
@@ -493,12 +499,20 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
                 }
               }
             } else{
-              $location.path('/');
+              if(role == "local"){
+                data.player = searchPlayer(data.player, $scope.match.local_players);
+                $scope.match.local_goals.push(data);
+              }else{
+                if(role == "visitor"){
+                  data.player = searchPlayer(data.player, $scope.match.visitor_players);
+                  $scope.match.visitor_goals.push(data);
+                }
+              }
             }
           });
       };
-      $scope.submitIncident = function (form) {
-        $http.post('/api/incidents', $scope.incident).
+      $scope.submitIncident = function  (form, role) {
+        $http.post('/api/matches/incidents/'+role+"/"+$scope.match._id, $scope.incident).
           success(function(data) {
             if (data.error) {
               for (var object in data.error.errors) {
@@ -509,7 +523,15 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
                 }
               }
             } else{
-              $location.path('/');
+              if(role == "local"){
+                data.player = searchPlayer(data.player, $scope.match.local_players);
+                $scope.match.local_incidents.push(data);
+              }else{
+                if(role == "visitor"){
+                  data.player = searchPlayer(data.player, $scope.match.visitor_players);
+                  $scope.match.visitor_incidents.push(data);
+                }
+              }
             }
           });
       };

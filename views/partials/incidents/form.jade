@@ -4,7 +4,7 @@ div(class="panel panel-default")
 			a(data-toggle="collapse", data-parent="#accordion#{role}", data-target="#incident#{role}Collapse", aria-expanded="true", aria-controls="collapseOne") Incidente
 	div(id="incident#{role}Collapse", class="panel-collapse collapse in", role="tabpanel", aria-labelledby="headingIncident#{role}")
 		div(class="panel-body")
-			form(name="addIncident", ng-submit="submitIncident(addIncident)")
+			form(name="addIncident", ng-submit="submitIncident(addIncident, '#{role}')")
 				.form-group
 					label(for="player") Jugador
 					select(ng-model='incident.player', name='player', id="player",  ng-options="player.name for player in match.local_players").form-control.input-sm

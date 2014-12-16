@@ -1,4 +1,6 @@
 var MatchModel = require('../models/match').MatchModel;
+var GoalModel = require('../models/goal').GoalModel;
+var IncidentModel = require('../models/incident').IncidentModel;
 var ImageModel 	= require('../models/image').ImageModel;
 var FieldModel = require('../models/field').FieldModel;
 var PlayerModel = require('../models/player').PlayerModel;
@@ -73,24 +75,32 @@ module.exports = function(app){
 	//End of RESTful routes
 
 	//Routes for embedded elements
-	app.post('/api/matches/:team_role/:id/goals', function(req, res){
+	app.post('/api/matches/goals/:team_role/:id', function(req, res){
 		var team_role = ""
-		var goal = new GoalModel(req.body.goal);
-		if(req.params.team_role === "Local"){
-			team_role = "local_goals";
-		}else{			
-			if(req.params.team_role === "Visitor"){
-				team_role = "visitor_goals";
-			}
-		}
+		var goal = new GoalModel(req.body);
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
-			req.send(goal);
+			res.send(goal);
 		}
-		MatchModel.update(
-		    { _id: req.params.id}, 
-		    {$push: {team_role: goal}}, callback
-		)
+		if(req.params.team_role === "local"){
+			MatchModel.update(
+			    { "_id": req.params.id}, 
+			    {$push: {"local_goals": goal}}, callback
+			)
+		}else{			
+			if(req.params.team_role === "visitor"){
+				MatchModel.update(
+				    { "_id": req.params.id}, 
+				    {$push: {"visitor_goals": goal}}, callback
+				)
+			}
+		}
+		Model.findOne({ name: 'borne' }, function (err, match){
+		  match.name = 'jason borne';
+		  match.visits.$inc();
+		  match.save();
+		});
+		
 	});
 
 	app.delete('/api/matches/goals/:team_role/:id', function(req, res, next){
@@ -104,7 +114,7 @@ module.exports = function(app){
 		}
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
-			req.send(goal);
+			res.send(goal);
 		}
 		var field = team_role + "._id"
 		MatchModel.update(
@@ -113,24 +123,26 @@ module.exports = function(app){
 		)
 	});
 
-	app.post('/api/matches/:team_role/:id/incidents', function(req, res){
+	app.post('/api/matches/incidents/:team_role/:id', function(req, res){
 		var team_role = ""
-		if(req.params.team_role === "Local"){
-			team_role = "local_goals";
-		}else{
-			if(req.params.team_role === "Visitor"){
-				team_role = "visitor_goals";
-			}			
-		}
-		var incident = new IncidentModel(req.body.incident);
+		var incident = new IncidentModel(req.body);
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
-			req.send(incident);
+			res.send(goal);
 		}
-		MatchModel.update(
-		    { _id: req.params.id}, 
-		    {$push: {team_role: incident}}, callback
-		)
+		if(req.params.team_role === "local"){
+			MatchModel.update(
+			    { "_id": req.params.id}, 
+			    {$push: {"local_incidents": incident}}, callback
+			)
+		}else{			
+			if(req.params.team_role === "visitor"){
+				MatchModel.update(
+				    { "_id": req.params.id}, 
+				    {$push: {"visitor_incidents": incident}}, callback
+				)
+			}
+		}
 	});
 
 	app.delete('/api/matches/incidents/:team_role/:id', function(req, res, next){
@@ -144,7 +156,7 @@ module.exports = function(app){
 		}
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
-			req.send(goal);
+			res.send(goal);
 		}
 		var field = team_role + "._id"
 		MatchModel.update(
