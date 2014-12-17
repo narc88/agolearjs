@@ -499,6 +499,14 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
                 }
               }
             } else{
+              $scope.match = data;
+              for (var i = $scope.match.local_goals.length - 1; i >= 0; i--) {
+                $scope.match.local_goals[i].player = searchPlayer(data.player, $scope.match.local_players);
+              };
+              for (var i = $scope.match.visitor_goals.length - 1; i >= 0; i--) {
+                $scope.match.visitor_goals[i].player = searchPlayer(data.player, $scope.match.visitor_players);
+              };
+              /*
               if(role == "local"){
                 data.player = searchPlayer(data.player, $scope.match.local_players);
                 $scope.match.local_goals.push(data);
@@ -507,7 +515,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
                   data.player = searchPlayer(data.player, $scope.match.visitor_players);
                   $scope.match.visitor_goals.push(data);
                 }
-              }
+              }*/
             }
           });
       };

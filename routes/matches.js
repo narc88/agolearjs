@@ -82,23 +82,28 @@ module.exports = function(app){
 			if(err) throw err;
 			res.send(goal);
 		}
-		if(req.params.team_role === "local"){
-			MatchModel.update(
-			    { "_id": req.params.id}, 
-			    {$push: {"local_goals": goal}}, callback
-			)
-		}else{			
-			if(req.params.team_role === "visitor"){
-				MatchModel.update(
-				    { "_id": req.params.id}, 
-				    {$push: {"visitor_goals": goal}}, callback
-				)
+		
+		MatchModel.findOne({ "_id": req.params.id}, function (err, match){
+		 	if(req.params.team_role === "local"){
+				match.local_goals.push(goal);
+			}else{			
+				if(req.params.team_role === "visitor"){
+					match.visitor_goals.push(goal);
+				}
 			}
-		}
-		Model.findOne({ name: 'borne' }, function (err, match){
-		  match.name = 'jason borne';
-		  match.visits.$inc();
-		  match.save();
+
+			if(match.local_goals.length > match.visitor_goals.length){
+				match.winner = match.local_team;
+			}else if(match.local_goals.length < match.visitor_goals.length){
+				match.winner = match.visitor_team;
+			}else if(match.local_goals.length == match.visitor_goals.length){
+				delete match.winner;
+			}
+			console.log(match.winner)
+			match.save(function(err){
+				if(err) throw err;
+				res.send(match);
+			})
 		});
 		
 	});
