@@ -8,7 +8,11 @@ div(class="panel panel-default")
 				.form-group
 					label(for="player") Jugador
 					select(ng-model='goal.player', name='player', id="player").form-control.input-sm
-						option(ng-repeat="player in match.local_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
+						option(value="", selected="selected") Ninguno
+						-if(role === "local")
+							option(ng-repeat="player in match.local_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
+						-else
+							option(ng-repeat="player in match.visitor_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
 				.form-group
 					label(for="minute") Minute
 					input(ng-model='goal.minute', name='minute', id="minute", type='text').form-control.input-sm

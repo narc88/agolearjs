@@ -12,6 +12,13 @@ module.exports = function(app){
 	var secret_sauce = 'this_is_my_secret_sauce';
 	var sessionStore = new express.session.MemoryStore();
 	var cookieParser = express.cookieParser(secret_sauce);
+	var csrfValue = function(req) {
+	  var token = (req.body && req.body._csrf)
+	    || (req.query && req.query._csrf)
+	    || (req.headers['x-csrf-token'])
+	    || (req.headers['x-xsrf-token']);
+	  return token;
+	};
 
 	// all environments
 	app.set('port', process.env.PORT || 3000);
@@ -25,10 +32,17 @@ module.exports = function(app){
 	app.use(express.static(path.join(__dirname, '../public')));
 	app.set('photos',path.join(__dirname,'../public/photos/'));
 	app.use(cookieParser);
+	//CRSF SUPPORT
+	app.use(express.cookieSession());
+	app.use(express.csrf({value: csrfValue}));
+	app.use(function(req, res, next) {
+	  res.cookie('XSRF-TOKEN', req.csrfToken());
+	  next();
+	});
+	//CRSF SUPPORT
 	app.use(express.session({
 		store :  sessionStore 
 	}));
-	
 	app.use(express.bodyParser());
 	app.use(function (req, res, next) {
 		// expose session to views

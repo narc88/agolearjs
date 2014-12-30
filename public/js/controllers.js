@@ -477,16 +477,32 @@ function matches_add($scope, $http, $location) {
 }
 
 function matches_view($scope, $http, $routeParams, $rootScope) {
+  var searchPlayer = function(key, array){
+    for (var i = array.length - 1; i >= 0; i--) {
+      if(key == array[i]._id){
+        return array[i];
+      }
+    };
+  }
+  var populateMatchPlayers = function(data, match){
+    for (var i = data.local_goals.length - 1; i >= 0; i--) {
+      data.local_goals[i].player = searchPlayer(data.local_goals[i].player, match.local_players);
+    };
+    for (var i = data.visitor_goals.length - 1; i >= 0; i--) {
+      data.visitor_goals[i].player = searchPlayer(data.visitor_goals[i].player, match.visitor_players);
+    };
+    for (var i = data.local_incidents.length - 1; i >= 0; i--) {
+      data.local_incidents[i].player = searchPlayer(data.local_incidents[i].player, match.local_players);
+    };
+    for (var i = data.visitor_incidents.length - 1; i >= 0; i--) {
+      data.visitor_incidents[i].player = searchPlayer(data.visitor_incidents[i].player, match.visitor_players);
+    };
+    return data;
+  }
   $http.get('/api/matches/' + $routeParams.id).
     success(function(data) {
-      $scope.match = data;
-      var searchPlayer = function(key, array){
-        for (var i = array.length - 1; i >= 0; i--) {
-          if(key == array[i]._id){
-            return array[i];
-          }
-        };
-      }
+      $scope.match = populateMatchPlayers(data, data);
+      
       $scope.submitGoal = function (form, role) {
         $http.post('/api/matches/goals/'+role+"/"+$scope.match._id, $scope.goal).
           success(function(data) {
@@ -499,23 +515,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
                 }
               }
             } else{
-              $scope.match = data;
-              for (var i = $scope.match.local_goals.length - 1; i >= 0; i--) {
-                $scope.match.local_goals[i].player = searchPlayer(data.player, $scope.match.local_players);
-              };
-              for (var i = $scope.match.visitor_goals.length - 1; i >= 0; i--) {
-                $scope.match.visitor_goals[i].player = searchPlayer(data.player, $scope.match.visitor_players);
-              };
-              /*
-              if(role == "local"){
-                data.player = searchPlayer(data.player, $scope.match.local_players);
-                $scope.match.local_goals.push(data);
-              }else{
-                if(role == "visitor"){
-                  data.player = searchPlayer(data.player, $scope.match.visitor_players);
-                  $scope.match.visitor_goals.push(data);
-                }
-              }*/
+              $scope.match = populateMatchPlayers(data, $scope.match);
             }
           });
       };
@@ -531,15 +531,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
                 }
               }
             } else{
-              if(role == "local"){
-                data.player = searchPlayer(data.player, $scope.match.local_players);
-                $scope.match.local_incidents.push(data);
-              }else{
-                if(role == "visitor"){
-                  data.player = searchPlayer(data.player, $scope.match.visitor_players);
-                  $scope.match.visitor_incidents.push(data);
-                }
-              }
+              $scope.match = populateMatchPlayers(data, $scope.match);
             }
           });
       };

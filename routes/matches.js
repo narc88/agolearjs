@@ -25,15 +25,7 @@ module.exports = function(app){
 			if (err) throw err
 			console.log(match)
 			FieldModel.populate(match, { path: 'turn.field', select: 'name'}, function(){
-				PlayerModel.populate(match, { path: 'visitor_goals.player', select: 'name last_name'}, function(){
-					PlayerModel.populate(match, { path: 'local_goals.player', select: 'name last_name'}, function(){
-						PlayerModel.populate(match, { path: 'local_incidents.player', select: 'name last_name'}, function(){
-							PlayerModel.populate(match, { path: 'visitor_incidents.player', select: 'name last_name'}, function(){
-								res.send(match)
-							});
-						});
-					});
-				});
+				res.send(match)
 			});
 		});
 	});

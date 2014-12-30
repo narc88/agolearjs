@@ -7,7 +7,7 @@ var IncidentSchema = new mongoose.Schema({
     incident_type		: {
                				 type: String
                			 },
-    detail				: {
+    details				: {
                				 type: String
                			 },
 	created		    	: {type: Date, default: Date.now },
