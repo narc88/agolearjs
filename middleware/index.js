@@ -1,7 +1,8 @@
 var path = require('path');
 var express = require('express');
-var SessionSockets = require('session.socket.io');
-var sessionSockets;
+var bodyParser = require('body-parser');
+var jwt        = require("jsonwebtoken");
+var morgan     = require("morgan");
 var private_config = require('../private_config');
 var mailer = require('express-mailer');
 var RolesHelper	= require('../helpers/checkAuth');
@@ -12,13 +13,6 @@ module.exports = function(app){
 	var secret_sauce = 'this_is_my_secret_sauce';
 	var sessionStore = new express.session.MemoryStore();
 	var cookieParser = express.cookieParser(secret_sauce);
-	var csrfValue = function(req) {
-	  var token = (req.body && req.body._csrf)
-	    || (req.query && req.query._csrf)
-	    || (req.headers['x-csrf-token'])
-	    || (req.headers['x-xsrf-token']);
-	  return token;
-	};
 
 	// all environments
 	app.set('port', process.env.PORT || 3000);
@@ -31,19 +25,15 @@ module.exports = function(app){
 	app.use(express.methodOverride());
 	app.use(express.static(path.join(__dirname, '../public')));
 	app.set('photos',path.join(__dirname,'../public/photos/'));
-	app.use(cookieParser);
-	//CRSF SUPPORT
-	app.use(express.cookieSession());
-	app.use(express.csrf({value: csrfValue}));
+	app.use(bodyParser.urlencoded({ extended: true }));
+	app.use(bodyParser.json());
+	app.use(morgan("dev"));
 	app.use(function(req, res, next) {
-	  res.cookie('XSRF-TOKEN', req.csrfToken());
-	  next();
+	    res.setHeader('Access-Control-Allow-Origin', '*');
+	    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+	    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+	    next();
 	});
-	//CRSF SUPPORT
-	app.use(express.session({
-		store :  sessionStore 
-	}));
-	app.use(express.bodyParser());
 	app.use(function (req, res, next) {
 		// expose session to views
 		if(typeof req.session.expose === 'undefined'){
@@ -87,12 +77,5 @@ module.exports = function(app){
 		}
 	});
 
-
-	//Socket IO
-	var socket = require('../socket');
-	socket.setIO(app.io);
-
-	sessionSockets = new SessionSockets(app.io, sessionStore, cookieParser);
-	sessionSockets.on('connection', socket.handleSocketCalls);
 	
 }

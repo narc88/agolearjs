@@ -69,7 +69,8 @@ var UserSchema = new mongoose.Schema({
 	images 		: [ImageSchema],
 	roles 		: [{type:String}],
 	created    	: {type: Date, default: Date.now },
-	modified	: {type: Date, default: Date.now }
+	modified	: {type: Date, default: Date.now },
+	token: String
 });
 
 exports.UserModel = mongoose.model('User', UserSchema);

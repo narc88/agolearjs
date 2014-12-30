@@ -26,6 +26,9 @@
     "session.socket.io": "~0.1.6",
     "socket.io": "~0.9.16",
     "underscore": "~1.6.0",
-    "validator": "~3.18.0"
+    "validator": "~3.18.0",
+    "morgan": "latest",
+    "body-parser": "~1.0.0",
+    "jsonwebtoken": "0.4.0"
   }
 }
