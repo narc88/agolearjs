@@ -1,18 +1,28 @@
-div(class="panel panel-default")
-	div(class="panel-heading", role="tab", id="headingIncident#{role}")
-		h4(class="panel-title")
-			a(data-toggle="collapse", data-parent="#accordion#{role}", data-target="#incident#{role}Collapse", aria-expanded="true", aria-controls="collapseOne") Incidente
-	div(id="incident#{role}Collapse", class="panel-collapse collapse in", role="tabpanel", aria-labelledby="headingIncident#{role}")
-		div(class="panel-body")
-			form(name="addIncident", ng-submit="submitIncident(addIncident, '#{role}')")
-				.form-group
-					label(for="player") Jugador
-					select(ng-model='incident.player', name='player', id="player",  ng-options="player.name for player in match.local_players").form-control.input-sm
-				.form-group
-					label(for="minute") Minute
-					input(ng-model='incident.minute', name='minute', id="minute", type='text').form-control.input-sm
-				.form-group
-					label(for="incident_type") Tipo
-					select(ng-model='incident.incident_type', name='incident_type', id="incident_type" ,  ng-options="player.name for player in match.local_players").form-control
-				.form-group
-					input(type="submit", value="Guardar").btn.btn-primary
+button(type="button", class="btn btn-primary btn-lg", data-toggle="modal",data-target="#headingIncident#{role}") Nuevo Incidente
+div(class="modal fade", tabindex="-1", role="dialog", id="headingIncident#{role}", aria-hidden="true" )
+	div(class="modal-dialog")
+		div(class="modal-content")
+			div(class="modal-header")
+				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+					span(aria-hidden="true")&times;
+				h4(class="modal-title", id="myModalLabel") Nuevo Incidente
+			div(class="modal-body")
+				form(name="addIncident", ng-submit="submitIncident(addIncident, '#{role}')")
+					.form-group
+						label(for="player") Jugador
+						select(ng-model='incident.player', name='player', id="player").form-control.input-sm
+							option(value="", selected="selected") Ninguno
+							-if(role === "local")
+								option(ng-repeat="player in match.local_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
+							-else
+								option(ng-repeat="player in match.visitor_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
+					.form-group
+						label(for="minute") Minuto
+						input(ng-model='incident.minute', name='minute', id="minute", type='text').form-control.input-sm
+					.form-group
+						label(for="incident_type") Tipo
+						select(ng-model='incident.incident_type', name='incident_type', id="incident_type" ,  ng-options="[Expulsión, Amonestación]").form-control
+					.form-group
+						input(type="submit", value="Guardar").btn.btn-primary
+						button(type="button", class="btn btn-default", data-dismiss="modal") Close
+			div(class="modal-footer")

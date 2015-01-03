@@ -4,14 +4,35 @@
 
 /*Main*/
 function main($scope, $http) {
-  $http.get('/api/countries').
+ /* $http.get('/api/countries').
     success(function(data, status, headers, config) {
       $scope.countries = data;
       $scope.default_country = data[0];
-    });
+    });*/
 }
 
 /*Users*/
+
+function login($scope, $http, $window) {
+  $scope.user = {username: 'john.doe', password: 'foobar'};
+  $scope.message = '';
+  $scope.submit = function () {
+    $http
+      .post('/authenticate', $scope.user)
+      .success(function (data, status, headers, config) {
+        $window.sessionStorage.token = data.token;
+        $scope.message = 'Welcome';
+      })
+      .error(function (data, status, headers, config) {
+        // Erase the token if the user fails to log in
+        delete $window.sessionStorage.token;
+
+        // Handle login errors here
+        $scope.message = 'Error: Invalid user or password';
+      });
+  };
+}
+
 function users_index($scope, $http) {
   $http.get('/api/users').
     success(function(data, status, headers, config) {
@@ -359,11 +380,16 @@ function tournaments_add($scope, $http, $location) {
   };
 }
 
-function tournaments_view($scope, $http, $routeParams) {
-  $http.get('/api/tournaments/' + $routeParams.id).
-    success(function(data) {
-      $scope.tournament = data;
-    });
+function tournaments_view($scope, $http, $routeParams, $rootScope) {
+  if((typeof $rootScope.tournament === "undefined") || ($routeParams.id != $rootScope.zone._id)){
+    $http.get('/api/tournaments/' + $routeParams.id).
+      success(function(data) {
+        $scope.tournament = data;
+        $rootScope.tournament = data;
+      });
+  }else{
+    $scope.tournament = $rootScope.tournament
+  }
 }
 
 function tournaments_edit($scope, $http, $location, $routeParams) {
@@ -417,11 +443,16 @@ function matchdays_add($scope, $http, $location) {
   };
 }
 
-function matchdays_view($scope, $http, $routeParams) {
-  $http.get('/api/matchdays/' + $routeParams.id).
-    success(function(data) {
-      $scope.match = data;
-    });
+function matchdays_view($scope, $http, $routeParams, $rootScope) {
+  if((typeof $rootScope.matchday === "undefined") || ($routeParams.id != $rootScope.matchday._id)){
+    $http.get('/api/matchdays/' + $routeParams.id).
+      success(function(data) {
+        $scope.matchday = data;
+        $rootScope.matchday = data;
+      });
+  }else{
+    $scope.matchday = $rootScope.matchday;
+  }
 }
 
 function matchdays_edit($scope, $http, $location, $routeParams) {

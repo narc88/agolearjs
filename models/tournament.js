@@ -39,6 +39,9 @@ var TournamentSchema = new mongoose.Schema({
     double_playoff_match : { 
                 type: Boolean
                 },
+    double_league_match : { 
+                type: Boolean
+                },
     closed : { 
                 type: Boolean
                 },

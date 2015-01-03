@@ -1,0 +1,10 @@
+div(ng-controller="UserCtrl")
+	h1 Iniciar Sesion
+	form(ng-submit="submit()")
+		label(for="user") Nombre de Usuario
+		input(ng-model="user.username" type="text" name="user" placeholder="Username")
+		label(for="user") Contraseña
+		input(ng-model="user.password" type="password" name="pass" placeholder="Password")
+		input(type="submit" value="Login")
+		div
+			span {{message}}

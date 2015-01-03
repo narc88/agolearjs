@@ -1,23 +1,28 @@
-div(class="panel panel-default")
-	div(class="panel-heading", role="tab", id="headingGoal#{role}")
-		h4(class="panel-title")
-			a(data-toggle="collapse", data-parent="#accordion#{role}", data-target="#goal#{role}Collapse", aria-expanded="true", aria-controls="collapseOne") Gol
-	div(id="goal#{role}Collapse", class="panel-collapse collapse in", role="tabpanel", aria-labelledby="headingGoal#{role}")
-		div(class="panel-body")
-			form(name="addGoal", ng-submit="submitGoal(addGoal, '#{role}')")
-				.form-group
-					label(for="player") Jugador
-					select(ng-model='goal.player', name='player', id="player").form-control.input-sm
-						option(value="", selected="selected") Ninguno
-						-if(role === "local")
-							option(ng-repeat="player in match.local_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
-						-else
-							option(ng-repeat="player in match.visitor_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
-				.form-group
-					label(for="minute") Minute
-					input(ng-model='goal.minute', name='minute', id="minute", type='text').form-control.input-sm
-				.form-group
-					label(for="own_goal") En contra
-					input(ng-model='goal.own_goal', name='own_goal', id="own_goal", type='checkbox').form-control
-				.form-group
-					input(type="submit", value="Guardar").btn.btn-primary
+button(type="button", class="btn btn-primary btn-lg", data-toggle="modal",data-target="#headingGoal#{role}") Nuevo Gol
+div(class="modal fade", tabindex="-1", role="dialog", id="headingGoal#{role}", aria-hidden="true" )
+	div(class="modal-dialog")
+		div(class="modal-content")
+			div(class="modal-header")
+				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+					span(aria-hidden="true")&times;
+				h4(class="modal-title", id="myModalLabel") Nuevo Gol
+			div(class="modal-body")
+				form(name="addGoal", ng-submit="submitGoal(addGoal, '#{role}')")
+					.form-group
+						label(for="player") Jugador
+						select(ng-model='goal.player', name='player', id="player").form-control.input-sm
+							option(value="", selected="selected") Ninguno
+							-if(role === "local")
+								option(ng-repeat="player in match.local_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
+							-else
+								option(ng-repeat="player in match.visitor_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
+					.form-group
+						label(for="minute") Minute
+						input(ng-model='goal.minute', name='minute', id="minute", type='text').form-control.input-sm
+					.form-group
+						label(for="own_goal") En contra
+						input(ng-model='goal.own_goal', name='own_goal', id="own_goal", type='checkbox').form-control
+					.form-group
+						input(type="submit", value="Guardar").btn.btn-primary
+						button(type="button", class="btn btn-default", data-dismiss="modal") Close
+			div(class="modal-footer")

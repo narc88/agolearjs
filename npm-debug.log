@@ -1,0 +1,309 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.35
+4 verbose node symlink /usr/bin/node
+5 verbose readDependencies using package.json deps
+6 verbose install where, deps [ '/datos/www/agolearjs',
+6 verbose install   [ 'body-parser',
+6 verbose install     'colors',
+6 verbose install     'crypto',
+6 verbose install     'easyimage',
+6 verbose install     'events',
+6 verbose install     'express',
+6 verbose install     'express-jwt',
+6 verbose install     'express-mailer',
+6 verbose install     'express-partials',
+6 verbose install     'grunt',
+6 verbose install     'grunt-express-server',
+6 verbose install     'jade',
+6 verbose install     'jsonwebtoken',
+6 verbose install     'mandrill-api',
+6 verbose install     'mandrill-send',
+6 verbose install     'mkdirp',
+6 verbose install     'mongoose',
+6 verbose install     'morgan',
+6 verbose install     'nodeletter',
+6 verbose install     'pdfkit',
+6 verbose install     'require',
+6 verbose install     'session.socket.io',
+6 verbose install     'socket.io',
+6 verbose install     'underscore',
+6 verbose install     'validator',
+6 verbose install     'karma',
+6 verbose install     'protractor',
+6 verbose install     'http-server',
+6 verbose install     'bower',
+6 verbose install     'shelljs',
+6 verbose install     'karma-junit-reporter' ] ]
+7 info preinstall agolear@0.0.1
+8 warn package.json crypto@0.0.3 crypto is also the name of a node core module.
+9 warn package.json events@1.0.2 events is also the name of a node core module.
+10 warn package.json karma-chrome-launcher@0.1.7 No README data
+11 warn package.json karma-firefox-launcher@0.1.4 No README data
+12 warn package.json karma-phantomjs-launcher@0.1.4 No README data
+13 warn package.json mandrill-send@0.1.0 No repository field.
+14 verbose readDependencies using package.json deps
+15 verbose already installed skipping nodeletter@~0.1.5 /datos/www/agolearjs
+16 verbose already installed skipping pdfkit@~0.6.1 /datos/www/agolearjs
+17 verbose already installed skipping require@~0.5.0 /datos/www/agolearjs
+18 verbose already installed skipping session.socket.io@~0.1.6 /datos/www/agolearjs
+19 verbose already installed skipping socket.io@~0.9.16 /datos/www/agolearjs
+20 verbose already installed skipping underscore@~1.6.0 /datos/www/agolearjs
+21 verbose already installed skipping validator@~3.18.0 /datos/www/agolearjs
+22 verbose already installed skipping karma@~0.10 /datos/www/agolearjs
+23 verbose already installed skipping protractor@^1.1.1 /datos/www/agolearjs
+24 verbose already installed skipping http-server@^0.6.1 /datos/www/agolearjs
+25 verbose already installed skipping bower@^1.3.1 /datos/www/agolearjs
+26 verbose already installed skipping shelljs@^0.2.6 /datos/www/agolearjs
+27 verbose already installed skipping karma-junit-reporter@^0.2.2 /datos/www/agolearjs
+28 verbose already installed skipping body-parser@~1.0.0 /datos/www/agolearjs
+29 verbose already installed skipping colors@~0.6.2 /datos/www/agolearjs
+30 verbose already installed skipping crypto@0.0.3 /datos/www/agolearjs
+31 verbose already installed skipping easyimage@^1.0.3 /datos/www/agolearjs
+32 verbose already installed skipping events@~1.0.0 /datos/www/agolearjs
+33 verbose already installed skipping express@3.4.7 /datos/www/agolearjs
+34 verbose already installed skipping express-jwt@^0.5.1 /datos/www/agolearjs
+35 verbose already installed skipping express-mailer@~0.2.3 /datos/www/agolearjs
+36 verbose already installed skipping express-partials@0.0.2 /datos/www/agolearjs
+37 verbose already installed skipping grunt@~0.4.5 /datos/www/agolearjs
+38 verbose already installed skipping grunt-express-server@~0.4.19 /datos/www/agolearjs
+39 verbose already installed skipping jade@* /datos/www/agolearjs
+40 verbose already installed skipping jsonwebtoken@^0.4.0 /datos/www/agolearjs
+41 verbose already installed skipping mandrill-api@~1.0.39 /datos/www/agolearjs
+42 verbose already installed skipping mandrill-send@~0.1.0 /datos/www/agolearjs
+43 verbose already installed skipping mkdirp@^0.5.0 /datos/www/agolearjs
+44 verbose already installed skipping mongoose@~3.8.8 /datos/www/agolearjs
+45 verbose cache add [ 'morgan@latest', null ]
+46 verbose cache add name=undefined spec="morgan@latest" args=["morgan@latest",null]
+47 verbose parsed url { protocol: null,
+47 verbose parsed url   slashes: null,
+47 verbose parsed url   auth: null,
+47 verbose parsed url   host: null,
+47 verbose parsed url   port: null,
+47 verbose parsed url   hostname: null,
+47 verbose parsed url   hash: null,
+47 verbose parsed url   search: null,
+47 verbose parsed url   query: null,
+47 verbose parsed url   pathname: 'morgan@latest',
+47 verbose parsed url   path: 'morgan@latest',
+47 verbose parsed url   href: 'morgan@latest' }
+48 verbose cache add name="morgan" spec="latest" args=["morgan","latest"]
+49 verbose parsed url { protocol: null,
+49 verbose parsed url   slashes: null,
+49 verbose parsed url   auth: null,
+49 verbose parsed url   host: null,
+49 verbose parsed url   port: null,
+49 verbose parsed url   hostname: null,
+49 verbose parsed url   hash: null,
+49 verbose parsed url   search: null,
+49 verbose parsed url   query: null,
+49 verbose parsed url   pathname: 'latest',
+49 verbose parsed url   path: 'latest',
+49 verbose parsed url   href: 'latest' }
+50 verbose addNamed [ 'morgan', 'latest' ]
+51 verbose addNamed [ null, null ]
+52 silly lockFile d2a09fff-morgan-latest morgan@latest
+53 verbose lock morgan@latest /home/nicolas/.npm/d2a09fff-morgan-latest.lock
+54 info addNameTag [ 'morgan', 'latest' ]
+55 verbose request where is /morgan
+56 verbose request registry https://registry.npmjs.org/
+57 verbose request id af6943e4f0fbc4b2
+58 verbose url raw /morgan
+59 verbose url resolving [ 'https://registry.npmjs.org/', './morgan' ]
+60 verbose url resolved https://registry.npmjs.org/morgan
+61 verbose request where is https://registry.npmjs.org/morgan
+62 info trying registry request attempt 1 at 21:58:49
+63 verbose etag "5GB169AIMOSXLXSBY1XBDUPBB"
+64 http GET https://registry.npmjs.org/morgan
+65 http 304 https://registry.npmjs.org/morgan
+66 silly registry.get cb [ 304,
+66 silly registry.get   { date: 'Sat, 03 Jan 2015 00:58:50 GMT',
+66 silly registry.get     server: 'Apache',
+66 silly registry.get     via: '1.1 varnish',
+66 silly registry.get     'last-modified': 'Sat, 03 Jan 2015 00:58:08 GMT',
+66 silly registry.get     'cache-control': 'max-age=60',
+66 silly registry.get     etag: '"5GB169AIMOSXLXSBY1XBDUPBB"',
+66 silly registry.get     age: '56',
+66 silly registry.get     'x-served-by': 'cache-jfk1028-JFK',
+66 silly registry.get     'x-cache': 'HIT',
+66 silly registry.get     'x-cache-hits': '3',
+66 silly registry.get     'x-timer': 'S1420246730.033973,VS0,VE0',
+66 silly registry.get     vary: 'Accept',
+66 silly registry.get     'content-length': '0',
+66 silly registry.get     'keep-alive': 'timeout=10, max=50',
+66 silly registry.get     connection: 'Keep-Alive' } ]
+67 verbose etag https://registry.npmjs.org/morgan from cache
+68 verbose addNamed [ 'morgan', '1.5.1' ]
+69 verbose addNamed [ '1.5.1', '1.5.1' ]
+70 silly lockFile 7ab299d0-morgan-1-5-1 morgan@1.5.1
+71 verbose lock morgan@1.5.1 /home/nicolas/.npm/7ab299d0-morgan-1-5-1.lock
+72 silly lockFile 7ab299d0-morgan-1-5-1 morgan@1.5.1
+73 silly lockFile 7ab299d0-morgan-1-5-1 morgan@1.5.1
+74 silly lockFile d2a09fff-morgan-latest morgan@latest
+75 silly lockFile d2a09fff-morgan-latest morgan@latest
+76 info already installed morgan@1.5.1
+77 silly resolved []
+78 info build /datos/www/agolearjs
+79 verbose linkStuff [ false, false, false, '/datos/www' ]
+80 info linkStuff agolear@0.0.1
+81 verbose linkBins agolear@0.0.1
+82 verbose linkMans agolear@0.0.1
+83 verbose rebuildBundles agolear@0.0.1
+84 verbose rebuildBundles [ '.bin',
+84 verbose rebuildBundles   'body-parser',
+84 verbose rebuildBundles   'bower',
+84 verbose rebuildBundles   'colors',
+84 verbose rebuildBundles   'crypto',
+84 verbose rebuildBundles   'easyimage',
+84 verbose rebuildBundles   'events',
+84 verbose rebuildBundles   'express',
+84 verbose rebuildBundles   'express-jwt',
+84 verbose rebuildBundles   'express-mailer',
+84 verbose rebuildBundles   'express-partials',
+84 verbose rebuildBundles   'grunt',
+84 verbose rebuildBundles   'grunt-express-server',
+84 verbose rebuildBundles   'http-server',
+84 verbose rebuildBundles   'jade',
+84 verbose rebuildBundles   'jsonwebtoken',
+84 verbose rebuildBundles   'karma',
+84 verbose rebuildBundles   'karma-chrome-launcher',
+84 verbose rebuildBundles   'karma-coffee-preprocessor',
+84 verbose rebuildBundles   'karma-firefox-launcher',
+84 verbose rebuildBundles   'karma-html2js-preprocessor',
+84 verbose rebuildBundles   'karma-jasmine',
+84 verbose rebuildBundles   'karma-junit-reporter',
+84 verbose rebuildBundles   'karma-phantomjs-launcher',
+84 verbose rebuildBundles   'karma-requirejs',
+84 verbose rebuildBundles   'karma-script-launcher',
+84 verbose rebuildBundles   'mandrill-api',
+84 verbose rebuildBundles   'mandrill-send',
+84 verbose rebuildBundles   'mkdirp',
+84 verbose rebuildBundles   'mongoose',
+84 verbose rebuildBundles   'morgan',
+84 verbose rebuildBundles   'nodeletter',
+84 verbose rebuildBundles   'pdfkit',
+84 verbose rebuildBundles   'protractor',
+84 verbose rebuildBundles   'require',
+84 verbose rebuildBundles   'requirejs',
+84 verbose rebuildBundles   'session.socket.io',
+84 verbose rebuildBundles   'shelljs',
+84 verbose rebuildBundles   'socket.io',
+84 verbose rebuildBundles   'underscore',
+84 verbose rebuildBundles   'validator' ]
+85 verbose rebuild bundle /datos/www/agolearjs/node_modules/karma-chrome-launcher
+86 info build /datos/www/agolearjs/node_modules/karma-chrome-launcher
+87 info preinstall karma-chrome-launcher@0.1.7
+88 verbose linkStuff [ false, false, false, '/datos/www/agolearjs/node_modules' ]
+89 info linkStuff karma-chrome-launcher@0.1.7
+90 verbose linkBins karma-chrome-launcher@0.1.7
+91 verbose linkMans karma-chrome-launcher@0.1.7
+92 verbose rebuildBundles karma-chrome-launcher@0.1.7
+93 info install karma-chrome-launcher@0.1.7
+94 info postinstall karma-chrome-launcher@0.1.7
+95 verbose rebuild bundle /datos/www/agolearjs/node_modules/karma-coffee-preprocessor
+96 info build /datos/www/agolearjs/node_modules/karma-coffee-preprocessor
+97 info preinstall karma-coffee-preprocessor@0.1.3
+98 verbose linkStuff [ false, false, false, '/datos/www/agolearjs/node_modules' ]
+99 info linkStuff karma-coffee-preprocessor@0.1.3
+100 verbose linkBins karma-coffee-preprocessor@0.1.3
+101 verbose linkMans karma-coffee-preprocessor@0.1.3
+102 verbose rebuildBundles karma-coffee-preprocessor@0.1.3
+103 verbose rebuildBundles [ '.bin', 'coffee-script' ]
+104 info install karma-coffee-preprocessor@0.1.3
+105 info postinstall karma-coffee-preprocessor@0.1.3
+106 verbose rebuild bundle /datos/www/agolearjs/node_modules/karma-firefox-launcher
+107 info build /datos/www/agolearjs/node_modules/karma-firefox-launcher
+108 info preinstall karma-firefox-launcher@0.1.4
+109 verbose linkStuff [ false, false, false, '/datos/www/agolearjs/node_modules' ]
+110 info linkStuff karma-firefox-launcher@0.1.4
+111 verbose linkBins karma-firefox-launcher@0.1.4
+112 verbose linkMans karma-firefox-launcher@0.1.4
+113 verbose rebuildBundles karma-firefox-launcher@0.1.4
+114 info install karma-firefox-launcher@0.1.4
+115 info postinstall karma-firefox-launcher@0.1.4
+116 verbose rebuild bundle /datos/www/agolearjs/node_modules/karma-html2js-preprocessor
+117 info build /datos/www/agolearjs/node_modules/karma-html2js-preprocessor
+118 info preinstall karma-html2js-preprocessor@0.1.0
+119 verbose linkStuff [ false, false, false, '/datos/www/agolearjs/node_modules' ]
+120 info linkStuff karma-html2js-preprocessor@0.1.0
+121 verbose linkBins karma-html2js-preprocessor@0.1.0
+122 verbose linkMans karma-html2js-preprocessor@0.1.0
+123 verbose rebuildBundles karma-html2js-preprocessor@0.1.0
+124 info install karma-html2js-preprocessor@0.1.0
+125 info postinstall karma-html2js-preprocessor@0.1.0
+126 verbose rebuild bundle /datos/www/agolearjs/node_modules/karma-jasmine
+127 info build /datos/www/agolearjs/node_modules/karma-jasmine
+128 info preinstall karma-jasmine@0.1.5
+129 verbose linkStuff [ false, false, false, '/datos/www/agolearjs/node_modules' ]
+130 info linkStuff karma-jasmine@0.1.5
+131 verbose linkBins karma-jasmine@0.1.5
+132 verbose linkMans karma-jasmine@0.1.5
+133 verbose rebuildBundles karma-jasmine@0.1.5
+134 info install karma-jasmine@0.1.5
+135 info postinstall karma-jasmine@0.1.5
+136 verbose rebuild bundle /datos/www/agolearjs/node_modules/karma-phantomjs-launcher
+137 info build /datos/www/agolearjs/node_modules/karma-phantomjs-launcher
+138 info preinstall karma-phantomjs-launcher@0.1.4
+139 verbose linkStuff [ false, false, false, '/datos/www/agolearjs/node_modules' ]
+140 info linkStuff karma-phantomjs-launcher@0.1.4
+141 verbose linkBins karma-phantomjs-launcher@0.1.4
+142 verbose linkMans karma-phantomjs-launcher@0.1.4
+143 verbose rebuildBundles karma-phantomjs-launcher@0.1.4
+144 verbose rebuildBundles [ '.bin', 'phantomjs' ]
+145 info install karma-phantomjs-launcher@0.1.4
+146 info postinstall karma-phantomjs-launcher@0.1.4
+147 verbose rebuild bundle /datos/www/agolearjs/node_modules/karma-requirejs
+148 info build /datos/www/agolearjs/node_modules/karma-requirejs
+149 info preinstall karma-requirejs@0.2.2
+150 verbose linkStuff [ false, false, false, '/datos/www/agolearjs/node_modules' ]
+151 info linkStuff karma-requirejs@0.2.2
+152 verbose linkBins karma-requirejs@0.2.2
+153 verbose linkMans karma-requirejs@0.2.2
+154 verbose rebuildBundles karma-requirejs@0.2.2
+155 info install karma-requirejs@0.2.2
+156 info postinstall karma-requirejs@0.2.2
+157 verbose rebuild bundle /datos/www/agolearjs/node_modules/karma-script-launcher
+158 info build /datos/www/agolearjs/node_modules/karma-script-launcher
+159 info preinstall karma-script-launcher@0.1.0
+160 verbose linkStuff [ false, false, false, '/datos/www/agolearjs/node_modules' ]
+161 info linkStuff karma-script-launcher@0.1.0
+162 verbose linkBins karma-script-launcher@0.1.0
+163 verbose linkMans karma-script-launcher@0.1.0
+164 verbose rebuildBundles karma-script-launcher@0.1.0
+165 info install karma-script-launcher@0.1.0
+166 info postinstall karma-script-launcher@0.1.0
+167 verbose rebuild bundle /datos/www/agolearjs/node_modules/requirejs
+168 info build /datos/www/agolearjs/node_modules/requirejs
+169 info preinstall requirejs@2.1.15
+170 verbose linkStuff [ false, false, false, '/datos/www/agolearjs/node_modules' ]
+171 info linkStuff requirejs@2.1.15
+172 verbose linkBins requirejs@2.1.15
+173 verbose link bins [ { 'r.js': './bin/r.js' },
+173 verbose link bins   '/datos/www/agolearjs/node_modules/.bin',
+173 verbose link bins   false ]
+174 verbose linkMans requirejs@2.1.15
+175 verbose rebuildBundles requirejs@2.1.15
+176 info install requirejs@2.1.15
+177 info postinstall requirejs@2.1.15
+178 info install agolear@0.0.1
+179 info postinstall agolear@0.0.1
+180 verbose unsafe-perm in lifecycle true
+181 info agolear@0.0.1 Failed to exec postinstall script
+182 error agolear@0.0.1 postinstall: `bower install`
+182 error Exit status 1
+183 error Failed at the agolear@0.0.1 postinstall script.
+183 error This is most likely a problem with the agolear package,
+183 error not with npm itself.
+183 error Tell the author that this fails on your system:
+183 error     bower install
+183 error You can get their info via:
+183 error     npm owner ls agolear
+183 error There is likely additional logging output above.
+184 error System Linux 3.13.0-32-generic
+185 error command "/usr/bin/node" "/usr/bin/npm" "install"
+186 error cwd /datos/www/agolearjs
+187 error node -v v0.10.35
+188 error npm -v 1.4.28
+189 error code ELIFECYCLE
+190 verbose exit [ 1, true ]

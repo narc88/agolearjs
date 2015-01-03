@@ -1,38 +1,37 @@
-table.table.table-condensed.table-hover
-	tr
-		th Pos
-		th Equipo
-		th PJ
-		th G
-		th E
-		th P
-		td GF
-		td GC
-		td DG
-		td Puntos
-	tr(ng-repeat="participator in zone.participations | orderBy:['-points','-own_goals', 'other_goals', 'own_goals-other_goals' ,'-won']") 
-		td {{$index + 1}}
-		td 
-			a(href="/teams/{{participator.team}") {{participator.team_name}}
-		td {{participator.won+participator.lost+participator.tied}}
-		td {{participator.won}}
-		td {{participator.tied}}
-		td {{participator.lost}}
-		td {{participator.own_goals}}
-		td {{participator.other_goals}}
-		td {{participator.own_goals-participator.other_goals}}
-		td {{participator.points}}
+div(ng-if="zone.zone_type !== 'Playoff'")
+	table.table.table-condensed.table-hover
+		tr
+			th Pos
+			th Equipo
+			th PJ
+			th G
+			th E
+			th P
+			td GF
+			td GC
+			td DG
+			td Puntos
+		tr(ng-repeat="participator in zone.participations | orderBy:['-points','-own_goals', 'other_goals', 'own_goals-other_goals' ,'-won']") 
+			td {{$index + 1}}
+			td 
+				a(href="/teams/{{participator.team}") {{participator.team_name}}
+			td {{participator.won+participator.lost+participator.tied}}
+			td {{participator.won}}
+			td {{participator.tied}}
+			td {{participator.lost}}
+			td {{participator.own_goals}}
+			td {{participator.other_goals}}
+			td {{participator.own_goals-participator.other_goals}}
+			td {{participator.points}}
 
-h4 Avance del campeonato
-
+h4 Avance
 table.table.table-condensed.table-hover
 	tr
 		th Estado
 		th Fecha Numero
 		th Decha de disputa
 		th Ver partidos
-		//Ver permisos
-		th Editar
+		th
 	tr(ng-repeat="matchday in zone.matchdays | orderBy:['number']") 
 		td
 			div(ng-show="matchday.closed")
@@ -44,4 +43,5 @@ table.table.table-condensed.table-hover
 		td
 			a(href="/matches?matchday={{matchday._id}}") Ver
 		td
-			a(href="/matchday/edit/{{matchday._id}}")
+			if(RolesHelper.admin(user))
+				a(href="/matchday/edit/{{matchday._id}}") Editar

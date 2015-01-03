@@ -1,5 +1,5 @@
 //Incindent and Goals container
-a(href="/zones/{{zone._id}}") Volver a la zona
+
 div(class="result col-md-12")
 	div(class="local col-md-6")
 		div(class="col-md-2")
@@ -20,9 +20,9 @@ div(class="incidents col-md-12")
 	div(class="local col-md-6")
 		ul
 			li(ng-repeat="goal in match.local_goals")
-				span {{goal.player.name}} {{goal.player.last_name}}
-			li(ng-repeat="goal in match.local_incidents")
-				span {{goal.player.name}} {{goal.player.last_name}}
+				span Gol: {{goal.player.name}} {{goal.player.last_name}}
+			li(ng-repeat="incident in match.local_incidents")
+				span {{incident.incident_type}}: {{incident.player.name}} {{incident.player.last_name}}
 			-var role = "local"
 			div(class="panel-group", id="accordion#{role}", role="tablist", aria-multiselectable="true")
 				include ../goals/form.jade
@@ -30,9 +30,9 @@ div(class="incidents col-md-12")
 	div(class="visitor col-md-6")
 		ul
 			li(ng-repeat="goal in match.visitor_goals")
-				span {{goal.player.name}} {{goal.player.last_name}}
-			li(ng-repeat="goal in match.visitor_incidents")
-				span {{goal.player.name}} {{goal.player.last_name}}
+				span Gol:  {{goal.player.name}} {{goal.player.last_name}}
+			li(ng-repeat="incident in match.visitor_incidents")
+				span {{incident.incident_type}}: {{incident.player.name}} {{incident.player.last_name}}
 			-var role = "visitor"
 			div(class="panel-group", id="accordion#{role}", role="tablist", aria-multiselectable="true")
 				include ../goals/form.jade
@@ -44,5 +44,11 @@ div(class="time")
 	span {{match.turn[0].minute}}
 h2 Jugadores
 div(class="players")
-	div(class="local")
-	div(class="visitor")
+	div(class="local col-md-6")
+		ul
+			li(ng-repeat="player in match.local_players")
+				span {{player.name}} {{player.last_name}}
+	div(class="visitor col-md-6")
+		ul
+			li(ng-repeat="player in match.visitor_players")
+				span {{player.name}} {{player.last_name}}
