@@ -1,4 +1,4 @@
-button(type="button", class="btn btn-primary btn-lg", data-toggle="modal",data-target="#headingGoal#{role}") Nuevo Gol
+button(type="button", class="btn btn-primary btn-xs", data-toggle="modal",data-target="#headingGoal#{role}") Nuevo Gol
 div(class="modal fade", tabindex="-1", role="dialog", id="headingGoal#{role}", aria-hidden="true" )
 	div(class="modal-dialog")
 		div(class="modal-content")
@@ -23,6 +23,6 @@ div(class="modal fade", tabindex="-1", role="dialog", id="headingGoal#{role}", a
 						label(for="own_goal") En contra
 						input(ng-model='goal.own_goal', name='own_goal', id="own_goal", type='checkbox').form-control
 					.form-group
-						input(type="submit", value="Guardar").btn.btn-primary
-						button(type="button", class="btn btn-default", data-dismiss="modal") Close
+						input(type="submit", value="Guardar").btn.btn-primary.btn-xs
+						button(type="button", class="btn btn-default btn-xs", data-dismiss="modal") Close
 			div(class="modal-footer")

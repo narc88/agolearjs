@@ -508,6 +508,10 @@ function matches_add($scope, $http, $location) {
 }
 
 function matches_view($scope, $http, $routeParams, $rootScope) {
+  $scope.incident_types = [
+      {name:'Amonestación'},
+      {name:'Expulsión'}
+    ];
   var searchPlayer = function(key, array){
     for (var i = array.length - 1; i >= 0; i--) {
       if(key == array[i]._id){
