@@ -29,7 +29,22 @@
   padding: 0;
 }
 
+/*MATCH*/
+
 .hourandfield{
   background-color: #006600;
   color:white;
 }
+
+.match_body .local_team{
+  text-align: right;
+}
+
+.match_body .visitor_team{
+  text-align: left;
+}
+
+.match_body > * {
+  vertical-align: middle
+}
+
