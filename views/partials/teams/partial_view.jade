@@ -3,4 +3,10 @@ div(class="media")
 		img(class="media-object" src="..." alt="...")
 	div(class="media-body")
 	h4(class="media-heading")
-		a(href="/teams/{{team._id}}") {{team.last_name}} {{team.name}}
+		a(href="/teams/{{team._id}}") {{team.name}}
+div(class="col-md-6")
+	ul
+		li(ng-repeat="player in team.players")
+			a(href="/players/{{plater._id}}")  {{player.name}} {{player.last_name}}
+			if(RolesHelper.admin(user))
+				a(href="/players/edit/{{plater._id}}")  Editar

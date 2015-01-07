@@ -23,25 +23,47 @@ div(ng-if="zone.zone_type !== 'Playoff'")
 			td {{participator.other_goals}}
 			td {{participator.own_goals-participator.other_goals}}
 			td {{participator.points}}
-
-h4 Avance
-table.table.table-condensed.table-hover
-	tr
-		th Estado
-		th Fecha Numero
-		th Decha de disputa
-		th Ver partidos
-		th
-	tr(ng-repeat="matchday in zone.matchdays | orderBy:['number']") 
-		td
-			div(ng-show="matchday.closed")
-				span(class="label label-success") Jugada
-			div(ng-hide="matchday.closed")
-				span(class="label label-info") No jugada aún
-		td {{matchday.matchday_number}}
-		td {{ matchday.dispute_day | date:'yyyy-MM-dd' }}
-		td
-			a(href="/matches?matchday={{matchday._id}}") Ver
-		td
-			if(RolesHelper.admin(user))
-				a(href="/matchday/edit/{{matchday._id}}") Editar
+div(ng-if="zone.zone_type !== 'Playoff'")
+	h4 Avance
+	table.table.table-condensed.table-hover
+		tr
+			th Estado
+			th Fecha Numero
+			th Fecha de disputa
+			th Ver partidos
+			th
+		tr(ng-repeat="matchday in zone.matchdays | orderBy:['number']") 
+			td
+				div(ng-show="matchday.closed")
+					span(class="label label-success") Jugada
+				div(ng-hide="matchday.closed")
+					span(class="label label-info") No jugada aún
+			td {{matchday.matchday_number}}
+			td {{ matchday.dispute_day | date:'yyyy-MM-dd' }}
+			td
+				a(href="/matches?matchday={{matchday._id}}") Ver
+			td
+				if(RolesHelper.admin(user))
+					a(href="/matchday/edit/{{matchday._id}}") Editar
+div(ng-if="zone.zone_type === 'Playoff'")
+	h4 Avance
+	table.table.table-condensed.table-hover
+		tr
+			th Estado
+			th Etapa
+			th Fecha de disputa
+			th Ver partidos
+			th
+		tr(ng-repeat="matchday in zone.matchdays | orderBy:['number']") 
+			td
+				div(ng-show="matchday.closed")
+					span(class="label label-success") Jugada
+				div(ng-hide="matchday.closed")
+					span(class="label label-info") No jugada aún
+			td {{matchday.matchday_number}}
+			td {{ matchday.dispute_day | date:'yyyy-MM-dd' }}
+			td
+				a(href="/matches?matchday={{matchday._id}}") Ver
+			td
+				if(RolesHelper.admin(user))
+					a(href="/matchday/edit/{{matchday._id}}") Editar

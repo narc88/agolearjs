@@ -15,7 +15,7 @@ module.exports = function(app){
 	});
 
 	app.get('/api/teams/:id', function(req, res, next){
-		TeamModel.findOne({ _id: req.params.id }).exec( function(err, team){
+		TeamModel.findOne({ _id: req.params.id }).populate("players").exec( function(err, team){
 			if (err) throw err;
 			res.send(team);
 		});
