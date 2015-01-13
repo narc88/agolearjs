@@ -41,56 +41,48 @@ module.exports = function(app){
 	var save_image = function(dir){
 		return function(req,res){
 			var Model = get_model(req.params.param);
-			var img = req.files.image.image;
-			var format = img.name.substr(img.name.indexOf("."));
 			var imageName;
-
-			if(req.body.image.name.trim()){
-				imageName = req.body.image.name + format;
-			}else{
-				imageName = img.name;
+			var extension = undefined;
+			var lowerCase = req.body.imageBase64Content.substr(1, 25).toLowerCase();
+			if (lowerCase.indexOf("png") !== -1){
+				extension = "png";
+			}else if (lowerCase.indexOf("jpg") !== -1){
+				extension = "jpg"
+			}else if (lowerCase.indexOf("jpeg") !== -1){
+			    extension = "jpeg"
+			}else if (lowerCase.indexOf("gif") !== -1){
+				extension = "gif";
 			}
-			var source_file = img.path;
-
+			imageName = "paruolo." + extension;
 			//Revisar path
+			console.log(extension)
 			var destination_file = dir+"/"+req.params.param+"/"+req.param.elem_id+"/"+imageName;
-
-			var is = fs.createReadStream(source_file);
-			var os = fs.createWriteStream(destination_file);
 			var mkdirp = require('mkdirp');
 			//crear carpeta
 			mkdirp(dir+'/'+req.params.param+'/'+req.param.elem_id, function(err) { 
 			    console.log(err);
-			    	easyimg.resize({
-								     src:source_file, dst:destination_file,
-								     width:500, height:500,
-								  }).then(
-								  function(image) {
-								  	/*is.pipe(os);
-									is.on('end',function(err) {
-										fs.unlinkSync(source_file);
-										if(err){
-											console.log('Image Writing ERROR!');
-											console.log(err);
-										}
-										var image = new ImageModel();
-										image.filename =  imageName;
-										Model.findOne({"_id" : req.params.elem_id }).exec(function(err, model){
-											model.images.push(image);
-											model.save(function(err){
-												if(err) throw err;
-												res.send(image);
-											});
-										});
-									});*/
-								  },
-								  function (err) {
-								    console.log(err);
-								  }
-								);
-			});
-			
-		}
+			     console.log(req.body.imageBase64Content.substr(1, 20));
+			    var base64Data = req.body.imageBase64Content.split(',')[1];
+			    console.log(base64Data.substr(1, 20));
+				require("fs").writeFile( destination_file, base64Data, 'base64', function(err) {
+				  console.log(err);
+				});
+			    
+				var image = new ImageModel();
+				image.filename =  imageName;
+				Model.findOne({"_id" : req.params.elem_id }).exec(function(err, model){
+					model.images.push(image);
+					model.save(function(err){
+						if(err) throw err;
+						res.send(image);
+					});
+				});
+					
+			  	},
+			  	function (err) {
+			   		 console.log(err);
+				});
+			};
 	}
 
 	app.post('/images/:param/:elem_id', save_image(app.get('photos')));

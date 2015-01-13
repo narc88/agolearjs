@@ -1,12 +1,24 @@
-p Seleccione una foto
-form(action="/images/upload/#{route_name}/#{get_id}", id="upload_image", method="POST", enctype='multipart/form-data').form-horizontal
-	.form-group
-		.col-md-10
-			input(type="text", name="image[name]", placeholder='Nombre de archivo', class="required").form-control
-	.form-group
-		.col-md-10
-			input(type="file", name="image[image]").form-control
-	.form-group
-		.col-md-4
-			button(name='submit', type='submit').btn.btn-default.form-control Upload
+button(type="button", class="btn btn-primary btn-xs", data-toggle="modal",data-target="#headingImage") Agregar Imagen
+div(class="modal fade", tabindex="-1", role="dialog", id="headingImage", aria-hidden="true" )
+	div(class="modal-dialog")
+		div(class="modal-content")
+			div(class="modal-header")
+				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+					span(aria-hidden="true")&times;
+				h4(class="modal-title", id="imageModalLabel") Seleccione una imagen
+			div(class="modal-body")
+				form( name="addImage", ng-submit="submit('#{model}', addImage)", ng-controller="ImageController").form-horizontal
+					.form-group
+						input(type="text", ng-model="image.name", placeholder='Nombre de archivo', class="required").form-control
+					.form-group
+						select(type="text", ng-model="image.type", class="required").form-control
+							option(ng-repeat="type in imageTypes.#{model}" value="{{type}}") {{type}}
+					.form-group
+						include crop.jade
+					.form-group
+						input(type="submit", value="Guardar").btn.btn-primary
+						button(type="button", class="btn btn-default", data-dismiss="modal") Close
+			div(class="modal-footer")
+
+
 

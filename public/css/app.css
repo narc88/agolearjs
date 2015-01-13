@@ -51,3 +51,105 @@
 ul, li{
   list-style:none !important;
 }
+
+/*Crop image*/
+/* Translucent background image */
+.cropit-image-background {
+  opacity: .2;
+}
+
+/*
+ * If the slider or anything else is covered by the background image,
+ * use relative or absolute position on it
+ */
+input.cropit-image-zoom-input {
+  position: relative;
+}
+
+/* Limit the background image by adding overflow: hidden */
+#image-cropper {
+  overflow: hidden;
+  text-align: center;
+  width:70%;
+  float: left;
+}
+
+.cropit-image-preview {
+  background-color: #f8f8f8;
+  background-size: cover;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-top: 7px;
+  cursor: move;
+  width: 300px; 
+  height: 230px;
+}
+ 
+.cropit-image-background {
+  opacity: .2;
+  cursor: auto;
+}
+ 
+.image-size-label { margin-top: 0.6rem; }
+ 
+input {
+  /* Use relative position to prevent from being covered by image background */
+  position: relative;
+  z-index: 10;
+}
+
+#headingImage .modal-dialog{
+  min-width: 800px;
+}
+
+.cropit-image-background-container{
+
+}
+
+.cropit-image-preview-container{
+  margin: 0px auto;
+  width:60%;
+}
+
+.cropit-image-preview {
+}
+
+.cropit-result{
+  width: 29%;
+  float:right;
+}
+
+#cropResultImg{
+  max-width:150px;
+  max-height:200px;
+}
+
+/*Cropper Proportions*/
+.cropit-image-preview .normal{
+  width: 300px; 
+  height: 230px;
+}
+.cropit-image-preview .escudo{
+  width: 100px; 
+  height: 100px;
+}
+.cropit-image-preview .logo{
+  width: 120px; 
+  height: 120px;
+}
+.cropit-image-preview .completa{
+  width: 230px; 
+  height: 300px;
+}
+.cropit-image-preview .uniforme{
+  width: 115px; 
+  height: 150px;
+}
+.cropit-image-preview .cara{
+  width: 80px; 
+  height: 80px;
+}
+.cropit-image-preview .copa{
+  width: 70px; 
+  height: 100px;
+}

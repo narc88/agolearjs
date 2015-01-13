@@ -7,6 +7,10 @@ div(class="media")
 div(class="col-md-6")
 	ul
 		li(ng-repeat="player in team.players")
-			a(href="/players/{{plater._id}}")  {{player.name}} {{player.last_name}}
+			a(href="/players/{{player._id}}")  {{player.name}} {{player.last_name}}
 			if(RolesHelper.admin(user))
-				a(href="/players/edit/{{plater._id}}")  Editar
+				a(href="/players/edit/{{player._id}}")  Editar
+if(RolesHelper.admin(user))
+	div(class="admin_section")
+		-model = "team"
+		include ../images/upload.jade

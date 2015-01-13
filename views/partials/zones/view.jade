@@ -14,7 +14,7 @@ div(ng-if="zone.zone_type !== 'Playoff'")
 		tr(ng-repeat="participator in zone.participations | orderBy:['-points','-own_goals', 'other_goals', 'own_goals-other_goals' ,'-won']") 
 			td {{$index + 1}}
 			td 
-				a(href="/teams/{{participator.team}") {{participator.team_name}}
+				a(href="/teams/{{participator.team}}") {{participator.team_name}}
 			td {{participator.won+participator.lost+participator.tied}}
 			td {{participator.won}}
 			td {{participator.tied}}

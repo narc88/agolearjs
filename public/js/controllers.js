@@ -2,6 +2,12 @@
 
 /* Controllers */
 
+/*Router redirects to selected page when a url is targeted by get request*/
+function router_controller($scope, $http, $location, $routeParams, $rootScope) {
+ //  $location = 'route/to/wherever';
+ alert(JSON.stringify($routeParams))
+}
+
 /*Main*/
 function main($scope, $http) {
  /* $http.get('/api/countries').
@@ -407,7 +413,7 @@ function tournaments_edit($scope, $http, $location, $routeParams) {
   };
 }
 
-function player_delete($scope, $http, $location, $routeParams) {
+function tournament_delete($scope, $http, $location, $routeParams) {
   $http.get('/api/tournaments/' + $routeParams.id).
     success(function(data) {
       $scope.league = data;
@@ -470,7 +476,7 @@ function matchdays_edit($scope, $http, $location, $routeParams) {
   };
 }
 
-function player_delete($scope, $http, $location, $routeParams) {
+function matchday_delete($scope, $http, $location, $routeParams) {
   $http.get('/api/matchdays/' + $routeParams.id).
     success(function(data) {
       $scope.league = data;

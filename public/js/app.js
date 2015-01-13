@@ -3,6 +3,7 @@
 var agolear = angular.module('agolear', ['ngRoute']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
+      
       when('/login', {
         templateUrl: '/partials/users/login.jade',
         controller: login
@@ -220,7 +221,6 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
           .post('/login', $scope.user)
           .success(function (data, status, headers, config) {
             $window.sessionStorage.token = data.token;
-            $window.sessionStorage.sessionProfile = jwtHelper.decodeToken(data.sessionProfile);
             $scope.message = 'Welcome';
           })
           .error(function (data, status, headers, config) {
@@ -229,6 +229,31 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
 
             // Handle login errors here
             $scope.message = 'Error: Invalid user or password';
+          });
+      };
+    }).controller('ImageController', function ($scope, $http, $window, $location, $routeParams) {
+      $scope.imageTypes = {};
+      $scope.imageTypes.team = ["normal", "uniforme", "escudo"];
+      $scope.imageTypes.player = ["cara", "completa"];
+      $scope.imageTypes.tournament = ["copa", "escudo"];
+      $scope.imageTypes.match = ["normal"];
+      $scope.imageTypes.matchday = ["normal"];
+      $scope.imageTypes.league = ["logo", "normal"];
+      $scope.imageTypes.field = ["normal"];
+      $scope.submit = function (model, addImage) {
+        var imgBase64 = $('#image-cropper').cropit('export', {
+          type: 'image/jpeg',
+          quality: .8,
+          originalSize: true
+        });
+        $scope.image.imageBase64Content = imgBase64;
+        $http
+          .post('/images/'+model+'/'+ $routeParams.id, $scope.image)
+          .success(function (data, status, headers, config) {
+           
+          })
+          .error(function (data, status, headers, config) {
+            
           });
       };
     });

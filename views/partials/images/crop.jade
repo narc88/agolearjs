@@ -1,9 +1,9 @@
-link(href="css/main.css", rel="stylesheet", type="text/css")
-script(src="js/script.js")
-div(class="container")
-    div(class="contr")
-        button(onclick="getResults()")Crop
-    canvas(id="panel", width="779", height="519")
-    div(id="results")
-        img(id="crop_result")
-
+script(src="js/cropper.js")
+div(id="image-cropper")
+	div(class="cropit-image-preview-container")
+		div(class="cropit-image-preview {{image.type}}")
+	input(type="range", class="cropit-image-zoom-input")
+	input(type="file", class="cropit-image-input")
+div(class="cropit-result")
+	button(id="cropResult") Previsualizar
+	img(id="cropResultImg",src="")
