@@ -6,6 +6,7 @@ var LeagueModel = require('../models/league').LeagueModel;
 var MatchModel = require('../models/match').MatchModel;
 var MatchdayModel = require('../models/matchday').MatchdayModel;
 var TournamentModel = require('../models/tournament').TournamentModel;
+var validator = require('validator');
 var fs = require('fs');
 
 module.exports = function(app){
@@ -53,9 +54,12 @@ module.exports = function(app){
 			}else if (lowerCase.indexOf("gif") !== -1){
 				extension = "gif";
 			}
-			imageName = "paruolo." + extension;
+			var image = new ImageModel();
+
+			image.filename =  validator.toString(req.body.filename + extension);
+			image.type =  req.body.type;
 			//Revisar path
-			console.log(extension)
+			console.log(image)
 			var destination_file = dir+"/"+req.params.param+"/"+req.param.elem_id+"/"+imageName;
 			var mkdirp = require('mkdirp');
 			//crear carpeta
@@ -68,8 +72,7 @@ module.exports = function(app){
 				  console.log(err);
 				});
 			    
-				var image = new ImageModel();
-				image.filename =  imageName;
+				
 				Model.findOne({"_id" : req.params.elem_id }).exec(function(err, model){
 					model.images.push(image);
 					model.save(function(err){

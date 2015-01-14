@@ -6,12 +6,7 @@ var TeamSchema = new mongoose.Schema({
     name	: { 
 				type: String,
 				trim: true,
-				required:true,
-				validate : [
-                     function(v) { return validator.isAlphanumeric(v.replace(/\s/g, '')); },
-                     'Nombre invalido, solo se aceptan letras y números'
-                 	]
-                },
+				required:true},
     players     : [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
     images 		: [ImageSchema],
 	created    	: {type: Date, default: Date.now },

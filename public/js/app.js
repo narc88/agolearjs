@@ -231,7 +231,7 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
             $scope.message = 'Error: Invalid user or password';
           });
       };
-    }).controller('ImageController', function ($scope, $http, $window, $location, $routeParams) {
+    }).controller('ImageController', function ($rootScope, $scope, $http, $window, $location, $routeParams) {
       $scope.imageTypes = {};
       $scope.imageTypes.team = ["normal", "uniforme", "escudo"];
       $scope.imageTypes.player = ["cara", "completa"];
@@ -250,7 +250,17 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
         $http
           .post('/images/'+model+'/'+ $routeParams.id, $scope.image)
           .success(function (data, status, headers, config) {
-           
+            if (data.error) {
+              for (var object in data.error.errors) {
+                if(object){
+                  if (data.error.errors.hasOwnProperty(object)) {
+                    form[object].$error.mongoose = data.error.errors[object].message;
+                  }
+                }
+              }
+            } else{
+              $rootScope.$broadcast('someEvent', [1,2,3])
+            }
           })
           .error(function (data, status, headers, config) {
             
