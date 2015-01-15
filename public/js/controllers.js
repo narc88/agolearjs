@@ -319,9 +319,14 @@ function teams_add($scope, $http, $location) {
 }
 
 function teams_view($scope, $http, $routeParams) {
+  function trigger(event,data) {
+    $scope.team.images.push(data.image);
+  }
   $http.get('/api/teams/' + $routeParams.id).
     success(function(data) {
       $scope.team = data;
+
+      $scope.$on('savedImage', trigger);
     });
 }
 

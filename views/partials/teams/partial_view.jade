@@ -5,6 +5,8 @@ div(class="media")
 	h4(class="media-heading")
 		a(href="/teams/{{team._id}}") {{team.name}}
 div(class="col-md-6")
+	img(ng-repeat="image in team.images" src="/photos/team/{{team._id}}/{{image.filename}}")
+div(class="col-md-6")
 	ul
 		li(ng-repeat="player in team.players")
 			a(href="/players/{{player._id}}")  {{player.name}} {{player.last_name}}

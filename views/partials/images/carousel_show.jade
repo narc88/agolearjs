@@ -10,10 +10,10 @@ div(id="carousel#{id}", class="carousel slide", data-ride="carousel" ,style="hei
 			-var image = images[i]
 			-if (i == 0)
 				.item.active
-					img(src="/photos/#{param}/#{image.filename}" , alt="#{image.filename}", style="width:100%; height:310px;")
+					img(src="/photos/#{param}/{{image.filename}}" , alt="{{image.filename}}", style="width:100%; height:310px;")
 			-else
 				.item
-					img(src="/photos/#{param}/#{image.filename}" , alt="#{image.filename}", style="width:100%; height:310px;")					
+					img(src="/photos/#{param}/{{image.filename}}" , alt="{{image.filename}}", style="width:100%; height:310px;")					
 	a(class="left carousel-control", href="#carousel#{id}", data-slide="prev")
 		span(class="glyphicon glyphicon-chevron-left")
 	a(class="right carousel-control", href="#carousel#{id}", data-slide="next")
@@ -21,4 +21,4 @@ div(id="carousel#{id}", class="carousel slide", data-ride="carousel" ,style="hei
 	div(class="caption-top transparent")
 		.col-md-12
 			h3
-				a(href="/deals/#{id}") #{title}
+				a(href="/deals/#{id}") {{image.filename}}

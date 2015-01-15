@@ -259,7 +259,7 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
                 }
               }
             } else{
-              $rootScope.$broadcast('someEvent', [1,2,3])
+              $rootScope.$broadcast('savedImage', {id:id,image:image})
             }
           })
           .error(function (data, status, headers, config) {

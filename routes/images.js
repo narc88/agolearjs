@@ -77,7 +77,7 @@ module.exports = function(app){
 					model.images.push(image);
 					model.save(function(err){
 						if(err) throw err;
-						res.send(image);
+						res.send(model._id, image);
 					});
 				});
 					
