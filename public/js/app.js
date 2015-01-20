@@ -189,6 +189,14 @@ var agolear = angular.module('agolear', ['ngRoute']).
         templateUrl: '/partials/chronicles/delete.jade',
         controller: chronicles_delete
       }).
+      when('/images/add/:param/:id/:format', {
+        templateUrl: '/partials/images/upload.jade',
+        controller: images_add
+      }).
+      when('/images/delete/:id', {
+        templateUrl: '/partials/images/delete.jade',
+        controller: images_delete
+      }).
       otherwise({
         redirectTo: '/'
       });
@@ -229,41 +237,6 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
 
             // Handle login errors here
             $scope.message = 'Error: Invalid user or password';
-          });
-      };
-    }).controller('ImageController', function ($rootScope, $scope, $http, $window, $location, $routeParams) {
-      $scope.imageTypes = {};
-      $scope.imageTypes.team = ["normal", "uniforme", "escudo"];
-      $scope.imageTypes.player = ["cara", "completa"];
-      $scope.imageTypes.tournament = ["copa", "escudo"];
-      $scope.imageTypes.match = ["normal"];
-      $scope.imageTypes.matchday = ["normal"];
-      $scope.imageTypes.league = ["logo", "normal"];
-      $scope.imageTypes.field = ["normal"];
-      $scope.submit = function (model, addImage) {
-        var imgBase64 = $('#image-cropper').cropit('export', {
-          type: 'image/jpeg',
-          quality: .8,
-          originalSize: true
-        });
-        $scope.image.imageBase64Content = imgBase64;
-        $http
-          .post('/images/'+model+'/'+ $routeParams.id, $scope.image)
-          .success(function (data, status, headers, config) {
-            if (data.error) {
-              for (var object in data.error.errors) {
-                if(object){
-                  if (data.error.errors.hasOwnProperty(object)) {
-                    form[object].$error.mongoose = data.error.errors[object].message;
-                  }
-                }
-              }
-            } else{
-              $rootScope.$broadcast('savedImage', {id:id,image:image})
-            }
-          })
-          .error(function (data, status, headers, config) {
-            
           });
       };
     });

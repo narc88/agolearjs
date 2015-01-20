@@ -1,24 +1,12 @@
-button(type="button", class="btn btn-primary btn-xs", data-toggle="modal",data-target="#headingImage") Agregar Imagen
-div(class="modal fade", tabindex="-1", role="dialog", id="headingImage", aria-hidden="true" )
-	div(class="modal-dialog")
-		div(class="modal-content")
-			div(class="modal-header")
-				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
-					span(aria-hidden="true")&times;
-				h4(class="modal-title", id="imageModalLabel") Seleccione una imagen
-			div(class="modal-body")
-				include crop.jade
-				form( name="addImage", ng-submit="submit('#{model}', addImage)", ng-controller="ImageController")
-					.form-group.col-md-6
-						input(type="text", ng-model="image.name", placeholder='Nombre de archivo', class="required").form-control
-					.form-group.col-md-6
-						select(type="text", ng-model="image.type", class="required").form-control
-							option(value="" selected) Tipo
-							option(ng-repeat="type in imageTypes.#{model}" value="{{type}}") {{type}}
-					.form-group.pull-right
-						input(type="submit", value="Guardar").btn.btn-primary
-						button(type="button", class="btn btn-default", data-dismiss="modal") Close
-			div(class="modal-footer")
+div(class="imageCropper")
+	include crop.jade
+	form( name="addImage", ng-submit="submit('#{model}', addImage)")
+		.form-group.col-md-6
+			input(type="text", ng-model="image.filename", placeholder='Nombre de archivo', class="required").form-control
+			imput(type="hidden", ng-model="image.type", value="{{image.type}}")
+		.form-group.pull-right
+			input(type="submit", value="Guardar").btn.btn-primary
+			button(type="button", class="btn btn-default", data-dismiss="modal") Close
 
 
 

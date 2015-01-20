@@ -14,5 +14,6 @@ div(class="col-md-6")
 				a(href="/players/edit/{{player._id}}")  Editar
 if(RolesHelper.admin(user))
 	div(class="admin_section")
+		h3 Agregar imagen
 		-model = "team"
-		include ../images/upload.jade
+		a(ng-repeat="type in imageTypes.#{model}", href="/images/add/#{model}/{{team._id}}/{{type}}") {{type}} 

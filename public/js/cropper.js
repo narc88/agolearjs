@@ -1,4 +1,3 @@
-$('#image-cropper').cropit({ imageBackground: true });
 
 $("#cropResult").click(function(){
 	var imgBase64 = $('#image-cropper').cropit('export', {

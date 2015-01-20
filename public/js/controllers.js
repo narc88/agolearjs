@@ -9,12 +9,20 @@ function router_controller($scope, $http, $location, $routeParams, $rootScope) {
 }
 
 /*Main*/
-function main($scope, $http) {
+function main($rootScope,$scope, $http) {
  /* $http.get('/api/countries').
     success(function(data, status, headers, config) {
       $scope.countries = data;
       $scope.default_country = data[0];
     });*/
+  $rootScope.imageTypes = {};
+  $rootScope.imageTypes.team = ["normal", "uniforme", "escudo"];
+  $rootScope.imageTypes.player = ["cara", "completa"];
+  $rootScope.imageTypes.tournament = ["copa", "escudo"];
+  $rootScope.imageTypes.match = ["normal"];
+  $rootScope.imageTypes.matchday = ["normal"];
+  $rootScope.imageTypes.league = ["logo", "normal"];
+  $rootScope.imageTypes.field = ["normal"];
 }
 
 /*Users*/
@@ -669,6 +677,67 @@ function chronicles_delete($scope, $http, $location, $routeParams) {
 
   $scope.deleteChronicle = function () {
     $http.delete('/api/chronicles/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+/*images*/
+function images_add($rootScope, $scope, $http, $window, $location, $routeParams){
+  var cropperImageSizesByType = {
+      "normal" : {"height": 300, "width": 230},
+      "escudo" : {"height":100, "width":100},
+      "logo" : {"height":120 , "width":120},
+      "completa" : {"height": 230, "width":300},
+      "uniforme" : {"height":115 , "width":50},
+      "cara" : {"height":80, "width":80},
+      "copa" : {"height":70 , "width":100}
+      };
+  $scope.image = {};
+  $scope.image.type = $routeParams.format;
+  $('#image-cropper').cropit({ imageBackground: true, width : cropperImageSizesByType[$scope.image.type].width, height : cropperImageSizesByType[$scope.image.type].height });
+ 
+  $scope.submit = function (model, addImage) {
+    var imgBase64 = $('#image-cropper').cropit('export', {
+      type: 'image/jpeg',
+      quality: .8,
+      originalSize: true
+    });
+    $scope.image.imageBase64Content = imgBase64;
+    $http
+      .post('/images/'+$routeParams.param+'/'+ $routeParams.id, $scope.image)
+      .success(function (data, status, headers, config) {
+        if (data.error) {
+          for (var object in data.error.errors) {
+            if(object){
+              if (data.error.errors.hasOwnProperty(object)) {
+                form[object].$error.mongoose = data.error.errors[object].message;
+              }
+            }
+          }
+        } else{
+          $rootScope.$broadcast('savedImage', {id:id,image:image})
+        }
+      })
+      .error(function (data, status, headers, config) {
+        
+      });
+  };
+}
+
+
+function images_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/images/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteimage = function () {
+    $http.delete('/api/images/' + $routeParams.id).
       success(function(data) {
         $location.url('/');
       });

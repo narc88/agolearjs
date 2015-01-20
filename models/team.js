@@ -10,7 +10,9 @@ var TeamSchema = new mongoose.Schema({
     players     : [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
     images 		: [ImageSchema],
 	created    	: {type: Date, default: Date.now },
-	modified	: {type: Date, default: Date.now }
+	modified	: {type: Date, default: Date.now },
+    tenant      : {type: mongoose.Schema.ObjectId, ref: 'League' }
 });
+
 
 exports.TeamModel = mongoose.model('Team', TeamSchema);
