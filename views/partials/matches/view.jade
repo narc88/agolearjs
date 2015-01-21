@@ -15,6 +15,9 @@ div(class="result col-md-12")
 		div(class="col-md-2")
 			a(href="#", class="thumbnail")
 				img(src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjE0LjUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==", style="width: 64px; height: 64px;", alt="...")
+div(class="admin_options col-md-12")
+	if(RolesHelper.admin(user))
+		include ../suspensions/form.jade
 h2 Goles e Incidentes
 div(class="incidents col-md-12")
 	div(class="local col-md-6")
@@ -30,6 +33,7 @@ div(class="incidents col-md-12")
 			if(RolesHelper.admin(user))
 				li
 					include ../incidents/form.jade
+					include ../suspensions/form.jade
 	div(class="visitor col-md-6")
 		ul
 			-var role = "visitor"
@@ -43,6 +47,7 @@ div(class="incidents col-md-12")
 			if(RolesHelper.admin(user))
 				li
 					include ../incidents/form.jade	
+					include ../suspensions/form.jade
 h2 Horario y Cancha
 div(class="time")
 	span {{match.turn[0].field.name}}

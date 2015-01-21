@@ -589,6 +589,22 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             }
           });
       };
+      $scope.submitSuspension = function  (form, role) {
+        $http.post('/api/matches/suspensions/'+$scope.match._id, $scope.suspension).
+          success(function(data) {
+            if (data.error) {
+              for (var object in data.error.errors) {
+                if(object){
+                  if (data.error.errors.hasOwnProperty(object)) {
+                    form[object].$error.mongoose = data.error.errors[object].message;
+                  }
+                }
+              }
+            } else{
+              $scope.match = populateMatchPlayers(data, $scope.match);
+            }
+          });
+      };
     });
 }
 
