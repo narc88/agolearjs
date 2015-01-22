@@ -102,10 +102,10 @@ module.exports = function(app){
 
 	app.delete('/api/matches/goals/:team_role/:id', function(req, res, next){
 		var team_role = ""
-		if(req.params.team_role === "Local"){
+		if(req.params.team_role === "local"){
 			team_role = "local_goals";
 		}else{
-			if(req.params.team_role === "Visitor"){
+			if(req.params.team_role === "visitor"){
 				team_role = "visitor_goals";
 			}			
 		}
@@ -144,10 +144,10 @@ module.exports = function(app){
 
 	app.delete('/api/matches/incidents/:team_role/:id', function(req, res, next){
 		var team_role = ""
-		if(req.params.team_role === "Local"){
+		if(req.params.team_role === "local"){
 			team_role = "local_goals";
 		}else{
-			if(req.params.team_role === "Visitor"){
+			if(req.params.team_role === "visitor"){
 				team_role = "visitor_goals";
 			}			
 		}
@@ -164,10 +164,10 @@ module.exports = function(app){
 
 	app.post('/api/matches/:team_role/:id/players', function(req, res){
 		var team_role = ""
-		if(req.params.team_role === "Local"){
+		if(req.params.team_role === "local"){
 			team_role = "local_goals";
 		}else{
-			if(req.params.team_role === "Visitor"){
+			if(req.params.team_role === "visitor"){
 				team_role = "visitor_goals";
 			}			
 		}

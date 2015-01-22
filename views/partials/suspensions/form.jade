@@ -1,11 +1,11 @@
-button(type="button", class="btn btn-primary btn-xs", data-toggle="modal",data-target="#headingSuspension#{role}") Nuevo Gol
+button(type="button", class="btn btn-primary btn-xs", data-toggle="modal",data-target="#headingSuspension#{role}") Nueva Suspension
 div(class="modal fade", tabindex="-1", role="dialog", id="headingSuspension#{role}", aria-hidden="true" )
 	div(class="modal-dialog")
 		div(class="modal-content")
 			div(class="modal-header")
 				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
 					span(aria-hidden="true")&times;
-				h4(class="modal-title", id="myModalLabel") Nueva Suspension
+				h4(class="modal-title", id="myModalLabel") Nueva Suspensión
 			div(class="modal-body")
 				form(name="addSuspension", ng-submit="submitSuspension(addSuspension, '#{role}')")
 					.form-group
@@ -20,10 +20,7 @@ div(class="modal fade", tabindex="-1", role="dialog", id="headingSuspension#{rol
 						label(for="number_of_matches") Cantidad de partidos
 						input(ng-model='suspension.number_of_matches', name='number_of_matches', id="number_of_matches", type='text').form-control.input-sm
 					.form-group
-						label(for="accomplished") Terminada
-						input(ng-model='suspension.accomplished', name='accomplished', id="accomplished", type='checkbox').form-control.input-sm
-					.form-group
-						label(for="reason") Minute
+						label(for="reason") Razón
 						textarea(ng-model='suspension.reason', name='reason', id="reason", type='text').form-control.input-sm
 					.form-group
 						input(type="submit", value="Guardar").btn.btn-primary.btn-xs

@@ -1,0 +1,22 @@
+h4(class="modal-title", id="myModalLabel") Nueva Suspension
+form(name="addSuspension", ng-submit="submitSuspension(addSuspension, '#{role}')")
+	.form-group
+		label(for="player") Jugador
+		select(ng-model='suspension.player', name='player', id="player").form-control.input-sm
+			option(value="", selected="selected") Ninguno
+			-if(role === "local")
+				option(ng-repeat="player in match.local_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
+			-else
+				option(ng-repeat="player in match.visitor_players" value="{{player._id}}") {{player.name}} {{player.last_name}}
+	.form-group
+		label(for="number_of_matches") Cantidad de partidos
+		input(ng-model='suspension.number_of_matches', name='number_of_matches', id="number_of_matches", type='text').form-control.input-sm
+	.form-group
+		label(for="accomplished") Terminada
+		input(ng-model='suspension.accomplished', name='accomplished', id="accomplished", type='checkbox').form-control.input-sm
+	.form-group
+		label(for="reason") Razón
+		textarea(ng-model='suspension.reason', name='reason', id="reason", type='text').form-control.input-sm
+	.form-group
+		input(type="submit", value="Guardar").btn.btn-primary.btn-xs
+		button(type="button", class="btn btn-default btn-xs", data-dismiss="modal") Close

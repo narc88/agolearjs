@@ -1,5 +1,5 @@
 var SuspensionModel 	= require('../models/suspension').SuspensionModel;
-var ImageModel 	= require('../models/image').ImageModel;
+var MatchModel = require('../models/match').MatchModel;
 
 var mongoose = require('mongoose');
 
@@ -26,6 +26,38 @@ module.exports = function(app){
 		suspension.save(function(err){
 			if(err) throw err;
 			req.send(suspension);
+		});
+	});
+
+	//Called from matches view
+	app.post('/api/suspensions/:role/:id', function(req, res, next){
+		var match_role = '';
+		if(req.params.role === "local"){
+			match_role = "local_suspension";
+		}else if(req.params.role === "visitor"){
+			match_role = "visitor_suspension";
+		}
+		MatchModel.findOne({ _id: req.params.id }).exec( function(err, match){
+			if (err) throw err;
+			if(match){
+				console.log(match)
+				var suspension = new SuspensionModel(req.body);
+				if(match_role === "local_suspension"){
+					console.log(match.local_suspensions)
+					match.local_suspensions.push(suspension);
+				}else{			
+					if(match_role === "visitor_suspension"){
+						match.visitor_suspensions.push(suspension);
+					}
+				}
+				match.save(function(err){
+					if (err) throw err;
+					suspension.save(function(err){
+						if(err) throw err;
+						res.send(suspension);
+					});
+				});
+			}
 		});
 	});
 

@@ -8,7 +8,7 @@ var LeagueSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAlpha(v); },
+                     function(v) { return validator.isAlpha(v.replace(/\s/g, '')); },
                      'Nombre invalido, no se aceptan numeros ni simbolos'
                  	]
                 },
@@ -17,7 +17,7 @@ var LeagueSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAlpha(v); },
+                     function(v) { return validator.isAlpha(v.replace(/\s/g, '')); },
                      'Nombre invalido, no se aceptan numeros ni simbolos'
                  	]
                 },
@@ -26,7 +26,7 @@ var LeagueSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAscii(v); },
+                     function(v) { return validator.isAscii(v.replace(/\s/g, '')); },
                      'Nombre invalido'
                  	]
                 },
@@ -34,7 +34,7 @@ var LeagueSchema = new mongoose.Schema({
     			type: String, 
     			required: true,
     			validate : [
-                     function(v) { return validator.isEmail(v); },
+                     function(v) { return validator.isEmail(v.replace(/\s/g, '')); },
                      'Email inválido'
                  	]
     		},
@@ -43,7 +43,7 @@ var LeagueSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAscii(v); },
+                     function(v) { return validator.isAscii(v.replace(/\s/g, '')); },
                      'Nombre invalido'
                  	]
                 },
@@ -51,7 +51,7 @@ var LeagueSchema = new mongoose.Schema({
 				type: String,
 				trim: true,
 				validate : [
-                     function(v) { return validator.isAscii(v); },
+                     function(v) { return validator.isAscii(v.replace(/\s/g, '')); },
                      'Nombre invalido'
                  	]
                 },

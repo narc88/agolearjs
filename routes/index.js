@@ -11,6 +11,7 @@ var teams = require('./teams');
 var matchdays = require('./matchdays');
 var matches = require('./matches');
 var chronicles = require('./chronicles');
+var suspensions = require('./suspensions');
 var errors = require('./errors');
 
 module.exports = function(app){
@@ -37,6 +38,7 @@ module.exports = function(app){
 	matches(app);
 	images(app);
 	chronicles(app);
+	suspensions(app);
 	// Error handlers
 	errors(app);
 

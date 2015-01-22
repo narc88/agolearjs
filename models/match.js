@@ -23,7 +23,8 @@ var MatchSchema = new mongoose.Schema({
     local_incidents	    : [IncidentSchema],
     visitor_incidents   : [IncidentSchema],
     mvp     			: {type: mongoose.Schema.ObjectId, ref: 'Player' },
-    suspensions         : {type: mongoose.Schema.ObjectId, ref: 'Suspension' },
+    local_suspensions         : [{type: mongoose.Schema.ObjectId, ref: 'Suspension' }],
+    visitor_suspensions         : [{type: mongoose.Schema.ObjectId, ref: 'Suspension' }],
     //Players who assisted to the match
     local_players       : [PlayerParticipationSchema],
     visitor_players     : [PlayerParticipationSchema],

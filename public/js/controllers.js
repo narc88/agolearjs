@@ -590,7 +590,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
           });
       };
       $scope.submitSuspension = function  (form, role) {
-        $http.post('/api/matches/suspensions/'+$scope.match._id, $scope.suspension).
+        $http.post('/api/suspensions/'+role+'/'+$scope.match._id, $scope.suspension).
           success(function(data) {
             if (data.error) {
               for (var object in data.error.errors) {
