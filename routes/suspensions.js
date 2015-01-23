@@ -40,10 +40,8 @@ module.exports = function(app){
 		MatchModel.findOne({ _id: req.params.id }).exec( function(err, match){
 			if (err) throw err;
 			if(match){
-				console.log(match)
 				var suspension = new SuspensionModel(req.body);
 				if(match_role === "local_suspension"){
-					console.log(match.local_suspensions)
 					match.local_suspensions.push(suspension);
 				}else{			
 					if(match_role === "visitor_suspension"){

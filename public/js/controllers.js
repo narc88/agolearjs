@@ -601,7 +601,13 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
                 }
               }
             } else{
-              $scope.match = populateMatchPlayers(data, $scope.match);
+              if(role === "local"){
+                data.player = searchPlayer(data.player, $scope.match.local_players);
+                $scope.match.local_suspensions.push(data);
+              }else if(role ==="visitor"){
+                data.player = searchPlayer(data.player, $scope.match.visitor_players);
+                $scope.match.visitor_suspensions.push(data);
+              }
             }
           });
       };

@@ -21,7 +21,7 @@ module.exports = function(app){
 	});
 
 	app.get('/api/matches/:id', function(req, res, next){
-		MatchModel.findOne({ _id: req.params.id }).populate("visitor_team").populate("local_team").exec( function(err, match){
+		MatchModel.findOne({ _id: req.params.id }).populate("visitor_team").populate("local_team").populate("local_suspensions").populate("visitor_suspensions").exec( function(err, match){
 			if (err) throw err
 			console.log(match)
 			FieldModel.populate(match, { path: 'turn.field', select: 'name'}, function(){
