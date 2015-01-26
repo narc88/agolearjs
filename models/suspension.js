@@ -22,4 +22,4 @@ var SuspensionSchema = new mongoose.Schema({
 	modified			: {type: Date, default: Date.now }
 });
 
-exports.SuspensionModel = mongoose.model('suspension', SuspensionSchema);
+exports.SuspensionModel = mongoose.model('Suspension', SuspensionSchema);

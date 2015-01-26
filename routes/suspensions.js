@@ -8,7 +8,7 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/suspensions', function(req, res, next){
-		SuspensionModel.find().exec( function(err, suspensions){
+		SuspensionModel.find(req.query).exec( function(err, suspensions){
 			if (err) throw err;
 			res.send(suspensions);
 		});

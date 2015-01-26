@@ -2,3 +2,11 @@ h3 Equipo
 div(ng-show="team")
 	include partial_view
 	a(class="btn btn-primary", role="button", href="/teams/{{team._id}}") Ver
+	div(ng-if="suspensions.length > 0", ng-model="suspensions")
+		div(ng-repeat="suspension in suspensions")
+			p {{suspension.player}}
+	if(RolesHelper.admin(user))
+		div(class="admin_section")
+			h3 Agregar imagen
+			-model = "team"
+			a(ng-repeat="type in imageTypes.#{model}", href="/images/add/#{model}/{{team._id}}/{{type}}") {{type}} 
