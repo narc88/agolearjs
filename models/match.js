@@ -17,6 +17,8 @@ var MatchSchema = new mongoose.Schema({
     winner	     		: {type: mongoose.Schema.ObjectId, ref: 'Team' },
     local_team     		: {type: mongoose.Schema.ObjectId, ref: 'Team' },
     visitor_team	 	: {type: mongoose.Schema.ObjectId, ref: 'Team' },
+    local_team_name      : {type: String},
+    visitor_team_name    : {type: String},
     local_goals  	    : [GoalSchema],
     visitor_goals	    : [GoalSchema],
     turn     			: {type: mongoose.Schema.ObjectId, ref: 'Turn' },

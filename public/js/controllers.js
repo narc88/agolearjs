@@ -335,9 +335,13 @@ function teams_view($scope, $http, $routeParams) {
       $scope.team = data;
       $scope.$on('savedImage', trigger);
     });
-  $http.get('/api/suspensions?team_id=' + $routeParams.id).
+  $http.get('/api/suspensionsByTeam?team=' + $routeParams.id).
     success(function(data) {
       $scope.suspensions = data;
+    });
+  $http.get('/api/matchesLastPlayed?team=' + $routeParams.id).
+    success(function(data) {
+      $scope.last_played_matches = data;
     });
 }
 

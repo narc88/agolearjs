@@ -20,6 +20,17 @@ module.exports = function(app){
 		});
 	});
 
+	app.get('/api/matchesLastPlayed', function(req, res, next){
+		var team_id = req.query.team
+		MatchModel.find(req.query).exec( function(err, matches){
+			if (err) throw err;
+			var callback = function(){
+				res.send(matches);
+			}
+			FieldModel.populate(matches, { path: 'turn.field', select: 'name'},callback);
+		});
+	});
+
 	app.get('/api/matches/:id', function(req, res, next){
 		MatchModel.findOne({ _id: req.params.id }).populate("visitor_team").populate("local_team").populate("local_suspensions").populate("visitor_suspensions").exec( function(err, match){
 			if (err) throw err

@@ -1,6 +1,6 @@
 var SuspensionModel 	= require('../models/suspension').SuspensionModel;
 var MatchModel = require('../models/match').MatchModel;
-
+var TeamModel = require('../models/team').TeamModel;
 var mongoose = require('mongoose');
 
 module.exports = function(app){
@@ -12,6 +12,19 @@ module.exports = function(app){
 			if (err) throw err;
 			res.send(suspensions);
 		});
+	});
+
+	app.get('/api/suspensionsByTeam', function(req, res, next){
+		var team_id = req.query.team
+		TeamModel.findOne({"_id":team_id}).exec( function(err, team){
+			if (err) throw err;
+			players = team.players;
+			SuspensionModel.find({"player":{$in : players }}).populate("player").exec( function(err, suspensions){
+				if (err) throw err;
+				res.send(suspensions);
+			});
+		});
+		
 	});
 
 	app.get('/api/suspensions/:id', function(req, res, next){
