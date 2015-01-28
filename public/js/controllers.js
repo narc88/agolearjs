@@ -661,6 +661,9 @@ function chronicles_index($scope, $http, $location, $routeParams) {
   $http.get('/api/chronicles'+'?'+queryString).
     success(function(data, status, headers, config) {
       $scope.chronicles = data;
+      for (var i = 0; i <= $scope.chronicles.length; i++) {
+        $scope.chronicles[i]
+      };
     });
 }
 
@@ -675,10 +678,12 @@ function chronicles_add($scope, $http, $location) {
   };
 }
 
-function chronicles_view($scope, $http, $routeParams, $rootScope) {
+function chronicles_view($scope, $http, $routeParams, $rootScope, $sce) {
   $http.get('/api/chronicles/' + $routeParams.id).
     success(function(data) {
       $scope.chronicle = data;
+      $scope.content_chronicle = $sce.trustAsHtml($scope.chronicle.content);
+      $scope.content_summary = $sce.trustAsHtml($scope.chronicle.summary);
     });
 }
 

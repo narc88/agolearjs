@@ -13,6 +13,7 @@
 		"html5-boilerplate": "~4.3.0",
 		"angular-jwt": "0.0.6",
 		"angular-scenario": "~1.2",
-		"cropit": "0.2"
+		"cropit": "0.2",
+		"angular-sanitize": "~1.2.x"
 	}
 }

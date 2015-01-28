@@ -1,7 +1,7 @@
 'use strict';
 // Declare app level module which depends on filters, and services
-var agolear = angular.module('agolear', ['ngRoute']).
-  config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+var agolear = angular.module('agolear', ['ngRoute','ngSanitize']).
+  config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider, $sceProvider) {
     $routeProvider.
       
       when('/login', {
