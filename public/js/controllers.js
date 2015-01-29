@@ -656,13 +656,14 @@ function matches_delete($scope, $http, $location, $routeParams) {
 
 
 /*chronicle*/
-function chronicles_index($scope, $http, $location, $routeParams) {
+function chronicles_index($scope, $http, $location, $routeParams , $sce) {
   var queryString = $.param( $routeParams );
   $http.get('/api/chronicles'+'?'+queryString).
     success(function(data, status, headers, config) {
       $scope.chronicles = data;
       for (var i = 0; i <= $scope.chronicles.length; i++) {
-        $scope.chronicles[i]
+        $scope.chronicles[i].trusted_content = $sce.trustAsHtml($scope.chronicle[i].content);
+        $scope.chronicles[i].trusted_summary = $sce.trustAsHtml($scope.chronicle[i].summary);
       };
     });
 }
