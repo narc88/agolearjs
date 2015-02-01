@@ -9,7 +9,7 @@ var ZoneSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAlpha(v); },
+                     function(v) { return validator.isAlpha(v.replace(/\s/g, '')); },
                      'Nombre invalido, no se aceptan numeros ni simbolos'
                  	]
                 },
@@ -18,7 +18,7 @@ var ZoneSchema = new mongoose.Schema({
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAlpha(v); },
+                     function(v) { return validator.isAlpha(v.replace(/\s/g, '')); },
                      'Inválido, no se aceptan numeros ni simbolos'
                  	]
                 },

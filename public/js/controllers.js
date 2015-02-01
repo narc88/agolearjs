@@ -15,6 +15,7 @@ function main($rootScope,$scope, $http) {
       $scope.countries = data;
       $scope.default_country = data[0];
     });*/
+  $rootScope.menu = {};
   $rootScope.imageTypes = {};
   $rootScope.imageTypes.team = ["normal", "uniforme", "escudo"];
   $rootScope.imageTypes.player = ["cara", "completa"];
@@ -23,6 +24,23 @@ function main($rootScope,$scope, $http) {
   $rootScope.imageTypes.matchday = ["normal"];
   $rootScope.imageTypes.league = ["logo", "normal"];
   $rootScope.imageTypes.field = ["normal"];
+  $rootScope.imageTypes.chronicle = ["completa"];
+
+  $rootScope.imageHelper = {};
+  $rootScope.imageHelper.getImage = function(images, type){
+    for (var i = images.length - 1; i >= 0; i--) {
+      if(images[i].type === type){
+        return images[i];
+      }
+    };  
+  }
+
+  //Service that responds with the json structure of the main menu
+   $http.get('/api/menu').
+    success(function(data, status, headers, config) {
+      $rootScope.menu.tournaments = data;
+    });
+
 }
 
 /*Users*/
@@ -326,13 +344,14 @@ function teams_add($scope, $http, $location) {
   };
 }
 
-function teams_view($scope, $http, $routeParams) {
+function teams_view($scope, $http, $routeParams, $rootScope) {
   function trigger(event,data) {
     $scope.team.images.push(data.image);
   }
   $http.get('/api/teams/' + $routeParams.id).
     success(function(data) {
       $scope.team = data;
+      $scope.team.logo_image = $rootScope.imageHelper.getImage($scope.team.images, "escudo");
       $scope.$on('savedImage', trigger);
     });
   $http.get('/api/suspensionsByTeam?team=' + $routeParams.id).
@@ -407,7 +426,7 @@ function tournaments_add($scope, $http, $location) {
 }
 
 function tournaments_view($scope, $http, $routeParams, $rootScope) {
-  if((typeof $rootScope.tournament === "undefined") || ($routeParams.id != $rootScope.zone._id)){
+  if((typeof $rootScope.tournament === "undefined") || ($routeParams.id !== $rootScope.tournament._id)){
     $http.get('/api/tournaments/' + $routeParams.id).
       success(function(data) {
         $scope.tournament = data;
@@ -656,15 +675,17 @@ function matches_delete($scope, $http, $location, $routeParams) {
 
 
 /*chronicle*/
-function chronicles_index($scope, $http, $location, $routeParams , $sce) {
+function chronicles_index($scope, $http, $location, $routeParams , $sce, $rootScope) {
   var queryString = $.param( $routeParams );
   $http.get('/api/chronicles'+'?'+queryString).
     success(function(data, status, headers, config) {
-      $scope.chronicles = data;
-      for (var i = 0; i <= $scope.chronicles.length; i++) {
-        $scope.chronicles[i].trusted_content = $sce.trustAsHtml($scope.chronicle[i].content);
-        $scope.chronicles[i].trusted_summary = $sce.trustAsHtml($scope.chronicle[i].summary);
+      
+      for (var i = 0; i < data.length; i++) {
+        data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "completa");
+        data[i].trusted_content = $sce.trustAsHtml(data[i].content);
+        data[i].trusted_summary = $sce.trustAsHtml(data[i].summary);
       };
+      $scope.chronicles = data;
     });
 }
 
@@ -683,6 +704,7 @@ function chronicles_view($scope, $http, $routeParams, $rootScope, $sce) {
   $http.get('/api/chronicles/' + $routeParams.id).
     success(function(data) {
       $scope.chronicle = data;
+      $scope.chronicle.preview_image = $rootScope.imageHelper.getImage($scope.chronicle.images, "completa");
       $scope.content_chronicle = $sce.trustAsHtml($scope.chronicle.content);
       $scope.content_summary = $sce.trustAsHtml($scope.chronicle.summary);
     });

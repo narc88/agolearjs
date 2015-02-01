@@ -6,6 +6,8 @@ var LeagueModel = require('../models/league').LeagueModel;
 var MatchModel = require('../models/match').MatchModel;
 var MatchdayModel = require('../models/matchday').MatchdayModel;
 var TournamentModel = require('../models/tournament').TournamentModel;
+var ChronicleModel 	= require('../models/chronicle').ChronicleModel;
+
 var validator = require('validator');
 var fs = require('fs');
 
@@ -33,6 +35,9 @@ module.exports = function(app){
 			break;
 			case "tournament":
 				Model = TournamentModel;
+			break;
+			case "chronicle":
+				Model = ChronicleModel;
 			break;
 			default:
 				console.log(req.params)

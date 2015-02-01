@@ -1,5 +1,5 @@
 var ChronicleModel 	= require('../models/chronicle').ChronicleModel;
-
+var ImageModel 	= require('../models/image').ImageModel;
 
 var mongoose = require('mongoose');
 

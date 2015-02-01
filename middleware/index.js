@@ -4,6 +4,7 @@ var expressJwt = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var private_config = require('../private_config');
 var mailer = require('express-mailer');
+var ImageHelper	= require('../helpers/imageHelper');
 var RolesHelper	= require('../helpers/checkAuth');
 var util = require('../helpers/util');
 

@@ -22,7 +22,7 @@ module.exports = function(app){
 
 	app.get('/api/matchesLastPlayed', function(req, res, next){
 		var team_id = req.query.team
-		MatchModel.find(req.query).exec( function(err, matches){
+		MatchModel.find(req.query).sort({'start_datetime': -1}).limit(5).exec( function(err, matches){
 			if (err) throw err;
 			var callback = function(){
 				res.send(matches);

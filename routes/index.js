@@ -12,6 +12,7 @@ var matchdays = require('./matchdays');
 var matches = require('./matches');
 var chronicles = require('./chronicles');
 var suspensions = require('./suspensions');
+var utils = require('./utils');
 var errors = require('./errors');
 
 module.exports = function(app){
@@ -39,6 +40,7 @@ module.exports = function(app){
 	images(app);
 	chronicles(app);
 	suspensions(app);
+	utils(app);
 	// Error handlers
 	errors(app);
 

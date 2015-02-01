@@ -1,7 +1,6 @@
 div(class="thumbnail")
-	img(src="..." alt="...")
+	img(ng-src="/photos/chronicle/{{chronicle._id}}/{{chronicle.preview_image.filename}}" alt="{{chronicle.title}}")
 	div(class="caption")
-		h3 {{chronicle.title}}
-		p(ng-bind-html="trusted_summary")
-		p
-			a( href="/chronicles/{{chronicle._id}}") Ver
+		h3
+			a( href="/chronicles/{{chronicle._id}}") {{chronicle.title}}
+		p(ng-bind-html="chronicle.trusted_summary")

@@ -19,7 +19,7 @@ module.exports = function(app){
 		TeamModel.findOne({"_id":team_id}).exec( function(err, team){
 			if (err) throw err;
 			players = team.players;
-			SuspensionModel.find({"player":{$in : players }}).populate("player").exec( function(err, suspensions){
+			SuspensionModel.find({ "accomplished" : false,"player":{$in : players }}).populate("player").exec( function(err, suspensions){
 				if (err) throw err;
 				res.send(suspensions);
 			});

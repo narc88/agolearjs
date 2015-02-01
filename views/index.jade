@@ -1,43 +1,59 @@
 extends layout
 
 block body
-	div
-		h2 My Blog
-		div(class="col-md-3")
-			a(href='/login') Login
+	div(class="col-md-12 page_header")
+		h3 Altos del paracao
+		img(src="")
+		a(href='/login') Login
+		nav(id="navbar-example", class="navbar navbar-default navbar-static")
+			div(class="container-fluid")
+				div(class="navbar-header")
+					div(class="collapse navbar-collapse bs-example-js-navbar-collapse")
+						ul(class="nav navbar-nav")
+							li(class="dropdown")
+								a(id="drop1", href="#", class="dropdown-toggle", data-toggle="dropdown", aria-haspopup="true", role="button", aria-expanded="false") Torneos
+									span Torneos
+									span(class="caret")
+								ul(class="dropdown-menu" role="menu" aria-labelledby="drop1")
+									li(ng-repeat="tournament in menu.tournaments" role="presentation" class="dropdown-submenu")
+										a(role="menuitem" tabindex="-1" href="/tournaments/{{tournament._id}}") {{tournament.name}}
+										ul(class="dropdown-menu")
+											li(ng-repeat="zone in tournament.zones" role="presentation")
+												a(role="menuitem" tabindex="-1" href="/zones/{{zone._id}}") {{zone.name}}
+	div(class="col-md-3 admin_menu")
+		ul(class="admin_menu")
+			li
+				a(href='/') Inicio
+			li
+				a(href='/users/add') Nuevo usuario
+			li
+				a(href='/users') Lista de usuarios
+			li
+				a(href='/leagues') Lista de Ligas
+			li
+				a(href='/teams') Lista de Equipos
+			li
+				a(href='/teams/add') Agregar Equipo
+			li
+				a(href='/players') Lista de Jugadores
+			li
+				a(href='/tournaments') Lista de Torneos
+			li
+				a(href='/chronicles/add') Nueva cronica
+			li
+				a(href='/chronicles') Cronicas
+	div(class="col-md-9")
+		div(class="breadcrumb")
 			ul
-				li
-					a(href='/') Inicio
-				li
-					a(href='/users/add') Nuevo usuario
-				li
-					a(href='/users') Lista de usuarios
-				li
-					a(href='/leagues') Lista de Ligas
-				li
-					a(href='/teams') Lista de Equipos
-				li
-					a(href='/teams/add') Agregar Equipo
-				li
-					a(href='/players') Lista de Jugadores
-				li
-					a(href='/tournaments') Lista de Torneos
-				li
-					a(href='/chronicles/add') Nueva cronica
-				li
-					a(href='/chronicles') Cronicas
-		div(class="col-md-9")
-			div(class="breadcrumb")
-				ul
-					li(ng-if="tournament")
-						a( href="/tournaments/{{tournament._id}}") Torneo
-					li(ng-if="zone")
-						a( href="/zones/{{zone._id}}") Zona
-					li(ng-if="matchday")
-						a( href="/matchdays/{{matchday._id}}") Fecha
-					li(ng-if="match")
-						a(href="/matches/{{match._id}}") Partido
-			div(ng-view)
+				li(ng-if="tournament")
+					a( href="/tournaments/{{tournament._id}}") Torneo
+				li(ng-if="zone")
+					a( href="/zones/{{zone._id}}") Zona
+				li(ng-if="matchday")
+					a( href="/matchdays/{{matchday._id}}") Fecha
+				li(ng-if="match")
+					a(href="/matches/{{match._id}}") Partido
+		div(ng-view)
 
 	//Javascript
 	script(src='js/jquery.min.js')
@@ -60,4 +76,5 @@ block body
 	link(rel='stylesheet', href='/css/bootstrap/bootstrap.min.css')
 	link(rel='stylesheet', href='/css/bootstrap/bootstrap-theme.min.css')
 	link(rel='stylesheet', href='/css/editor.css')
+	link(rel='stylesheet', href='/css/app.css')
 	link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")
