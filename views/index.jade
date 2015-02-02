@@ -4,22 +4,28 @@ block body
 	div(class="col-md-12 page_header")
 		h3 Altos del paracao
 		img(src="")
-		a(href='/login') Login
 		nav(id="navbar-example", class="navbar navbar-default navbar-static")
 			div(class="container-fluid")
 				div(class="navbar-header")
-					div(class="collapse navbar-collapse bs-example-js-navbar-collapse")
-						ul(class="nav navbar-nav")
-							li(class="dropdown")
-								a(id="drop1", href="#", class="dropdown-toggle", data-toggle="dropdown", aria-haspopup="true", role="button", aria-expanded="false") Torneos
-									span Torneos
-									span(class="caret")
-								ul(class="dropdown-menu" role="menu" aria-labelledby="drop1")
-									li(ng-repeat="tournament in menu.tournaments" role="presentation" class="dropdown-submenu")
-										a(role="menuitem" tabindex="-1" href="/tournaments/{{tournament._id}}") {{tournament.name}}
-										ul(class="dropdown-menu")
-											li(ng-repeat="zone in tournament.zones" role="presentation")
-												a(role="menuitem" tabindex="-1" href="/zones/{{zone._id}}") {{zone.name}}
+				div(class="collapse navbar-collapse bs-example-js-navbar-collapse")
+					ul(class="nav navbar-nav")
+						li(class="dropdown")
+							a(id="drop1", href="#", class="dropdown-toggle", data-toggle="dropdown", aria-haspopup="true", role="button", aria-expanded="false")
+								span Torneos
+								span(class="caret")
+							ul(class="dropdown-menu" role="menu" aria-labelledby="drop1")
+								li(ng-repeat="tournament in menu.tournaments" role="presentation" class="dropdown-submenu")
+									a(role="menuitem" tabindex="-1" href="/tournaments/{{tournament._id}}") {{tournament.name}}
+									ul(class="dropdown-menu")
+										li(ng-repeat="zone in tournament.zones" role="presentation")
+											a(role="menuitem" tabindex="-1" href="/zones/{{zone._id}}") {{zone.name}}
+						li
+							a(id="chroniclesButton", href="/chronicles")
+								span Noticias
+					ul(class="nav navbar-nav navbar-right")
+						li(class="")
+							a(id="chroniclesButton", href="/login")
+								span Entrar
 	div(class="col-md-3 admin_menu")
 		ul(class="admin_menu")
 			li
