@@ -25,6 +25,7 @@ function main($rootScope,$scope, $http) {
   $rootScope.imageTypes.league = ["logo", "normal"];
   $rootScope.imageTypes.field = ["normal"];
   $rootScope.imageTypes.chronicle = ["completa"];
+  $rootScope.imageTypes.rule = ["completa"];
 
   $rootScope.imageHelper = {};
   $rootScope.imageHelper.getImage = function(images, type){
@@ -734,6 +735,76 @@ function chronicles_delete($scope, $http, $location, $routeParams) {
 
   $scope.deleteChronicle = function () {
     $http.delete('/api/chronicles/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+
+/*rule*/
+function rules_index($scope, $http, $location, $routeParams , $sce, $rootScope) {
+  var queryString = $.param( $routeParams );
+  $http.get('/api/rules'+'?'+queryString).
+    success(function(data, status, headers, config) {
+      
+      for (var i = 0; i < data.length; i++) {
+        data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "completa");
+        data[i].trusted_content = $sce.trustAsHtml(data[i].content);
+        data[i].trusted_summary = $sce.trustAsHtml(data[i].summary);
+      };
+      $scope.rules = data;
+    });
+}
+
+function rules_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitRule = function () {
+    $scope.rule.content  = $("#contentarea").html();
+    $http.post('/api/rules', $scope.rule).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function rules_view($scope, $http, $routeParams, $rootScope, $sce) {
+  $http.get('/api/rules/' + $routeParams.id).
+    success(function(data) {
+      $scope.rule = data;
+      $scope.rule.preview_image = $rootScope.imageHelper.getImage($scope.rule.images, "completa");
+      $scope.content_rule = $sce.trustAsHtml($scope.rule.content);
+      $scope.content_summary = $sce.trustAsHtml($scope.rule.summary);
+    });
+}
+
+function rules_edit($scope, $http, $location, $routeParams) {
+  $scope.rule = {};
+  $http.get('/api/rules/' + $routeParams.id).
+    success(function(data) {
+      $scope.rule = data;
+    });
+
+  $scope.editRule = function () {
+    $scope.rule.content  = $("#contentarea").html();
+    $http.put('/api/rules/' + $routeParams.id, $scope.rule).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function rules_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/rules/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteRule = function () {
+    $http.delete('/api/rules/' + $routeParams.id).
       success(function(data) {
         $location.url('/');
       });

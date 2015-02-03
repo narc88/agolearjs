@@ -1,0 +1,17 @@
+script 
+	$('#rule').Editor();
+form(name="addRule", ng-submit="submitRule(addRule)")
+	.form-group
+		label(for="title") Titulo
+		input(ng-model='rule.title', name='title', id="title", type='text').form-control.input-sm
+		div(ng-show="addRule['title'].$error.mongoose", style="color: red") {{addRule.title.$error.mongoose}}
+	.form-group
+		label(for="summary") Resumen
+		textarea(ng-model='rule.summary', name='summary', id="summary", type='text').form-control.input-sm
+		div(ng-show="addRule['summary'].$error.mongoose", style="color: red") {{addRule.summary.$error.mongoose}}
+	.form-group
+		label(for="rule") Crónica
+		textarea(ng-model='rule.rule', name='rule', id="rule", type='text').form-control.input-sm
+		div(ng-show="addRule['rule'].$error.mongoose", style="color: red") {{addRule.name.$error.mongoose}}
+	.form-group
+		input(type="submit", value="Guardar").btn.btn-primary

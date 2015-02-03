@@ -5,3 +5,8 @@ div(ng-show="tournament")
 	div(ng-repeat="zone in tournament.zones") 
 		include ../zones/partial_view
 	a(class="btn btn-primary", role="button", href="/tournaments/{{tournament._id}}") Ver
+f(RolesHelper.admin(user))
+	div(class="admin_section")
+		h3 Agregar imagen
+		-model = "tournament"
+		a(ng-repeat="type in imageTypes.#{model}", href="/images/add/#{model}/{{tournament._id}}/{{type}}") {{type}} 

@@ -31,23 +31,13 @@ block body
 			li
 				a(href='/') Inicio
 			li
-				a(href='/users/add') Nuevo usuario
+				a(href='/zones/{{zone._id}}/add_participation') Agregar Participante
 			li
-				a(href='/users') Lista de usuarios
+				a(href='/zones/{{zone._id}}/create_fixture') Crear Fixture
 			li
-				a(href='/leagues') Lista de Ligas
+				a(href='/zones/{{zone._id}}/participations/replace') Reemplazar equipo
 			li
-				a(href='/teams') Lista de Equipos
-			li
-				a(href='/teams/add') Agregar Equipo
-			li
-				a(href='/players') Lista de Jugadores
-			li
-				a(href='/tournaments') Lista de Torneos
-			li
-				a(href='/chronicles/add') Nueva cronica
-			li
-				a(href='/chronicles') Cronicas
+				a(href='/chronicles?zone={{zone._id}}') Crónicas
 	div(class="col-md-9")
 		div(class="breadcrumb")
 			ul

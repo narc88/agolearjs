@@ -1,0 +1,13 @@
+h1 {{rule.title}}
+div(class="summary", ng-bind-html="content_summary")
+div(class="content", ng-bind-html="content_rule") 
+
+div(class="row")
+	div(class="col-xs-6 col-md-3")
+		a(href="#", class="thumbnail")
+			img(ng-repeat="image in rule.images" ng-src="/photos/rule/{{rule._id}}/{{image.filename}}" alt="...")
+if(RolesHelper.admin(user))
+	div(class="admin_section")
+		h3 Agregar imagen
+		-model = "rule"
+		a(ng-repeat="type in imageTypes.#{model}", href="/images/add/#{model}/{{rule._id}}/{{type}}") Nueva imagen 

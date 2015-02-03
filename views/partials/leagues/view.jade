@@ -2,3 +2,8 @@ h3 {{league.name}}
 p {{league.slogan}} 
 p {{league.email}} 
 a(href="/leagues/edit/{{league._id}}")
+if(RolesHelper.admin(user))
+	div(class="admin_section")
+		h3 Agregar imagen
+		-model = "league"
+		a(ng-repeat="type in imageTypes.#{model}", href="/images/add/#{model}/{{league._id}}/{{type}}") {{type}} 

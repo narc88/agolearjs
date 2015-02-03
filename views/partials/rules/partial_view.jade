@@ -1,0 +1,6 @@
+div(class="thumbnail")
+	img(ng-src="/photos/rule/{{rule._id}}/{{rule.preview_image.filename}}" alt="{{rule.title}}")
+	div(class="caption")
+		h3
+			a( href="/rules/{{rule._id}}") {{rule.title}}
+		p(ng-bind-html="rule.trusted_summary")

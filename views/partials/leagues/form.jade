@@ -1,24 +1,20 @@
-form(name="addLeague", ng-submit="submitPlayer(addLeague)")
+form(name="addLeague", ng-submit="submitLeague(addLeague)")
 	.form-group
 		label(for="name") Nombre
 		input(ng-model='form.league.name', name='name', id="name", type='text').form-control.input-sm
 		div(ng-show="addLeague['name'].$error.mongoose", style="color: red") {{addLeague.name.$error.mongoose}}
 	.form-group
-		label(for="last_name") Apellido
-		input(ng-model='form.league.last_name', name='last_name', id="last_name", type='text').form-control.input-sm
-		div(ng-show="addLeague['last_name'].$error.mongoose", style="color: red") {{addLeague.last_name.$error.mongoose}}
+		label(for="slug") Nombre Abreviado
+		input(ng-model='form.league.slug', name='slug', id="slug", type='text').form-control.input-sm
+		div(ng-show="addLeague['slug'].$error.mongoose", style="color: red") {{addLeague.last_name.$error.mongoose}}
 	.form-group
-		label(for="dni") Dni
-		input(ng-model='form.league.dni', name='dni', id="dni", type='text').form-control.input-sm
-		div(ng-show="addLeague['dni'].$error.mongoose", style="color: red") {{addLeague.dni.$error.mongoose}}
+		label(for="slogan") Slogan
+		input(ng-model='form.league.slogan', name='slogan', id="slogan", type='text').form-control.input-sm
+		div(ng-show="addLeague['slogan'].$error.mongoose", style="color: red") {{addLeague.slogan.$error.mongoose}}
 	.form-group
 		label(for="email") Email
 		input(ng-model='form.league.email', name='email', id="email", type='text').form-control.input-sm
 		div(ng-show="addLeague['email'].$error.mongoose", style="color: red") {{addLeague.email.$error.mongoose}}
-	.form-group
-		label(for="phone") Telefono
-		input(ng-model='form.league.phone', name='phone', id="phone", type='text').form-control.input-sm
-		div(ng-show="addLeague['phone'].$error.mongoose", style="color: red") {{addLeague.phone.$error.mongoose}}
 	.form-group
 		label(for="birthdate") Fecha de nacimiento
 		.div(class='input-group date', id='datetimepicker1')
@@ -26,12 +22,12 @@ form(name="addLeague", ng-submit="submitPlayer(addLeague)")
 				span(class="input-group-addon")
 					span(class="glyphicon glyphicon-calendar")
 	.form-group
-		label(for="address") Dirección
-		input(ng-model='form.league.address', name='address', id="address", type='text').form-control.input-sm
-		div(ng-show="addLeague['address'].$error.mongoose", style="color: red") {{addLeague.address.$error.mongoose}}
+		label(for="introduction") introduction
+		textarea(ng-model='form.league.introduction', name='introduction', id="introduction", type='text').form-control.input-sm
+		div(ng-show="addLeague['introduction'].$error.mongoose", style="color: red") {{addLeague.introduction.$error.mongoose}}
 	.form-group
-		label(for="blood_type") Grupo Sanguíneo
-		input(ng-model='form.league.blood_type', name='blood_type', id="blood_type", type='text').form-control.input-sm
-		div(ng-show="addLeague['blood_type'].$error.mongoose", style="color: red") {{addLeague.blood_type.$error.mongoose}}
+		label(for="description") description
+		textarea(ng-model='form.league.description', name='description', id="description", type='text').form-control.input-sm
+		div(ng-show="addLeague['description'].$error.mongoose", style="color: red") {{addLeague.description.$error.mongoose}}
 	.form-group
 		input(type="Submit", value="Guardar").btn.btn-primary

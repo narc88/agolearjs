@@ -2,3 +2,8 @@ h3 Jugador
 div(ng-show="player")
 	include partial_view
 	a(class="btn btn-primary", role="button", href="/players/{{player._id}}") Ver
+f(RolesHelper.admin(user))
+	div(class="admin_section")
+		h3 Agregar imagen
+		-model = "player"
+		a(ng-repeat="type in imageTypes.#{model}", href="/images/add/#{model}/{{player._id}}/{{type}}") {{type}} 
