@@ -70,21 +70,29 @@ module.exports = function(app){
 
 	app.post('/api/zones/:id/participations/replace', function(req, res){
 		//Reemplaza un equipo con otro entre los participantes
-		var participation = new ParticipationModel(req.body.participation);
-		var callback = function(err, numAffected, status){
-			if(err) throw err;
-			req.send(goal);
-		}
-		ZoneModel.update(
-		    { _id: req.params.id}, 
-		    {$push: {"participations": participation}}, 
-			    function(err, numAffected, status){
-			    	 ZoneModel.update(
-					    { "participations._id": req.body.replaced_id}, 
-					    {$pull: {"participations" :{_id : req.params.id }}}, callback
-					)
-			    }
-		)
+		
+		TeamModel.findOne({ _id: req.body.new_team_id }).exec( function(err, team){
+			if (err) throw err;
+			var participation = new ParticipationModel();
+			participation.team_id = team._id;
+			participation.name = team.name;
+
+			var callback = function(err, numAffected, status){
+				if(err) throw err;
+				req.send(goal);
+			}
+			ZoneModel.update(
+			    { _id: req.params.id}, 
+			    {$push: {"participations": participation}}, 
+				    function(err, numAffected, status){
+				    	 ZoneModel.update(
+						    { "participations._id": req.params.id}, 
+						    {$pull: {"participations" :{_id : req.params.id}}}, callback
+						)
+				    }
+			);
+		});
+		
 	});
 
 	app.delete('/api/zones/participations/:id', function(req, res, next){

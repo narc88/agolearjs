@@ -8,7 +8,7 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/chronicles', function(req, res, next){
-		ChronicleModel.find().exec( function(err, chronicles){
+		ChronicleModel.find(req.query).exec( function(err, chronicles){
 			if (err) throw err;
 			res.send(chronicles);
 		});
