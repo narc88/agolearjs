@@ -22,22 +22,14 @@ block body
 						li
 							a(id="chroniclesButton", href="/chronicles")
 								span Noticias
+						li
+							a(id="myLeague", href="/leagues/54a129722730630d7c0015e3")
+								span Mi Liga
 					ul(class="nav navbar-nav navbar-right")
 						li(class="")
 							a(id="chroniclesButton", href="/login")
 								span Entrar
-	div(class="col-md-3 admin_menu")
-		ul(class="admin_menu")
-			li
-				a(href='/') Inicio
-			li
-				a(href='/zones/{{zone._id}}/add_participation') Agregar Participante
-			li
-				a(href='/zones/{{zone._id}}/create_fixture') Crear Fixture
-			li
-				a(href='/zones/{{zone._id}}/participations/replace') Reemplazar equipo
-			li
-				a(href='/chronicles?zone={{zone._id}}') Crónicas
+	div(class="col-md-3")
 	div(class="col-md-9")
 		div(class="breadcrumb")
 			ul

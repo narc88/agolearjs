@@ -19,8 +19,8 @@ form(name="addLeague", ng-submit="submitLeague(addLeague)")
 		label(for="birthdate") Fecha de nacimiento
 		.div(class='input-group date', id='datetimepicker1')
 			input(ng-model='form.league.dni',type='text', class="form-control")
-				span(class="input-group-addon")
-					span(class="glyphicon glyphicon-calendar")
+			span(class="input-group-addon")
+				span(class="glyphicon glyphicon-calendar")
 	.form-group
 		label(for="introduction") introduction
 		textarea(ng-model='form.league.introduction', name='introduction', id="introduction", type='text').form-control.input-sm

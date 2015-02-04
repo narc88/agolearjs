@@ -60,7 +60,7 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize']).
         templateUrl: '/partials/leagues/view.jade',
         controller: leagues_view
       }).
-      when('/leagues/edit/:id', {
+      when('/leagues/:id/edit', {
         templateUrl: '/partials/leagues/edit.jade',
         controller: leagues_edit
       }).

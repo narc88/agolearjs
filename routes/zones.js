@@ -2,7 +2,6 @@ var ZoneModel = require('../models/zone').ZoneModel;
 var ImageModel 	= require('../models/image').ImageModel;
 var MatchdayModel = require('../models/matchday').MatchdayModel;
 var MatchModel = require('../models/match').MatchModel;
-
 var mongoose = require('mongoose');
 
 module.exports = function(app){

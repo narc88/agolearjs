@@ -1,0 +1,13 @@
+<!-- Single button -->
+div(class="btn-group")
+	button(type="button", class="btn  btn-primary dropdown-toggle", data-toggle="dropdown", aria-expanded="false")
+		span Acciones 
+		span(class="caret")
+	ul(class="dropdown-menu admin_menu", role="menu")
+		li
+			a(href='/leagues/{{league._id}}/edit') Editar
+		-model = "league" 
+		li(ng-repeat="type in imageTypes.#{model}")
+			a(href="/images/add/#{model}/{{league._id}}/{{type}}") Agregar imagen {{type}}
+		li
+			a(href='/chronicles?league={{league._id}}') Crónicas

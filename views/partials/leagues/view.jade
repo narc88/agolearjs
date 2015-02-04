@@ -1,7 +1,9 @@
-h3 {{league.name}}
+include admin_menu
+h3
+	a(href="/leagues/edit/{{league._id}}") {{league.name}}
 p {{league.slogan}} 
 p {{league.email}} 
-a(href="/leagues/edit/{{league._id}}")
+
 if(RolesHelper.admin(user))
 	div(class="admin_section")
 		h3 Agregar imagen
