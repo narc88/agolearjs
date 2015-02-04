@@ -5,9 +5,7 @@ div(class="btn-group pull-right")
 		span(class="caret")
 	ul(class="dropdown-menu admin_menu", role="menu")
 		li
-			a(href='/leagues/{{league._id}}/edit') Editar
-		-model = "league" 
+			a(href='/players/{{player._id}}/edit') Editar
+		-model = "player" 
 		li(ng-repeat="type in imageTypes.#{model}")
-			a(href="/images/add/#{model}/{{league._id}}/{{type}}") Agregar imagen {{type}}
-		li
-			a(href='/chronicles?league={{league._id}}') Crónicas
+			a(href="/images/add/#{model}/{{player._id}}/{{type}}") Agregar imagen {{type}}

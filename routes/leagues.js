@@ -33,7 +33,12 @@ module.exports = function(app){
 		LeagueModel.findOne({ _id: req.params.id }).exec( function(err, league){
 			if (err) throw err;
 			if(league){
-				league.name = req.body.league.name;
+				league.name = req.body.name;
+				league.slug = req.body.slug;
+				league.slogan = req.body.slogan;
+				league.email = req.body.email;
+				league.introduction = req.body.introduction;
+				league.description = req.body.description;
 				league.modified = new Date();
 				league.save(function(err){
 					if (err) throw err;

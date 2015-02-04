@@ -1,5 +1,4 @@
-//Incindent and Goals container
-
+include admin_menu
 div(class="result col-md-12")
 	include partial_view.jade
 h2 Goles e Incidentes
@@ -43,15 +42,17 @@ div(class="incidents col-md-12")
 h2 Horario y Cancha
 div(class="time")
 	span {{match.turn[0].field.name}}
-	span {{match.turn[0].hour}}
-	span {{match.turn[0].minute}}
+div(class="hour")
+	span {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
 h2 Jugadores
 div(class="players")
 	div(class="local col-md-6")
 		ul
 			li(ng-repeat="player in match.local_players")
-				span {{player.name}} {{player.last_name}}
+				a(href="/players/{{player._id}}")
+					span {{player.name}} {{player.last_name}}
 	div(class="visitor col-md-6")
 		ul
 			li(ng-repeat="player in match.visitor_players")
-				span {{player.name}} {{player.last_name}}
+				a(href="/players/{{player._id}}")
+					span {{player.name}} {{player.last_name}}

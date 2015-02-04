@@ -1,33 +1,27 @@
-form(name="addLeague", ng-submit="submitLeague(addLeague)")
+form(name="addLeague", ng-submit="editLeague(addLeague)")
 	.form-group
 		label(for="name") Nombre
-		input(ng-model='form.league.name', name='name', id="name", type='text').form-control.input-sm
+		input(ng-model='league.name', name='name',value="{{league.name}}", id="name", type='text').form-control.input-sm
 		div(ng-show="addLeague['name'].$error.mongoose", style="color: red") {{addLeague.name.$error.mongoose}}
 	.form-group
 		label(for="slug") Nombre Abreviado
-		input(ng-model='form.league.slug', name='slug', id="slug", type='text').form-control.input-sm
+		input(ng-model='league.slug', name='slug',value="{{league.slug}}", id="slug", type='text').form-control.input-sm
 		div(ng-show="addLeague['slug'].$error.mongoose", style="color: red") {{addLeague.last_name.$error.mongoose}}
 	.form-group
 		label(for="slogan") Slogan
-		input(ng-model='form.league.slogan', name='slogan', id="slogan", type='text').form-control.input-sm
+		input(ng-model='league.slogan', name='slogan', value="{{league.slogan}}", id="slogan", type='text').form-control.input-sm
 		div(ng-show="addLeague['slogan'].$error.mongoose", style="color: red") {{addLeague.slogan.$error.mongoose}}
 	.form-group
 		label(for="email") Email
-		input(ng-model='form.league.email', name='email', id="email", type='text').form-control.input-sm
+		input(ng-model='league.email', name='email', value="{{league.email}}",  id="email", type='text').form-control.input-sm
 		div(ng-show="addLeague['email'].$error.mongoose", style="color: red") {{addLeague.email.$error.mongoose}}
 	.form-group
-		label(for="birthdate") Fecha de nacimiento
-		.div(class='input-group date', id='datetimepicker1')
-			input(ng-model='form.league.dni',type='text', class="form-control")
-			span(class="input-group-addon")
-				span(class="glyphicon glyphicon-calendar")
-	.form-group
-		label(for="introduction") introduction
-		textarea(ng-model='form.league.introduction', name='introduction', id="introduction", type='text').form-control.input-sm
+		label(for="introduction") Introducción a la liga
+		textarea(ng-model='league.introduction',value="{{league.introduction}}", name='introduction', id="introduction", type='text').form-control.input-sm
 		div(ng-show="addLeague['introduction'].$error.mongoose", style="color: red") {{addLeague.introduction.$error.mongoose}}
 	.form-group
-		label(for="description") description
-		textarea(ng-model='form.league.description', name='description', id="description", type='text').form-control.input-sm
+		label(for="description") Descripción
+		textarea(ng-model='league.description', value="{{league.description}}",name='description', id="description", type='text').form-control.input-sm
 		div(ng-show="addLeague['description'].$error.mongoose", style="color: red") {{addLeague.description.$error.mongoose}}
 	.form-group
 		input(type="Submit", value="Guardar").btn.btn-primary

@@ -4,8 +4,8 @@ div(class="content", ng-bind-html="content_chronicle")
 
 div(class="row")
 	div(class="col-xs-6 col-md-3")
-		a(href="#", class="thumbnail")
-			img(ng-repeat="image in chronicle.images" ng-src="/photos/chronicle/{{chronicle._id}}/{{image.filename}}" alt="...")
+		a(ng-repeat="image in chronicle.images" , href="#", class="thumbnail")
+			img(ng-src="/photos/chronicle/{{chronicle._id}}/{{image.filename}}" alt="...")
 if(RolesHelper.admin(user))
 	div(class="admin_section")
 		h3 Agregar imagen

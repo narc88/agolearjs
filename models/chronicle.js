@@ -6,6 +6,7 @@ var ChronicleSchema = new mongoose.Schema({
 	title				: { type: String, required:true, trim:true},
 	summary				: { type: String, trim:true},
 	content				: { type: String, required:true, trim:true},
+	match				: {type: mongoose.Schema.ObjectId, ref: 'Match' },
 	created        		: { type: Date, default: Date.now },
 	images              : [ImageSchema],
 	modified       		: { type: Date, default: Date.now }

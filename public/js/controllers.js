@@ -153,11 +153,11 @@ function leagues_edit($scope, $http, $location, $routeParams) {
   $scope.form = {};
   $http.get('/api/leagues/' + $routeParams.id).
     success(function(data) {
-      $scope.form = data;
+      $scope.league = data;
     });
 
   $scope.editLeague = function () {
-    $http.put('/api/leagues/' + $routeParams.id, $scope.form).
+    $http.put('/api/leagues/' + $routeParams.id, $scope.league).
       success(function(data) {
         $location.url('/readPost/' + $routeParams.id);
       });
@@ -690,9 +690,13 @@ function chronicles_index($scope, $http, $location, $routeParams , $sce, $rootSc
     });
 }
 
-function chronicles_add($scope, $http, $location) {
+function chronicles_add($scope, $http, $location, $routeParams ) {
+  var queryString = $.param( $routeParams );
   $scope.form = {};
   $scope.submitChronicle = function () {
+    if(queryString.match){
+      $scope.chronicle.match = queryString.match;
+    }
     $scope.chronicle.content  = $("#contentarea").html();
     $http.post('/api/chronicles', $scope.chronicle).
       success(function(data) {
