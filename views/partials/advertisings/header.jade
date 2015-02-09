@@ -1,0 +1,14 @@
+div(id="headerAdvertisings", class="carousel slide", data-ride="carousel")
+	ol(class="carousel-indicators")
+		li(ng-repeat="advert in advertisings", data-target="#headerAdvertisings", data-slide-to="#{i}", class="active")
+	.carousel-inner
+		.item.active
+			img(ng-repeat="advert in advertisings", ng-src="/photos/advertising/{{advert._id}}/{{advert.preview_image.filename}}" , alt="{{advert.title}}", style="width:100%;max-height:450px;")
+			.carousel-caption
+				p {{advert.title}}
+				p {{advert.description}}							
+	a(class="left carousel-control", href="#headerAdvertisings", data-slide="prev")
+		span(class="glyphicon glyphicon-chevron-left")
+	a(class="right carousel-control", href="#headerAdvertisings", data-slide="next")
+		span(class="glyphicon glyphicon-chevron-right")
+		

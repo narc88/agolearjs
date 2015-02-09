@@ -1,6 +1,10 @@
 'use strict';
 // Declare app level module which depends on filters, and services
-var agolear = angular.module('agolear', ['ngRoute','ngSanitize']).
+var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).run([
+      '$rootScope', function ($rootScope) {
+          $rootScope.facebookAppId = '202443209924902'; // set your facebook app id here
+      }
+  ]).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider, $sceProvider) {
     $routeProvider.
       
@@ -197,9 +201,27 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize']).
         templateUrl: '/partials/images/delete.jade',
         controller: images_delete
       }).
-      otherwise({
-        redirectTo: '/'
-      });
+      when('/advertisings', {
+        templateUrl: '/partials/advertisings/index.jade',
+        controller: advertisings_index
+      }).
+      when('/advertisings/add', {
+        templateUrl: '/partials/advertisings/form.jade',
+        controller: advertisings_add
+      }).
+      when('/advertisings/:id', {
+        templateUrl: '/partials/advertisings/view.jade',
+        controller: advertisings_view
+      }).
+      when('/advertisings/edit/:id', {
+        templateUrl: '/partials/advertisings/edit.jade',
+        controller: advertisings_edit
+      }).
+      when('/advertisings/delete/:id', {
+        templateUrl: '/partials/advertisings/delete.jade',
+        controller: advertisings_delete
+      })
+      .otherwise({redirectTo: '/otherwise' });
     $locationProvider.html5Mode(true);
   }]);
 
@@ -239,4 +261,20 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
             $scope.message = 'Error: Invalid user or password';
           });
       };
+    }).controller('HeaderAdvertisingsController', function ($scope, $http, $window, $rootScope) {
+     $http.get('/api/advertisings?type=encabezado').
+        success(function(data) {
+          for (var i = 0; i < data.length; i++) {
+            data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "encabezado");
+          };
+          $scope.advertisings = data;
+        });
+    }).controller('SidebarAdvertisingsController', function ($scope, $http, $window, $rootScope) {
+     $http.get('/api/advertisings?type=lateral').
+        success(function(data) {
+         for (var i = 0; i < data.length; i++) {
+            data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "lateral");
+          };
+          $scope.advertisings = data;
+        });
     });

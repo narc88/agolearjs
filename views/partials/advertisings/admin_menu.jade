@@ -1,0 +1,9 @@
+<!-- Single button -->
+div(class="btn-group pull-right")
+	button(type="button", class="btn  btn-primary dropdown-toggle", data-toggle="dropdown", aria-expanded="false")
+		span Acciones 
+		span(class="caret")
+	ul(class="dropdown-menu admin_menu", role="menu")
+		-model = "advertising" 
+		li(ng-repeat="type in imageTypes.#{model}")
+			a(href="/images/add/#{model}/{{advertising._id}}/{{type}}") Agregar imagen {{type}}

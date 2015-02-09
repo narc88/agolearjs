@@ -26,6 +26,7 @@ function main($rootScope,$scope, $http) {
   $rootScope.imageTypes.field = ["normal"];
   $rootScope.imageTypes.chronicle = ["completa"];
   $rootScope.imageTypes.rule = ["completa"];
+  $rootScope.imageTypes.advertising = ["encabezado", "lateral"];
 
   $rootScope.imageHelper = {};
   $rootScope.imageHelper.getImage = function(images, type){
@@ -200,12 +201,14 @@ function zones_add($scope, $http, $location) {
   };
 }
 
-function zones_view($scope, $http, $routeParams, $rootScope) {
+function zones_view($scope, $http, $routeParams, $rootScope, $location) {
   if((typeof $rootScope.zone === "undefined") || ($routeParams.id != $rootScope.zone.id)){
     $http.get('/api/zones/' + $routeParams.id).
       success(function(data) {
         $scope.zone = data;
         $rootScope.zone = data;
+        $scope.sociallikeurl = $location.absUrl();
+        $scope.socialname = "El usuario ha compartido la zona"
     });
   }else{
     $scope.zone = $rootScope.zone
@@ -749,6 +752,77 @@ function chronicles_delete($scope, $http, $location, $routeParams) {
   };
 }
 
+
+
+/*advertising*/
+function advertisings_index($scope, $http, $location, $routeParams , $sce, $rootScope) {
+  var queryString = $.param( $routeParams );
+  $http.get('/api/advertisings'+'?'+queryString).
+    success(function(data, status, headers, config) {
+      for (var i = 0; i < data.length; i++) {
+        data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, data[i].type);
+      };
+      $scope.advertisings = data;
+    });
+}
+
+function advertisings_add($scope, $http, $location, $routeParams ) {
+  var queryString = $.param( $routeParams );
+  $scope.form = {};
+  $scope.submitAdvertising = function () {
+    if(queryString.match){
+      $scope.advertising.match = queryString.match;
+    }
+    $scope.advertising.content  = $("#contentarea").html();
+    $http.post('/api/advertisings', $scope.advertising).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function advertisings_view($scope, $http, $routeParams, $rootScope, $sce) {
+  $http.get('/api/advertisings/' + $routeParams.id).
+    success(function(data) {
+      data.preview_image = $rootScope.imageHelper.getImage(data.images,  data.type);
+      $scope.advertising = data;
+    });
+}
+
+function advertisings_edit($scope, $http, $location, $routeParams) {
+  $scope.advertising = {};
+  $http.get('/api/advertisings/' + $routeParams.id).
+    success(function(data) {
+      $scope.advertising = data;
+    });
+
+  $scope.editAdvertising = function () {
+    $scope.advertising.content  = $("#contentarea").html();
+    $http.put('/api/advertisings/' + $routeParams.id, $scope.advertising).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function advertisings_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/advertisings/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteAdvertising = function () {
+    $http.delete('/api/advertisings/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+
 /*rule*/
 function rules_index($scope, $http, $location, $routeParams , $sce, $rootScope) {
   var queryString = $.param( $routeParams );
@@ -827,7 +901,9 @@ function images_add($rootScope, $scope, $http, $window, $location, $routeParams)
       "completa" : {"height": 230, "width":300},
       "uniforme" : {"height":115 , "width":50},
       "cara" : {"height":80, "width":80},
-      "copa" : {"height":70 , "width":100}
+      "copa" : {"height":70 , "width":100},
+      "encabezado" : {"height":70 , "width":100},
+      "lateral" : {"height":70 , "width":100}
       };
   $scope.image = {};
   $scope.image.type = $routeParams.format;

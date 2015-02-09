@@ -2,8 +2,10 @@ extends layout
 
 block body
 	div(class="col-md-12 page_header")
-		h3 Altos del paracao
-		img(src="")
+		div(class="col-md-12 col-xs-12")
+			h3 Altos del paracao
+			div(ng-controller="HeaderAdvertisingsController", class="col-md-6 col-xs-6")
+				include partials/advertisings/header.jade
 		nav(id="navbar-example", class="navbar navbar-default navbar-static")
 			div(class="container-fluid")
 				div(class="navbar-header")
@@ -30,7 +32,6 @@ block body
 							a(id="chroniclesButton", href="/login")
 								span Entrar
 	div(class="col-md-3")
-	div(class="col-md-9")
 		div(class="breadcrumb")
 			ul
 				li(ng-if="tournament")
@@ -41,26 +42,32 @@ block body
 					a( href="/matchdays/{{matchday._id}}") Fecha
 				li(ng-if="match")
 					a(href="/matches/{{match._id}}") Partido
+				li()
+					a(href="/advertisings/add") Publicidades
+		div(ng-controller="SidebarAdvertisingsController")
+			include partials/advertisings/sidebar.jade
+	div(class="col-md-9")
 		div(ng-view)
 
 	//Javascript
-	script(src='js/jquery.min.js')
-	script(src='bower_components/angular/angular.js')
-	script(src='bower_components/angular-route/angular-route.js')
-	script(src='bower_components/angular-sanitize/angular-sanitize.js')
-	script(src='js/app.js')
-	script(src='js/services.js')
-	script(src='js/controllers.js')
-	script(src='js/filters.js')
-	script(src='js/lib/bootstrap/bootstrap.min.js')
-	script(src='js/editor.js')
-	script(src='js/index.js')
-	script(src="bower_components/cropit/dist/jquery.cropit.min.js")
+	script(src='/js/jquery.min.js')
+	script(src='/bower_components/angular/angular.js')
+	script(src='/bower_components/angular-route/angular-route.js')
+	script(src='/bower_components/angular-sanitize/angular-sanitize.js')
+	script(src='/js/angulike.js')
+	script(src='/js/app.js')
+	script(src='/js/services.js')
+	script(src='/js/controllers.js')
+	script(src='/js/filters.js')
+	script(src='/js/lib/bootstrap/bootstrap.min.js')
+	script(src='/js/editor.js')
+	script(src='/js/index.js')
+	script(src="/bower_components/cropit/dist/jquery.cropit.min.js")
 	
 
 	//Css
-	link(rel='stylesheet', href='bower_components/html5-boilerplate/css/normalize.css')
-	link(rel='stylesheet', href='bower_components/html5-boilerplate/css/main.css')
+	link(rel='stylesheet', href='/bower_components/html5-boilerplate/css/normalize.css')
+	link(rel='stylesheet', href='/bower_components/html5-boilerplate/css/main.css')
 	link(rel='stylesheet', href='/css/bootstrap/bootstrap.min.css')
 	link(rel='stylesheet', href='/css/bootstrap/bootstrap-theme.min.css')
 	link(rel='stylesheet', href='/css/editor.css')

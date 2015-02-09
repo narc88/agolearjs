@@ -6,6 +6,7 @@ var validator = require('validator');
 var AdvertisingSchema = new mongoose.Schema({
 	title				: { type: String, required:true, trim:true},
 	description				: { type: String, trim:true},
+	type				: { type: String, trim:true},
 	link				: { type: String, required:true, trim:true},
 	expiration        		: { type: Date, default: Date.now },
 	images 				: [ImageSchema],

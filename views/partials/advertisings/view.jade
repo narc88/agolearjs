@@ -1,0 +1,6 @@
+include admin_menu.jade
+include partial_view.jade
+div(class="row")
+	div(ng-repeat="image in advertising.images", class="col-xs-6 col-md-3")
+		a(href="#", class="thumbnail")
+			img(ng-src="/photos/advertising/{{advertising._id}}/{{image.filename}}" alt="{{image.filename}}")

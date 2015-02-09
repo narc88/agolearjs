@@ -1,0 +1,24 @@
+form(name="addAdvertising", ng-submit="submitAdvertising(addAdvertising)")
+	.form-group
+		label(for="title") Titulo
+		input(ng-model='advertising.title', name='title', id="title", type='text').form-control.input-sm
+		div(ng-show="addAdvertising['title'].$error.mongoose", style="color: red") {{addAdvertising.title.$error.mongoose}}
+	.form-group
+		label(for="link") Link
+		input(ng-model='advertising.link', name='link', id="link", type='text').form-control.input-sm
+		div(ng-show="addAdvertising['link'].$error.mongoose", style="color: red") {{addAdvertising.link.$error.mongoose}}
+	.form-group
+		label(for="expiration") Expiration
+		input(ng-model='advertising.expiration', name='expiration', id="expiration", type='text').form-control.input-sm
+		div(ng-show="addAdvertising['expiration'].$error.mongoose", style="color: red") {{addAdvertising.expiration.$error.mongoose}}
+	.form-group
+		label(for="type") Tipo
+		select(ng-model='advertising.type', name='type', id="type" ).form-control
+			option(value="encabezado", selected="selected") Encabezado
+			option(value="lateral") Lateral
+	.form-group
+		label(for="description") Descripción
+		textarea(ng-model='advertising.description', name='description', id="description", type='text').form-control.input-sm
+		div(ng-show="addAdvertising['advertising'].$error.mongoose", style="color: red") {{addAdvertising.description.$error.mongoose}}
+	.form-group
+		input(type="submit", value="Guardar").btn.btn-primary
