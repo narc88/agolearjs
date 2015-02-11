@@ -197,7 +197,7 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
         templateUrl: '/partials/images/upload.jade',
         controller: images_add
       }).
-      when('/images/delete/:id', {
+      when('/images/delete/:model/:model_id/:id', {
         templateUrl: '/partials/images/delete.jade',
         controller: images_delete
       }).
@@ -268,6 +268,8 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
             data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "encabezado");
           };
           $scope.advertisings = data;
+          $(".carousel-inner > .item").first().addClass("active")
+          $(".carousel-indicators > li").first().addClass("active")
         });
     }).controller('SidebarAdvertisingsController', function ($scope, $http, $window, $rootScope) {
      $http.get('/api/advertisings?type=lateral').
@@ -276,5 +278,7 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
             data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "lateral");
           };
           $scope.advertisings = data;
+          $(".carousel-inner > .item").first().addClass("active")
+          $(".carousel-indicators > li").first().addClass("active")
         });
     });

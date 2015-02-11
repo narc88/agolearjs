@@ -1,6 +1,6 @@
 div(class="media")
 	a(class="pull-left", href="#")
-		img(class="media-object" src="..." alt="...")
+		img(ng-src="/photos/player/{{player._id}}/{{player.cara_image.filename}}")
 	div(class="media-body")
 	h4(class="media-heading")
 		a(href="/players/{{player._id}}") {{player.last_name}} {{player.name}}

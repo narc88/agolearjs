@@ -1,8 +1,8 @@
 div(id="sidebarAdvertisings", class="carousel slide", data-ride="carousel", style="width:50%;height:150px;")
 	ol(class="carousel-indicators")
-		li(ng-repeat="advert in advertisings", data-target="#sidebarAdvertisings", data-slide-to="#{i}", class="active")
+		li(ng-repeat="advert in advertisings", data-target="#sidebarAdvertisings", data-slide-to="#{i}")
 	.carousel-inner
-		.item.active
+		.item
 			img(ng-repeat="advert in advertisings", ng-src="/photos/advertising/{{advert._id}}/{{advert.preview_image.filename}}" , alt="{{advert.title}}", style="width:100%;max-height:450px;")
 			.carousel-caption
 				p {{advert.title}}

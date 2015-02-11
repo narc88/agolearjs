@@ -79,6 +79,8 @@ module.exports = function(app){
 				 if (err) console.log(err)
 				});
 				Model.findOne({"_id" :  elem_id}).exec(function(err, model){
+					console.log(model.images)
+					console.log(image)
 					model.images.push(image);
 					model.save(function(err){
 						if(err) throw err;

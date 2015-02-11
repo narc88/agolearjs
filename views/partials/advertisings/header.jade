@@ -1,9 +1,9 @@
 div(id="headerAdvertisings", class="carousel slide", data-ride="carousel", style="height:150px;", ng-model="advertisings")
 	ol(class="carousel-indicators")
-		li(ng-repeat="advert in advertisings", data-target="#headerAdvertisings", data-slide-to="0", class="active")
+		li(ng-repeat="advert in advertisings", data-target="#headerAdvertisings", data-slide-to="{{$index}}")
 	.carousel-inner
-		.item.active
-			img(ng-repeat="advert in advertisings", ng-src="/photos/advertising/{{advert._id}}/{{advert.preview_image.filename}}" , alt="{{advert.title}}", style="max-height:150px;")
+		div(ng-repeat="advert in advertisings").item
+			img(ng-src="/photos/advertising/{{advert._id}}/{{advert.preview_image.filename}}" , alt="{{advert.title}}", style="max-height:150px;")
 			.carousel-caption
 				p {{advert.title}}
 				p {{advert.description}}							
