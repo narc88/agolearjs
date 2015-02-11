@@ -64,6 +64,7 @@ var PlayerSchema = new mongoose.Schema({
                      'Grupo sanguíneo debe tener entre uno y 5 caracteres'
                     ]
                 },
+    active      : {type:Boolean, default:true},
     images      : [ImageSchema],
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }

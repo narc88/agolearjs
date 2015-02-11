@@ -281,6 +281,7 @@ function players_add($scope, $http, $location) {
 function players_view($scope, $http, $routeParams) {
   $http.get('/api/players/' + $routeParams.id).
     success(function(data) {
+      data.cara_image =  $rootScope.imageHelper.getImage(data.images, "cara");
       $scope.player = data;
     });
 }
@@ -356,6 +357,9 @@ function teams_view($scope, $http, $routeParams, $rootScope) {
     success(function(data) {
       $scope.team = data;
       $scope.team.logo_image = $rootScope.imageHelper.getImage($scope.team.images, "escudo");
+      for (var i = $scope.team.players.length - 1; i >= 0; i--) {
+        $scope.team.players[i].cara_image =  $rootScope.imageHelper.getImage($scope.player.images, "cara");
+      };
       $scope.$on('savedImage', trigger);
     });
   $http.get('/api/suspensionsByTeam?team=' + $routeParams.id).
@@ -902,8 +906,8 @@ function images_add($rootScope, $scope, $http, $window, $location, $routeParams)
       "uniforme" : {"height":115 , "width":50},
       "cara" : {"height":80, "width":80},
       "copa" : {"height":70 , "width":100},
-      "encabezado" : {"height":70 , "width":100},
-      "lateral" : {"height":70 , "width":100}
+      "encabezado" : {"height":100 , "width":400},
+      "lateral" : {"height":100 , "width":100}
       };
   $scope.image = {};
   $scope.image.type = $routeParams.format;
@@ -928,7 +932,7 @@ function images_add($rootScope, $scope, $http, $window, $location, $routeParams)
             }
           }
         } else{
-          $rootScope.$broadcast('savedImage', {id:id,image:image})
+          $rootScope.$broadcast('savedImage', {id:$routeParams.id,image:image})
         }
       })
       .error(function (data, status, headers, config) {
@@ -939,19 +943,8 @@ function images_add($rootScope, $scope, $http, $window, $location, $routeParams)
 
 
 function images_delete($scope, $http, $location, $routeParams) {
-  $http.get('/api/images/' + $routeParams.id).
-    success(function(data) {
-      $scope.league = data;
-    });
-
-  $scope.deleteimage = function () {
-    $http.delete('/api/images/' + $routeParams.id).
+   $http.delete('/api/images/'+ $routeParams.model + '/'+$routeParams.model_id + '/'+ $routeParams.id).
       success(function(data) {
         $location.url('/');
       });
-  };
-
-  $scope.home = function () {
-    $location.url('/');
-  };
 }
