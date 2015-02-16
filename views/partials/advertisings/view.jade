@@ -1,4 +1,5 @@
-include admin_menu.jade
+if(RolesHelper.admin(user))
+	include admin_menu.jade
 include partial_view.jade
 div(class="row")
 	div(ng-repeat="image in advertising.images", class="col-xs-6 col-md-3")

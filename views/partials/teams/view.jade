@@ -1,3 +1,5 @@
+if(RolesHelper.admin(user))
+	include admin_menu
 h3 Equipo
 div(ng-show="team")
 	include partial_view
@@ -8,8 +10,10 @@ div(ng-show="team")
 	div(ng-if="last_played_matches.length > 0", ng-model="last_played_matches")
 		div(ng-repeat="match in last_played_matches")
 			include ../matches/partial_view.jade
-	if(RolesHelper.admin(user))
-		div(class="admin_section")
-			h3 Agregar imagen
-			-model = "team"
-			a(ng-repeat="type in imageTypes.#{model}", href="/images/add/#{model}/{{team._id}}/{{type}}") {{type}} 
+div(class="row")
+	div(ng-repeat="image in team.images", class="col-xs-6 col-md-3")
+		a(href="#", class="thumbnail")
+			img(ng-src="/photos/team/{{team._id}}/{{image.filename}}" alt="{{image.filename}}")
+		if(RolesHelper.admin(user))
+			a(ng-click="removeImage(image._id)")
+				button(type="button" class="btn btn-danger") Borrar

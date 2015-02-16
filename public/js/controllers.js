@@ -284,6 +284,12 @@ function players_view($scope, $http, $routeParams) {
       data.cara_image =  $rootScope.imageHelper.getImage(data.images, "cara");
       $scope.player = data;
     });
+  $scope.removeImage = function(image_id){
+    $http.delete('/api/images/player/'+$scope.player._id + '/'+ image_id).
+      success(function(data) {
+        $scope.player.images = $scope.player.images.filter(function(img) { return img._id == image_id; });
+      });
+  };
 }
 
 function players_edit($scope, $http, $location, $routeParams) {
@@ -353,23 +359,26 @@ function teams_view($scope, $http, $routeParams, $rootScope) {
   function trigger(event,data) {
     $scope.team.images.push(data.image);
   }
-  $http.get('/api/teams/' + $routeParams.id).
-    success(function(data) {
-      $scope.team = data;
-      $scope.team.logo_image = $rootScope.imageHelper.getImage($scope.team.images, "escudo");
-      for (var i = $scope.team.players.length - 1; i >= 0; i--) {
-        $scope.team.players[i].cara_image =  $rootScope.imageHelper.getImage($scope.player.images, "cara");
-      };
-      $scope.$on('savedImage', trigger);
-    });
-  $http.get('/api/suspensionsByTeam?team=' + $routeParams.id).
-    success(function(data) {
-      $scope.suspensions = data;
-    });
-  $http.get('/api/matchesLastPlayed?team=' + $routeParams.id).
-    success(function(data) {
-      $scope.last_played_matches = data;
-    });
+  $http.get('/api/teams/' + $routeParams.id).success(function(data) {
+    $scope.team = data;
+    $scope.team.logo_image = $rootScope.imageHelper.getImage($scope.team.images, "escudo");
+    for (var i = $scope.team.players.length - 1; i >= 0; i--) {
+      $scope.team.players[i].cara_image =  $rootScope.imageHelper.getImage($scope.player.images, "cara");
+    };
+    $scope.$on('savedImage', trigger);
+  });
+  $http.get('/api/suspensionsByTeam?team=' + $routeParams.id).success(function(data) {
+    $scope.suspensions = data;
+  });
+  $http.get('/api/matchesLastPlayed?team=' + $routeParams.id).success(function(data) {
+    $scope.last_played_matches = data;
+  });
+  $scope.removeImage = function(image_id){
+    $http.delete('/api/images/team/'+$scope.team._id + '/'+ image_id).
+      success(function(data) {
+        $scope.team.images = $scope.team.images.filter(function(img) { return img._id == image_id; });
+      });
+  };
 }
 
 function teams_edit($scope, $http, $location, $routeParams) {
