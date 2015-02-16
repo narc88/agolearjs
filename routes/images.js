@@ -106,22 +106,37 @@ module.exports = function(app){
 			
 	}
 
-	app.post('/images/:param/:elem_id', save_image(app.get('photos')));
+	app.post('/api/images/:param/:elem_id', save_image(app.get('photos')));
 
 	var delete_image = function(dir){
 		return function(req,res){
+			var path = dir+req.params.param+'/'+req.params.param_id;
+			//Al path hay que agregarle el tenant id
+			console.log(path);
 			console.log("me llamaban")
 			var Model = get_model(req.params.param);
-			
-				Model.update(
-				  { _id: req.params.param_id },
-				  { $pull: { 'images': req.params.image_id } }
-				).exec(function(){
-					res.send(true)
-				})			
+			Model.findOne({"_id" :  req.params.param_id}).exec(function(err, model){
+				for (var i = model.images.length - 1; i >= 0; i--) {
+					if(model.images[i]._id == req.params.image_id){
+						image_to_erase = model.images[i];
+					}
+				};
+				fs.unlink(path+'/'+image_to_erase.filename, function (err) {
+				  if (err) throw err;
+				  Model.update(
+					  { _id: req.params.param_id },
+					  { $pull: {images:{ '_id': req.params.image_id } }}
+					).exec(function(err, numAffected){
+						console.log(err)
+						console.log(numAffected)
+						res.send(true)
+					})	
+				});
+			});
+						
 		}
 	}
 
-	app.get('/images/:param/:param_id/:image_id', delete_image(app.get('photos')));
+	app.delete('/api/images/:param/:param_id/:image_id', delete_image(app.get('photos')));
 }
 

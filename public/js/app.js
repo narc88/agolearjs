@@ -197,10 +197,6 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
         templateUrl: '/partials/images/upload.jade',
         controller: images_add
       }).
-      when('/images/delete/:model/:model_id/:id', {
-        templateUrl: '/partials/images/delete.jade',
-        controller: images_delete
-      }).
       when('/advertisings', {
         templateUrl: '/partials/advertisings/index.jade',
         controller: advertisings_index

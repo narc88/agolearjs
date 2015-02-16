@@ -204,3 +204,7 @@ input {
   vertical-align:middle;
   text-align:center;
 }
+
+.page_header{
+  margin-top: 60px;
+}

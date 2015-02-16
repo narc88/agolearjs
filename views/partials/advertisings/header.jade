@@ -1,14 +1,5 @@
 div(id="headerAdvertisings", class="carousel slide", data-ride="carousel", style="height:150px;", ng-model="advertisings")
-	ol(class="carousel-indicators")
-		li(ng-repeat="advert in advertisings", data-target="#headerAdvertisings", data-slide-to="{{$index}}")
 	.carousel-inner
 		div(ng-repeat="advert in advertisings").item
-			img(ng-src="/photos/advertising/{{advert._id}}/{{advert.preview_image.filename}}" , alt="{{advert.title}}", style="max-height:150px;")
-			.carousel-caption
-				p {{advert.title}}
-				p {{advert.description}}							
-	a(class="left carousel-control", href="#headerAdvertisings", data-slide="prev")
-		span(class="glyphicon glyphicon-chevron-left")
-	a(class="right carousel-control", href="#headerAdvertisings", data-slide="next")
-		span(class="glyphicon glyphicon-chevron-right")
+			img(ng-src="/photos/advertising/{{advert._id}}/{{advert.preview_image.filename}}" , alt="{{advert.title}}", style="max-height:150px;")						
 		

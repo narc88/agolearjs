@@ -5,5 +5,5 @@ div(class="row")
 		a(href="#", class="thumbnail")
 			img(ng-src="/photos/advertising/{{advertising._id}}/{{image.filename}}" alt="{{image.filename}}")
 		if(RolesHelper.admin(user))
-			a(href="/images/delete/{{image._id}}")
+			a(ng-click="removeImage(image._id)")
 				button(type="button" class="btn btn-danger") Borrar

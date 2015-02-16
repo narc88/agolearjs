@@ -791,6 +791,13 @@ function advertisings_view($scope, $http, $routeParams, $rootScope, $sce) {
       data.preview_image = $rootScope.imageHelper.getImage(data.images,  data.type);
       $scope.advertising = data;
     });
+
+  $scope.removeImage = function(image_id){
+    $http.delete('/api/images/advertising/'+$scope.advertising._id + '/'+ image_id).
+      success(function(data) {
+        $scope.advertising.images = $scope.advertising.images.filter(function(img) { return img._id == image_id; });
+      });
+  };
 }
 
 function advertisings_edit($scope, $http, $location, $routeParams) {
@@ -921,7 +928,7 @@ function images_add($rootScope, $scope, $http, $window, $location, $routeParams)
     });
     $scope.image.imageBase64Content = imgBase64;
     $http
-      .post('/images/'+$routeParams.param+'/'+ $routeParams.id, $scope.image)
+      .post('/api/images/'+$routeParams.param+'/'+ $routeParams.id, $scope.image)
       .success(function (data, status, headers, config) {
         if (data.error) {
           for (var object in data.error.errors) {
@@ -939,12 +946,4 @@ function images_add($rootScope, $scope, $http, $window, $location, $routeParams)
         
       });
   };
-}
-
-
-function images_delete($scope, $http, $location, $routeParams) {
-   $http.delete('/api/images/'+ $routeParams.model + '/'+$routeParams.model_id + '/'+ $routeParams.id).
-      success(function(data) {
-        $location.url('/');
-      });
 }
