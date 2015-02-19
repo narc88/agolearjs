@@ -13,40 +13,40 @@ var TournamentSchema = new mongoose.Schema({
                  	]
                 },
     number_of_teams	: { 
-				type: Number
+				type: Number, default: 20
                 },
     number_of_zones : { 
-                type: Number
+                type: Number, default: 1
                 },
     tournament_type : { 
-                type: Number
+                type: Number, default: 1
                 },
     yellow_card_limit : { 
-                type: Number
+                type: Number, default: 5
                 },
     winner_points : { 
-                type: Number
+                type: Number, default: 3
                 },
     tied_points : { 
-                type: Number
+                type: Number, default: 1
                 },
     presentation_points : { 
-                type: Number
+                type: Number, default: 0
                 },
     cant_teams_for_next_round : { 
-                type: Number
+                type: Number, default: 0
                 },
     double_playoff_match : { 
-                type: Boolean
+                type: Boolean, default: false
                 },
     double_league_match : { 
-                type: Boolean
+                type: Boolean, default: false
                 },
     closed : { 
-                type: Boolean
+                type: Boolean, default: false
                 },
     suspension_increment : {
-                type: Boolean
+                type: Boolean, default: true
                 },
     champion : { type: mongoose.Schema.ObjectId, ref: 'Team' },
     images      : [ImageSchema],

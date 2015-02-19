@@ -152,5 +152,59 @@ module.exports = function(app){
 		});
 	});
 	
+	var update_participation = function(participant_id){
+		MatchModel.find({ "matchday" : {$in : { zone.matchdays }}, $or: [ {"visitor_team" : participant_id } , {"local_team" : participant_id }]}).exec( function(err, matches){
+			if (err) throw err;
+			var points = 0;
+			var won_matches = 0;
+			var tied_matches = 0;
+			var lost_matches = 0;
+			var own_goals = 0;
+			var other_goals = 0;
+			var points = 0;
+			for (var i = matches.length - 1; i >= 0; i--) {
+				if(matches[i].winner === participant_id){
+					won_matches++;
+				}else if((matches[i].winner !== matches[i].local_team)&&(matches[i].winner !== matches[i].visitor_team)){
+					tied_matches++;
+				}else{
+					lost_matches++;
+				}
+				if(matches[i].local_team === participant_id){
+					own_goals += matches[i].local_team_goals.length;
+					other_goals += matches[i].visitor_team_goals.length;
+				}else if(matches[i].visitor_team === participant_id){
+					other_goals += matches[i].local_team_goals.length;
+					own_goals += matches[i].visitor_team_goals.length;
+				}
+			};
+			points = zone.tournament.winner_points * won_points + zone.tournament.tied_points * tied_matches + zone.tournament.presentation_points*(tied_matches+won_matches+lost_matches);  
+
+			var callback = function(err, numAffected, status){
+				if(err) throw err;
+			}
+
+			ZoneModel.update(
+			    { "participations.team": participant_id}, 
+			    {
+			    	$set: {
+			    		"won" : won_matches,
+			    		"lost" : lost_matches,
+			    		"tied" : tied_matches,
+			    		"points" : points,
+			    		"own_goals" : own_goals,
+			    		"other_goals" : other_goals
+						}
+					}, callback);
+		});
+	}
+
+	var close_zone = function(){
+		ZoneModel.aggregate(
+			{ $match: { "_id": zone._id }},
+			{ $unwind : "$participations" },
+			{ $project: { goalDiff : { $subtract: ["own_goals", "other_goals"]}}},
+			{ $sort : { "points" : -1, "own_goals" : -1, "other_goals" : 1, "goalDiff" : -1 , "won" : -1}});
+	}
 
 }

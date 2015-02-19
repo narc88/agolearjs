@@ -14,7 +14,6 @@
 		"angular-jwt": "0.0.6",
 		"angular-scenario": "~1.2",
 		"cropit": "0.2",
-		"angular-sanitize": "~1.2.x",
-		"angulike" : "1.1.1"
+		"angular-sanitize": "~1.2.x"
 	}
 }
