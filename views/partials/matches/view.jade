@@ -1,23 +1,35 @@
 include admin_menu
-div(class="result col-md-12")
+div(class="result col-md-9")
 	include partial_view.jade
-h2 Goles e Incidentes
-div(class="incidents col-md-12")
+
+div(class="incidents col-md-9")
+	h3 Resumen
 	div(class="local col-md-6")
 		ul
 			-var role = "local"
 			li(ng-repeat="goal in match.local_goals")
-				span Gol: {{goal.player.name}} {{goal.player.last_name}}
+				span 
+					img(src="/img/pelota.png", style="width:20px")
+					span {{goal.player.name}} {{goal.player.last_name}}
+					span(class="glyphicon glyphicon-remove", aria-hidden="true", ng-click="removeGoal('local', goal._id)")
 			if(RolesHelper.admin(user))
 				li
 					include ../goals/form.jade
 			li(ng-repeat="incident in match.local_incidents")
-				span {{incident.incident_type}}: {{incident.player.name}} {{incident.player.last_name}}
+				span(ng-if="incident.incident_type == 'Amonestación'" class="animate-if")
+					img(src="/img/tarjamarilla.png" , style="width:20px")
+				span(ng-if="incident.incident_type == 'Expulsión'" class="animate-if")
+					img(src="/img/tarjroja.png" , style="width:20px")
+				span {{incident.player.name}} {{incident.player.last_name}}
+				span(class="glyphicon glyphicon-remove", aria-hidden="true", ng-click="removeIncident('local', incident._id)")
 			if(RolesHelper.admin(user))
 				li
 					include ../incidents/form.jade
 			li(ng-repeat="suspension in match.local_suspensions")
-				span {{suspension.incident_type}}: {{suspension.player.name}} {{suspension.player.last_name}}
+				span
+					img(src="/img/suspension.png", style="width:20px")
+				span {{suspension.player.name}} {{suspension.player.last_name}}
+				span(class="glyphicon glyphicon-remove", aria-hidden="true" , ng-click="remove('local', suspension._id)")
 			if(RolesHelper.admin(user))
 				li
 					include ../suspensions/form.jade
@@ -25,34 +37,45 @@ div(class="incidents col-md-12")
 		ul
 			-var role = "visitor"
 			li(ng-repeat="goal in match.visitor_goals")
-				span Gol:  {{goal.player.name}} {{goal.player.last_name}}
+				span 
+					img(src="/img/pelota.png", style="width:15px")
+					span {{goal.player.name}} {{goal.player.last_name}}
+					span(class="glyphicon glyphicon-remove", aria-hidden="true" , ng-click="removeGoal('visitor', goal._id)")
 			if(RolesHelper.admin(user))
 				li
 					include ../goals/form.jade
 			li(ng-repeat="incident in match.visitor_incidents")
-				span {{incident.incident_type}}: {{incident.player.name}} {{incident.player.last_name}}
+				span(ng-if="incident.incident_type == 'Amonestación'" class="animate-if")
+					img(src="/img/tarjamarilla.png" , style="width:20px")
+				span(ng-if="incident.incident_type == 'Expulsión'" class="animate-if")
+					img(src="/img/tarjroja.png" , style="width:20px")
+				span {{incident.player.name}} {{incident.player.last_name}}
+				span(class="glyphicon glyphicon-remove", aria-hidden="true", ng-click="removeIncident('visitor', incident._id)")
 			if(RolesHelper.admin(user))
 				li
 					include ../incidents/form.jade
 			li(ng-repeat="suspension in match.visitor_suspensions")
-				span Suspensión: {{suspension.player.name}} {{suspension.player.last_name}} {{suspension.number_of_matches}}
+				span
+					img(src="/img/suspension.png", style="width:20px")
+				span {{suspension.player.name}} {{suspension.player.last_name}} ({{suspension.number_of_matches}})
+				span(class="glyphicon glyphicon-remove", aria-hidden="true" , ng-click="remove('visitor', suspension._id)")
 			if(RolesHelper.admin(user))
 				li
 					include ../suspensions/form.jade
-h2 Horario y Cancha
-div(class="time")
-	span {{match.turn[0].field.name}}
-div(class="hour")
-	span {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
-h2 Jugadores
-div(class="players")
-	div(class="local col-md-6")
-		ul
-			li(ng-repeat="player in match.local_players")
-				a(href="/players/{{player._id}}")
-					span {{player.name}} {{player.last_name}}
-	div(class="visitor col-md-6")
-		ul
-			li(ng-repeat="player in match.visitor_players")
-				a(href="/players/{{player._id}}")
-					span {{player.name}} {{player.last_name}}
+	h2 Horario y Cancha
+	div(class="time")
+		span {{match.turn[0].field.name}}
+	div(class="hour")
+		span {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
+	h2 Jugadores
+	div(class="players")
+		div(class="local col-md-6")
+			ul
+				li(ng-repeat="player in match.local_players")
+					a(href="/players/{{player._id}}")
+						span {{player.name}} {{player.last_name}}
+		div(class="visitor col-md-6")
+			ul
+				li(ng-repeat="player in match.visitor_players")
+					a(href="/players/{{player._id}}")
+						span {{player.name}} {{player.last_name}}

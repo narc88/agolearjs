@@ -25,6 +25,7 @@ var ZoneSchema = new mongoose.Schema({
     double_match : { 
                 type: Boolean
                 },
+    tournament : {type: mongoose.Schema.ObjectId, ref: 'Tournament' },
     matchdays     : [MatchdaySchema],
     participations     : [ParticipationSchema],
 	created    	: {type: Date, default: Date.now },

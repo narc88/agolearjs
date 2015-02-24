@@ -8,7 +8,6 @@ var mongoose = require('mongoose');
 
 module.exports = function(app){
 
-
 	// RESTful routes
 	app.get('/api/matches', function(req, res, next){
 		MatchModel.find(req.query).populate("visitor_team").populate("local_team").exec( function(err, matches){
@@ -47,6 +46,7 @@ module.exports = function(app){
 		match.save(function(err){
 			if(err) throw err;
 			req.send(match);
+
 		});
 
 		//TODO: Cada vez que guardo necesito levantar los partidos jugados para esta zona y actualizar los valores.
@@ -96,13 +96,16 @@ module.exports = function(app){
 			}
 
 			if(match.local_goals.length > match.visitor_goals.length){
+				console.log("localWinner")
 				match.winner = match.local_team;
 			}else if(match.local_goals.length < match.visitor_goals.length){
+				console.log("visitorWinner")
 				match.winner = match.visitor_team;
 			}else if(match.local_goals.length == match.visitor_goals.length){
-				delete match.winner;
+				console.log("tiedMatch")
+				match.winner = undefined;
 			}
-			console.log(match.winner)
+			console.log(match)
 			match.save(function(err){
 				if(err) throw err;
 				res.send(match);
@@ -113,27 +116,37 @@ module.exports = function(app){
 
 	app.delete('/api/matches/goals/:team_role/:id', function(req, res, next){
 		var team_role = ""
+		var id = mongoose.Types.ObjectId(req.params.id);
 		if(req.params.team_role === "local"){
 			team_role = "local_goals";
+			var callback = function(err, numAffected, status){
+					if(err) throw err;
+					res.send(true);
+				}
+			MatchModel.update(
+			    { "local_goals._id": id}, 
+			    {$pull: {"local_goals" :{_id : id }}}, callback
+			)
 		}else{
 			if(req.params.team_role === "visitor"){
 				team_role = "visitor_goals";
+				var callback = function(err, numAffected, status){
+					if(err) throw err;
+					res.send(true);
+				}
+				MatchModel.update(
+				    { "visitor_goals._id": id}, 
+				    {$pull: {"visitor_goals" :{_id : id }}}, callback
+				)
 			}			
 		}
-		var callback = function(err, numAffected, status){
-			if(err) throw err;
-			res.send(goal);
-		}
-		var field = team_role + "._id"
-		MatchModel.update(
-		    { field: req.params.id}, 
-		    {$pull: {team_role :{_id : req.params.id }}}, callback
-		)
+		
 	});
 
 	app.post('/api/matches/incidents/:team_role/:id', function(req, res){
 		var team_role = ""
 		var incident = new IncidentModel(req.body);
+		var id = mongoose.Types.ObjectId(req.params.id);
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
 			res.send(goal);
@@ -151,26 +164,46 @@ module.exports = function(app){
 				)
 			}
 		}
+		MatchModel.aggregate(
+			{ $match: {$or :{ "local_incidents.player": incident.player ,  "visitor_incidents.player": incident.player }}},
+			{ $unwind : "$participations" },
+			{ $project: { goalDiff : { $subtract: ["own_goals", "other_goals"]}}},
+			{ $sort : { "points" : -1, "own_goals" : -1, "other_goals" : 1, "goalDiff" : -1 , "won" : -1}},
+			function (err, participators){
+				if (err) throw err;
+				var callback = function(err, numAffected, status){
+					if(err) throw err;
+				}
+				for (var i = 0; i < zone.participations.length; i++) {
+					pos = i+1;
+
+					ZoneModel.update({ "participations.team": zone.participations[i]._id }, { $set: { "participations.$.position" : pos, "closed":true}}, callback)
+				};
+			});
 	});
 
 	app.delete('/api/matches/incidents/:team_role/:id', function(req, res, next){
 		var team_role = ""
+		var id = mongoose.Types.ObjectId(req.params.id);
 		if(req.params.team_role === "local"){
-			team_role = "local_goals";
+			team_role = "local_incidents";
+			MatchModel.update(
+			    { "local_incidents._id": id}, 
+			    {$pull: {"local_incidents" :{_id : id }}}, callback)
 		}else{
 			if(req.params.team_role === "visitor"){
-				team_role = "visitor_goals";
+				team_role = "visitor_incidents";
+				MatchModel.update(
+				    { "visitor_incidents._id": id}, 
+				    {$pull: {"visitor_incidents" :{_id : id }}}, callback)
 			}			
 		}
+		
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
-			res.send(goal);
+			res.send(true);
 		}
-		var field = team_role + "._id"
-		MatchModel.update(
-		    { "incidents._id": req.params.id}, 
-		    {$pull: {"incidents" :{_id : req.params.id }}}, callback
-		)
+		
 	});
 
 	app.post('/api/matches/:team_role/:id/players', function(req, res){
@@ -188,8 +221,7 @@ module.exports = function(app){
 		}
 		MatchModel.update(
 		    { _id: req.params.id}, 
-		    {$push: {$each:{team_role: req.body.players}}}, callback
-		)
+		    {$push: {$each:{team_role: req.body.players}}}, callback)
 	});
 
 	app.delete('/api/matches/:team_role/:id/players/:player_id', function(req, res, next){

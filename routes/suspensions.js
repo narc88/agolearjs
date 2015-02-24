@@ -55,10 +55,10 @@ module.exports = function(app){
 			if(match){
 				var suspension = new SuspensionModel(req.body);
 				if(match_role === "local_suspension"){
-					match.local_suspensions.push(suspension);
+					match.local_suspensions.push(suspension._id);
 				}else{			
 					if(match_role === "visitor_suspension"){
-						match.visitor_suspensions.push(suspension);
+						match.visitor_suspensions.push(suspension._id);
 					}
 				}
 				match.save(function(err){

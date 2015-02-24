@@ -574,6 +574,12 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
       {name:'Amonestación'},
       {name:'Expulsión'}
     ];
+  var removeObjectById = function(objectArray, id){
+    objectArray = objectArray.filter(function( obj ) {
+        return obj._id !== id;
+    });
+    return objectArray;
+  }
   var searchPlayer = function(key, array){
     for (var i = array.length - 1; i >= 0; i--) {
       if(key == array[i]._id){
@@ -652,6 +658,42 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
                 $scope.match.visitor_suspensions.push(data);
               }
             }
+          });
+      };
+      $scope.removeGoal = function  (role, id) {
+        $http.delete('/api/matches/goals/'+role+'/'+id).
+          success(function(data) {
+            if(role === "local"){
+              $scope.match.local_goals = removeObjectById($scope.match.local_goals, id)
+            }else if(role ==="visitor"){
+              $scope.match.visitor_goals = removeObjectById($scope.match.visitor_goals, id)
+            }
+          });
+      };
+      $scope.removeIncident = function  (role, id) {
+        $http.delete('/api/matches/incidents/'+role+'/'+id).
+          success(function(data) {
+            if(role === "local"){
+              $scope.match.local_incidents = removeObjectById($scope.match.local_incidents, id)
+            }else if(role ==="visitor"){
+              $scope.match.visitor_incidents = removeObjectById($scope.match.visitor_incidents, id)
+            }
+          });
+      };
+      $scope.removeSuspension = function  (role, id) {
+        $http.delete('/api/matches/suspensions/'+role+'/'+id).
+          success(function(data) {
+            if(role === "local"){
+              $scope.match.local_suspensions = removeObjectById($scope.match.local_suspensions, id)
+            }else if(role ==="visitor"){
+              $scope.match.visitor_suspensions = removeObjectById($scope.match.visitor_suspensions, id)
+            }
+          });
+      };
+      $scope.update = function  (form, role) {
+        $http.post('/api/zones/'+$scope.match.matchday+'/update_participations', {"match_id" : $scope.match._id}).
+          success(function(data) {
+            
           });
       };
     });
