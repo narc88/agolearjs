@@ -4,6 +4,8 @@ ul(class="nav nav-tabs")
 		a(data-target="#table", aria-controls="table", role="tab", data-toggle="tab") Tabla
 	li(role="presentation")
 		a(data-target="#matchdays", aria-controls="matchdays", role="tab", data-toggle="tab") Fechas
+	li(role="participations")
+		a(data-target="#participations", aria-controls="participations", role="tab", data-toggle="tab") Participantes
 div(class="tab-content")
 	div(role="tabpanel", class="tab-pane active" ,id="table")
 		div(ng-if="zone.zone_type !== 'Playoff'")
@@ -76,4 +78,6 @@ div(class="tab-content")
 					td
 						if(RolesHelper.admin(user))
 							a(href="/matchday/edit/{{matchday._id}}") Editar
+	div(role="tabpanel", class="tab-pane" ,id="participations")
+		include ../participations/index.jade
 include ../socials/shareBar.jade
