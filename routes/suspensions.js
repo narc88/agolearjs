@@ -55,18 +55,15 @@ module.exports = function(app){
 			if(match){
 				var suspension = new SuspensionModel(req.body);
 				if(match_role === "local_suspension"){
-					match.local_suspensions.push(suspension._id);
+					match.local_suspensions.push(suspension);
 				}else{			
 					if(match_role === "visitor_suspension"){
-						match.visitor_suspensions.push(suspension._id);
+						match.visitor_suspensions.push(suspension);
 					}
 				}
 				match.save(function(err){
 					if (err) throw err;
-					suspension.save(function(err){
-						if(err) throw err;
-						res.send(suspension);
-					});
+					res.send(suspension);
 				});
 			}
 		});

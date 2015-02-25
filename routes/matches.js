@@ -143,7 +143,7 @@ module.exports = function(app){
 		
 	});
 
-	app.post('/api/matches/incidents/:team_role/:id', function(req, res){
+	app.post('/api/matches/incidents/:team_role/:id/:tournament_id', function(req, res){
 		var team_role = ""
 		var incident = new IncidentModel(req.body);
 		var id = mongoose.Types.ObjectId(req.params.id);
@@ -164,22 +164,55 @@ module.exports = function(app){
 				)
 			}
 		}
-		MatchModel.aggregate(
-			{ $match: {$or :{ "local_incidents.player": incident.player ,  "visitor_incidents.player": incident.player }}},
-			{ $unwind : "$participations" },
-			{ $project: { goalDiff : { $subtract: ["own_goals", "other_goals"]}}},
-			{ $sort : { "points" : -1, "own_goals" : -1, "other_goals" : 1, "goalDiff" : -1 , "won" : -1}},
-			function (err, participators){
+		TournamentModel.find({"_id": req.params.tournament_id}).exec( function(err, tournament){
+			if (err) throw err;
+			MatchModel.find({"_id" : id}).exec( function(err, match){
 				if (err) throw err;
-				var callback = function(err, numAffected, status){
-					if(err) throw err;
-				}
-				for (var i = 0; i < zone.participations.length; i++) {
-					pos = i+1;
-
-					ZoneModel.update({ "participations.team": zone.participations[i]._id }, { $set: { "participations.$.position" : pos, "closed":true}}, callback)
-				};
+				ZoneModel.findOne({ "zones.tournament": req.params.tournament_id }).exec( function(err, zones){
+					if (err) throw err;
+					for (var i = 0; i < zones.length; i++) {
+						matchdays = matchdays.concat(zones[i].matchdays);
+					};
+					if (err) throw err;
+					MatchModel.aggregate(
+						{ $match: {"matchday" : { $in : matchdays }, "played" : true , $or: [ {"visitor_team" : participant_id } , {"local_team" : participant_id }]}},
+						{ $unwind : "$local_incidents" },
+						{ $unwind : "$visitor_incidents" },
+						function (err, matches_with_incidents){
+							if (err) throw err;
+							var yellow_card = 0;
+							var red_card = 0;
+							for (var i = 0; i < matches_with_incidents.length; i++) {
+								if(matches_with_incidents[i].type == "Amonestación"){
+									yellow_card++;
+								}
+								if(matches_with_incidents[i].type == "Expulsión"){
+									red_card++;
+								}
+							};
+							if( (yellow_card % tournament.yellow_card_limit) === 0 ){
+								var suspension = new SuspensionModel();
+								suspension.player = incident.player;
+								suspension.player = match._id;
+								if(match_role === "local_suspension"){
+									match.local_suspensions.push(suspension._id);
+								}else{			
+									if(match_role === "visitor_suspension"){
+										match.visitor_suspensions.push(suspension._id);
+									}
+								}
+								match.save(function(err){
+									if (err) throw err;
+									suspension.save(function(err){
+										if(err) throw err;
+										res.send(suspension);
+									});
+								});
+							}
+						});
+				});
 			});
+		});
 	});
 
 	app.delete('/api/matches/incidents/:team_role/:id', function(req, res, next){

@@ -623,7 +623,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
           });
       };
       $scope.submitIncident = function  (form, role) {
-        $http.post('/api/matches/incidents/'+role+"/"+$scope.match._id, $scope.incident).
+        $http.post('/api/matches/incidents/'+role+"/"+$scope.match._id+"/"+$rootScope.zone.tournament, $scope.incident).
           success(function(data) {
             if (data.error) {
               for (var object in data.error.errors) {
