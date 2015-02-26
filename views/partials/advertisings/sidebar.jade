@@ -1,4 +1,4 @@
-div(id="sidebarAdvertisings", class="carousel slide", data-ride="carousel", style="width:50%;height:150px;")
+div(id="sidebarAdvertisings", class="carousel slide", data-ride="carousel", style="height:150px;")
 	.carousel-inner
 		.item
 			img(ng-repeat="advert in advertisings", ng-src="/photos/advertising/{{advert._id}}/{{advert.preview_image.filename}}" , alt="{{advert.title}}", style="width:100%;max-height:450px;")

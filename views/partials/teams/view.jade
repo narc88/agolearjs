@@ -3,7 +3,6 @@ if(RolesHelper.admin(user))
 h3 Equipo
 div(ng-show="team")
 	include partial_view
-	a(class="btn btn-primary", role="button", href="/teams/{{team._id}}") Ver
 	div(ng-if="suspensions.length > 0", ng-model="suspensions")
 		div(ng-repeat="suspension in suspensions")
 			include ../suspensions/partial_view.jade

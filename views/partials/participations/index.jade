@@ -1,18 +1,11 @@
-div(class="media")
-	a(class="pull-left", href="#")
-		img(ng-src="/photos/team/{{team._id}}/{{team.logo_image.filename}}")
-	div(class="media-body")
-		h4(class="media-heading")
-			a(href="/teams/{{team._id}}") {{team.name}}
-
-div(class="col-md-6 pull-left")
+div()
 	ul
 		li(ng-repeat="participator in zone.participations")
 			a(data-toggle="collapse", data-parent="#accordion", data-target="#collapse{{participator._id}}", aria-expanded="true", aria-controls="collapseOne")
-			div(id="{{participator._id}}", class="panel-collapse collapse in", role="tabpanel", aria-labelledby="headingOne")
+					span {{participator.team_name}}
+			div(id="{{participator._id}}", class="panel-collapse collapse", role="tabpanel", aria-labelledby="headingOne")
 				ul
-					li(ng-repeat="player in team.players")
-						h4(class="media-heading")
-							a(href="/players/{{player._id}}")  {{player.name}} {{player.last_name}}
+					li(ng-repeat="player in participator.players")
+						a(href="/players/{{player._id}}")  {{player.name}} {{player.last_name}}
 						if(RolesHelper.admin(user))
 							span(class="glyphicon glyphicon-remove", aria-hidden="true" , ng-click="removePlayer(suspension._id)")

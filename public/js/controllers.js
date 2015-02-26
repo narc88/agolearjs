@@ -278,7 +278,7 @@ function players_add($scope, $http, $location) {
   };
 }
 
-function players_view($scope, $http, $routeParams) {
+function players_view($scope, $http, $routeParams, $rootScope) {
   $http.get('/api/players/' + $routeParams.id).
     success(function(data) {
       data.cara_image =  $rootScope.imageHelper.getImage(data.images, "cara");
@@ -965,7 +965,7 @@ function images_add($rootScope, $scope, $http, $window, $location, $routeParams)
       "cara" : {"height":80, "width":80},
       "copa" : {"height":70 , "width":100},
       "encabezado" : {"height":100 , "width":400},
-      "lateral" : {"height":100 , "width":100}
+      "lateral" : {"height":60 , "width":100}
       };
   $scope.image = {};
   $scope.image.type = $routeParams.format;

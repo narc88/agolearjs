@@ -1,5 +1,5 @@
-div(id="headerAdvertisings", class="carousel slide", data-ride="carousel", style="height:150px;", ng-model="advertisings")
-	.carousel-inner
+div(id="headerAdvertisings", class="carousel slide", data-ride="carousel", style="height:150px;width:600px;", ng-model="advertisings")
+	.carousel-inner( style="height:150px;")
 		div(ng-repeat="advert in advertisings").item
 			img(ng-src="/photos/advertising/{{advert._id}}/{{advert.preview_image.filename}}" , alt="{{advert.title}}", style="max-height:150px;")						
 		

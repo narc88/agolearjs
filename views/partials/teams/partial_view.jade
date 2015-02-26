@@ -1,6 +1,9 @@
 div(class="media")
 	a(class="pull-left", href="#")
-		img(ng-src="/photos/team/{{team._id}}/{{team.logo_image.filename}}")
+		span(ng-if="player.logo_image")
+			img(ng-src="/photos/team/{{team._id}}/{{team.logo_image.filename}}", width="100px" ,style="width:100px,max-height:100px;")
+		span(ng-if="!player.logo_image")
+			img(ng-src="/img/logoteam.png", width="100px" ,style="width:100px,max-height:100px;")
 	div(class="media-body")
 		h4(class="media-heading")
 			a(href="/teams/{{team._id}}") {{team.name}}
@@ -17,5 +20,5 @@ div(class="col-md-6 pull-left")
 				div(class="media-body")
 					h4(class="media-heading")
 						a(href="/players/{{player._id}}")  {{player.name}} {{player.last_name}}
-			if(RolesHelper.admin(user))
-				a(href="/players/edit/{{player._id}}")  Editar
+					if(RolesHelper.admin(user))
+						a(href="/players/edit/{{player._id}}")  Editar

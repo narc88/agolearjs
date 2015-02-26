@@ -2,7 +2,11 @@ include admin_menu
 h3 Jugador
 div(ng-show="player")
 	include partial_view
-	a(class="btn btn-primary", role="button", href="/players/{{player._id}}") Ver
+	div(class="col-md-6 pull-right")
+		span(ng-if="player.cuerpo_image")
+			img(ng-src="/photos/player/{{player._id}}/{{player.cuerpo_image.filename}}", style="max-width:150px;max-height:500px")
+		span(ng-if="!player.cuerpo_image")
+			img(ng-src="/img/cuerpocompleto.jpg" , style="max-width:150px;max-height:500px")
 div(class="row")
 	div(ng-repeat="image in player.images", class="col-xs-6 col-md-3")
 		a(href="#", class="thumbnail")
