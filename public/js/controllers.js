@@ -209,9 +209,14 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
         $rootScope.zone = data;
         $scope.sociallikeurl = $location.absUrl();
         $scope.socialname = "El usuario ha compartido la zona"
+        $http.get('/api/suspensions/openByZone/' + $routeParams.id).
+          success(function(data) {
+            $scope.zone.suspensions = data;
+        });
     });
+
   }else{
-    $scope.zone = $rootScope.zone
+    $scope.zone = $rootScope.zone;
   }
   
 }

@@ -249,7 +249,6 @@ module.exports = function(app){
 			});
 	}
 
+	
 }
 
-
-//NECESITAMOS UN SERVICIO QUE NOS DE LOS SUSPENDIDOS EN UN MOMENTO DADO
