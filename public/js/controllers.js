@@ -37,6 +37,9 @@ function main($rootScope,$scope, $http) {
     };  
   }
 
+  $rootScope.isUndefinedOrNull = function(val) {
+    return angular.isUndefined(val) || val === null 
+  }
   //Service that responds with the json structure of the main menu
    $http.get('/api/menu').
     success(function(data, status, headers, config) {
@@ -363,7 +366,7 @@ function teams_view($scope, $http, $routeParams, $rootScope) {
     $scope.team = data;
     $scope.team.logo_image = $rootScope.imageHelper.getImage($scope.team.images, "escudo");
     for (var i = $scope.team.players.length - 1; i >= 0; i--) {
-      $scope.team.players[i].cara_image =  $rootScope.imageHelper.getImage($scope.player.images, "cara");
+      $scope.team.players[i].cara_image =  $rootScope.imageHelper.getImage($scope.team.players[i].images, "cara");
     };
     $scope.$on('savedImage', trigger);
   });
@@ -605,7 +608,8 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
   $http.get('/api/matches/' + $routeParams.id).
     success(function(data) {
       $scope.match = populateMatchPlayers(data, data);
-      
+      $scope.match.visitor_team.logo_image = $rootScope.imageHelper.getImage($scope.match.visitor_team.images, "escudo");
+      $scope.match.local_team.logo_image = $rootScope.imageHelper.getImage($scope.match.local_team.images, "escudo");
       $scope.submitGoal = function (form, role) {
         $http.post('/api/matches/goals/'+role+"/"+$scope.match._id, $scope.goal).
           success(function(data) {

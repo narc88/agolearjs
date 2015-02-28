@@ -24,7 +24,6 @@ var PlayerSchema = new mongoose.Schema({
 	dni	: { 
 				type: String,
 				trim: true,
-				required:true,
 				validate : [
                      function(v) { return validator.isNumeric(v.replace(/\s/g, '')); },
                      'El dni solo debe estar compuesto por numeros'
@@ -32,7 +31,6 @@ var PlayerSchema = new mongoose.Schema({
                 },
     email	: { 
     			type: String, 
-    			required: true,
     			validate : [
                      function(v) { return validator.isEmail(v.replace(/\s/g, '')); },
                      'Email inválido'
@@ -41,28 +39,15 @@ var PlayerSchema = new mongoose.Schema({
     phone	: { 
 				type: String,
 				trim: true,
-				required:true,
-				validate : [
-                     function(v) { return validator.isAscii(v); },
-                     'Telefono invalido'
-                 	]
-                },
-    birthdate   : { type: Date, required: true},
+				},
+    birthdate   : { type: Date},
     address	: { 
 				type: String,
-				trim: true,
-				validate : [
-                     function(v) { return validator.isAscii(v); },
-                     'Dirección invalido'
-                 	]
+				trim: true
                 },
     blood_type : { 
                 type: String,
-                trim: true,
-                validate : [
-                     function(v) { return validator.isLength(v, 1 , 5); },
-                     'Grupo sanguíneo debe tener entre uno y 5 caracteres'
-                    ]
+                trim: true
                 },
     active      : {type:Boolean, default:true},
     images      : [ImageSchema],
