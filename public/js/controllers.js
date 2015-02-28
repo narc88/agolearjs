@@ -212,7 +212,7 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
         $rootScope.zone = data;
         $scope.sociallikeurl = $location.absUrl();
         $scope.socialname = "El usuario ha compartido la zona"
-        $http.get('/api/suspensions/openByZone/' + $routeParams.id).
+        $http.get('/api/suspensions/suspendedPlayers').
           success(function(data) {
             $scope.zone.suspensions = data;
         });
@@ -608,6 +608,12 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
     for (var i = data.visitor_incidents.length - 1; i >= 0; i--) {
       data.visitor_incidents[i].player = searchPlayer(data.visitor_incidents[i].player, match.visitor_players);
     };
+    for (var i = data.local_suspensions.length - 1; i >= 0; i--) {
+      data.local_incidents[i].player = searchPlayer(data.local_suspensions[i].player, match.local_players);
+    };
+    for (var i = data.visitor_suspensions.length - 1; i >= 0; i--) {
+      data.visitor_incidents[i].player = searchPlayer(data.visitor_suspensions[i].player, match.visitor_players);
+    };
     return data;
   }
   $http.get('/api/matches/' + $routeParams.id).
@@ -699,10 +705,16 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             }
           });
       };
-      $scope.update = function  (form, role) {
+      $scope.updateParticipations = function  () {
         $http.post('/api/zones/'+$scope.match.matchday+'/update_participations', {"match_id" : $scope.match._id}).
           success(function(data) {
             
+          });
+      };
+      $scope.setMatchAsPlayed = function () {
+        $http.post('/api/matches/setAsPlayed', {"match_id" : $scope.match._id}).
+          success(function(data) {
+            updateParticipations();
           });
       };
     });

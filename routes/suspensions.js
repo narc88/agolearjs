@@ -1,4 +1,5 @@
 var SuspensionModel 	= require('../models/suspension').SuspensionModel;
+var ZoneModel 	= require('../models/zone').ZoneModel;
 var MatchModel = require('../models/match').MatchModel;
 var TeamModel = require('../models/team').TeamModel;
 var mongoose = require('mongoose');
@@ -28,32 +29,14 @@ module.exports = function(app){
 		
 	});
 
-	app.get('/api/suspensions/openByZone/:zone_id', function(req, res, next){
-		ZoneModel.findOne({ "_id": req.params.zone_id }).exec( function(err, zone){
+	app.get('/api/suspensions/suspendedPlayers', function(req, res, next){
+		SuspensionModel.find({ "accomplished": false }).exec( function(err, suspensions){
 			if (err) throw err;
-			var matchdays = zone.matchdays;
-			MatchModel.find({"matchday" : { $in : matchdays }, "played" : true ,$or: [ {"visitor_suspensions" : {$size: {$gt:0}} } , {"local_suspensions" : {$size: {$gt:0}} }]  }).exec(function(err, matches){
-				if (err) throw err;
-				var suspended = [];
-				for (var i = 0; i < matches.length; i++) {
-					if(typeof matches[i].local_suspensions === "Array"){
-						for (var j = matches[i].local_suspensions.length - 1; j >= 0; j--) {
-							if(matches[i].local_suspensions[j].accomplished == false){
-								suspended.push(matches[i].local_suspensions[j].player);
-							}
-						};
-					}
-					if(typeof matches[i].visitor_suspensions === "Array"){
-						for (var j = matches[i].visitor_suspensions.length - 1; j >= 0; j--) {
-							if(matches[i].visitor_suspensions[j].accomplished == false){
-								suspended.push(matches[i].visitor_suspensions[j].player);
-							}
-						};
-					}
-				};
-				res.send(suspended);
-			});
-				
+			var suspended =[];
+			for (var i = suspensions.length - 1; i >= 0; i--) {
+				suspended.push(suspensions[i].player)
+			};
+			res.send(suspended);
 		});
 	});
 
@@ -70,15 +53,18 @@ module.exports = function(app){
 			if(match){
 				var suspension = new SuspensionModel(req.body);
 				if(match_role === "local_suspension"){
-					match.local_suspensions.push(suspension);
+					match.local_suspensions.push(suspension._id);
 				}else{			
 					if(match_role === "visitor_suspension"){
-						match.visitor_suspensions.push(suspension);
+						match.visitor_suspensions.push(suspension._id);
 					}
 				}
 				match.save(function(err){
 					if (err) throw err;
-					res.send(suspension);
+					suspension.save(function(err){
+						if (err) throw err;
+						res.send(suspension);
+					})
 				});
 			}
 		});

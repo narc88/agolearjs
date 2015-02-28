@@ -1,8 +1,8 @@
 include admin_menu
-div(class="result col-md-9")
+div(class="result col-md-12")
 	include partial_view.jade
 
-div(class="incidents col-md-9")
+div(class="incidents col-md-12")
 	h3 Resumen
 	div(class="local col-md-6")
 		ul
@@ -62,11 +62,13 @@ div(class="incidents col-md-9")
 			if(RolesHelper.admin(user))
 				li
 					include ../suspensions/form.jade
+	hr
 	h2 Horario y Cancha
 	div(class="time")
 		span {{match.turn[0].field.name}}
 	div(class="hour")
 		span {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
+	hr
 	h2 Jugadores
 	div(class="players")
 		div(class="local col-md-6")

@@ -9,6 +9,4 @@ div(class="panel-group", id="participationsAccordion", role="tablist", aria-mult
 					ul
 						li(ng-repeat="player in participator.players")
 							a(href="/players/{{player._id}}")  {{player.name}} {{player.last_name}} 
-								span(ng-if="zone.suspensions.indexOf(player._id) >= 0") Suspendido
-							if(RolesHelper.admin(user))
-								span(class="glyphicon glyphicon-remove", aria-hidden="true" , ng-click="removePlayer(player._id)")
+							span(ng-if="zone.suspensions.indexOf(player._id) >= 0") (Suspendido)

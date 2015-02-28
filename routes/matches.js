@@ -40,16 +40,28 @@ module.exports = function(app){
 		});
 	});
 
-	app.post('/api/matches', function(req, res){
+	app.post('/api/matches/setMatchAsPlayed', function(req, res){
+		MatchModel.findOne({ _id: req.body.match_id }).exec(function(err, match){
+			if(!match.played){
+				SuspensionModel.find({ "accomplished": false }).exec(function(err, suspensions){
+					if(err) throw err;
+					for (var i = suspensions.length - 1; i >= 0; i--) {
+						suspensions[i].matches.push(match._id);
+						if(suspensions[i].matches.length >= suspensions[i].number_of_matches){
+							suspensions[i].accomplished = true;
+						}
+						suspensions[i].save();
+					};
+				});
+				match.played = true;
+				match.save(function(err){
+					if(err) throw err;
+					req.send(match);
+				});
+			}
+			
+		})
 		
-		var match = new MatchModel(req.body.match);
-		match.save(function(err){
-			if(err) throw err;
-			req.send(match);
-
-		});
-
-		//TODO: Cada vez que guardo necesito levantar los partidos jugados para esta zona y actualizar los valores.
 	});
 
 	app.put('/api/matches/:id', function(req, res, next){
@@ -86,7 +98,7 @@ module.exports = function(app){
 			res.send(goal);
 		}
 		
-		MatchModel.findOne({ "_id": req.params.id}, function (err, match){
+		MatchModel.findOne({ "_id": req.params.id}).exec(function (err, match){
 		 	if(req.params.team_role === "local"){
 				match.local_goals.push(goal);
 			}else{			
@@ -110,6 +122,7 @@ module.exports = function(app){
 				if(err) throw err;
 				res.send(match);
 			})
+		
 		});
 		
 	});

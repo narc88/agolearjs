@@ -10,7 +10,6 @@ module.exports = function(app){
 	app.get('/api/zones', function(req, res, next){
 		ZoneModel.find().exec( function(err, zones){
 			if (err) throw err;
-			console.log(zones)
 			res.send(zones);
 		});
 	});
@@ -18,7 +17,6 @@ module.exports = function(app){
 	app.get('/api/zones/:id', function(req, res, next){
 		ZoneModel.findOne({ _id: req.params.id }).exec( function(err, zone){
 			if (err) throw err;
-			console.log(zone.matchdays)
 			res.send(zone);
 		});
 	});
@@ -208,7 +206,7 @@ module.exports = function(app){
 				}
 			};
 			points = zone.tournament.winner_points * won_matches + zone.tournament.tied_points * tied_matches + zone.tournament.presentation_points*(tied_matches+won_matches+lost_matches);  
-
+			
 			var callback = function(err, numAffected, status){
 				if(err) throw err;
 

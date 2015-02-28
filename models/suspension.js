@@ -5,11 +5,6 @@ var SuspensionSchema = new mongoose.Schema({
     reason    : { 
                 type: String,
                 trim: true,
-                required:true,
-                validate : [
-                     function(v) { return validator.isAscii(v.replace(/\s/g, '')); },
-                     'Razón invalida, solo se aceptan letras y números'
-                    ]
                 },
     player     : {type: mongoose.Schema.ObjectId, ref: 'Player' },
     //Matches he missed due to the suspension
