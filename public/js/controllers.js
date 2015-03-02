@@ -216,6 +216,10 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
           success(function(data) {
             $scope.zone.suspensions = data;
         });
+        $http.get('/api/goalMakers/'+$scope.zone.tournament).
+          success(function(data) {
+            $scope.tournament_goals = data;
+        });
     });
 
   }else{

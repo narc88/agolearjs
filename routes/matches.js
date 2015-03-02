@@ -4,6 +4,8 @@ var IncidentModel = require('../models/incident').IncidentModel;
 var ImageModel 	= require('../models/image').ImageModel;
 var FieldModel = require('../models/field').FieldModel;
 var PlayerModel = require('../models/player').PlayerModel;
+var ZoneModel = require('../models/zone').ZoneModel;
+var DataGrouper = require('../helpers/dataGrouper').DataGrouper;
 var mongoose = require('mongoose');
 
 module.exports = function(app){
@@ -27,6 +29,43 @@ module.exports = function(app){
 				res.send(matches);
 			}
 			FieldModel.populate(matches, { path: 'turn.field', select: 'name'},callback);
+		});
+	});
+
+	app.get('/api/goalMakers/:tournament_id', function(req, res, next){
+		ZoneModel.find({ "tournament": req.params.tournament_id }).exec( function(err, zones){
+			var matchdays = [];
+			if (err) throw err;
+			for (var i = 0; i < zones.length; i++) {
+				for (var j = zones[i].matchdays.length - 1; j >= 0; j--) {
+					matchdays.push(zones[i].matchdays[j]._id)
+				};
+			};
+			if (err) throw err;
+			MatchModel.find({"matchday" : { $in : matchdays }, "played" : true }, { "local_goals.player": 1, "visitor_goals.player": 1, "local_incidents.player": 1, "visitor_incidents.player": 1 }).exec(
+				function (err, matches){
+					if (err) throw err;
+					console.log(matches.length)
+					var goals = [];
+					for (var i = 0; i < matches.length; i++) {
+						for (var j = matches[i].local_goals.length - 1; j >= 0; j--) {
+							goals.push(matches[i].local_goals[j].player)
+						};
+						for (var j = matches[i].visitor_goals.length - 1; j >= 0; j--) {
+							goals.push(matches[i].visitor_goals[j].player)
+						};
+						for (var j = matches[i].local_incidents.length - 1; j >= 0; j--) {
+							incidents.push(matches[i].local_incidents[j].player)
+						};
+						for (var j = matches[i].visitor_incidents.length - 1; j >= 0; j--) {
+							incidents.push(matches[i].visitor_incidents[j].player)
+						};
+					};
+					var hist = {};
+					goals.map( function (a) { if (a in hist) hist[a] ++; else hist[a] = 1; } );
+					res.send(hist);
+				}
+			);
 		});
 	});
 
@@ -181,7 +220,7 @@ module.exports = function(app){
 			if (err) throw err;
 			MatchModel.find({"_id" : id}).exec( function(err, match){
 				if (err) throw err;
-				ZoneModel.findOne({ "zones.tournament": req.params.tournament_id }).exec( function(err, zones){
+				ZoneModel.find({ "tournament": req.params.tournament_id }).exec( function(err, zones){
 					if (err) throw err;
 					for (var i = 0; i < zones.length; i++) {
 						matchdays = matchdays.concat(zones[i].matchdays);
