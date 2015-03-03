@@ -1,0 +1,6 @@
+h3 Lista de Equipos
+table.table.table-condensed.table-hover(class="")
+	tr(ng-repeat="turn in turns") 
+		td
+			include partial_view
+			a(class="btn btn-primary", role="button", href="/turns/edit/{{turn._id}}") Editar

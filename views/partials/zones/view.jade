@@ -9,7 +9,7 @@ ul(class="nav nav-tabs")
 div(class="tab-content")
 	div(role="tabpanel", class="tab-pane active" ,id="table")
 		div(ng-if="zone.zone_type !== 'Playoff'")
-			table.table.table-condensed.table-hover
+			table.table.table-condensed.table-hover(class="table table-responsive table-striped")
 				tr
 					th Pos
 					th Equipo
@@ -21,7 +21,7 @@ div(class="tab-content")
 					td GC
 					td DG
 					td Puntos
-				tr(ng-repeat="participator in zone.participations | orderBy:['-points','-own_goals', 'other_goals', 'own_goals-other_goals' ,'-won']") 
+				tr(ng-repeat="participator in zone.participations | orderBy:['-points','-own_goals', 'other_goals', 'own_goals-other_goals' ,'-won']"
 					td {{$index + 1}}
 					td 
 						a(href="/teams/{{participator.team}}") {{participator.team_name}}

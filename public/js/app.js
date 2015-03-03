@@ -216,6 +216,10 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
       when('/advertisings/delete/:id', {
         templateUrl: '/partials/advertisings/delete.jade',
         controller: advertisings_delete
+      }).
+      when('/turns', {
+        templateUrl: '/partials/turns/index.jade',
+        controller: turns_index
       })
       .otherwise({redirectTo: '/otherwise' });
     $locationProvider.html5Mode(true);

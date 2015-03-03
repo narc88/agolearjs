@@ -205,9 +205,13 @@ function zones_add($scope, $http, $location) {
 }
 
 function zones_view($scope, $http, $routeParams, $rootScope, $location) {
+  var searchInParticipatorStatsByPlayer = function(id , objArray){
+    return objArray[id] || 0;
+  }
   if((typeof $rootScope.zone === "undefined") || ($routeParams.id != $rootScope.zone.id)){
     $http.get('/api/zones/' + $routeParams.id).
       success(function(data) {
+        
         $scope.zone = data;
         $rootScope.zone = data;
         $scope.sociallikeurl = $location.absUrl();
@@ -216,10 +220,28 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
           success(function(data) {
             $scope.zone.suspensions = data;
         });
-        $http.get('/api/goalMakers/'+$scope.zone.tournament).
-          success(function(data) {
-            $scope.tournament_goals = data;
-        });
+          if(!$rootScope.tournament_stats){
+            $rootScope.tournament_stats = {};
+          }
+        if( $rootScope.tournament_stats.id != $scope.zone.tournament){
+          $http.get('/api/participators_stats/'+$scope.zone.tournament).
+            success(function(data) {
+              $rootScope.tournament_stats.participators_stats = data;
+              $rootScope.tournament_stats.id = $scope.zone.tournament;
+              for (var i = $scope.zone.participations.length - 1; i >= 0; i--) {
+                var participation = $scope.zone.participations[i];
+                for (var j = participation.players.length - 1; j >= 0; j--) {
+                  var player = participation.players[j];
+                  player.goals = searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.goals);
+                  player.yellow_cards = searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.yellow_cards);
+                  player.red_cards =  searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.red_cards);
+                  player.mvps =  searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.mvps);
+                  $scope.zone.participations[i].players[j] = player;
+                };
+              };
+          });
+        }
+        
     });
 
   }else{
@@ -956,6 +978,72 @@ function rules_edit($scope, $http, $location, $routeParams) {
   $scope.editRule = function () {
     $scope.rule.content  = $("#contentarea").html();
     $http.put('/api/rules/' + $routeParams.id, $scope.rule).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function rules_delete($scope, $http, $location, $routeParams) {
+  $http.get('/api/rules/' + $routeParams.id).
+    success(function(data) {
+      $scope.league = data;
+    });
+
+  $scope.deleteRule = function () {
+    $http.delete('/api/rules/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+
+/*TUrns*/
+function turns_index($scope, $http) {
+  $http.get('/api/turns').
+    success(function(data, status, headers, config) {
+      $scope.turns = data;
+    });
+}
+
+function turns_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitTurn = function () {
+    $http.post('/api/turns', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+
+function turns_view($scope, $http, $routeParams, $rootScope, $location) {
+    $http.get('/api/turns/' + $routeParams.id).
+      success(function(data) {
+        $scope.turn = data;
+    });
+    $scope.deleteTurn = function () {
+    $http.delete('/api/turns/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+  
+}
+
+function turns_edit($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/turns/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data;
+    });
+
+  $scope.editTurn = function () {
+    $http.put('/api/turns/' + $routeParams.id, $scope.form).
       success(function(data) {
         $location.url('/readPost/' + $routeParams.id);
       });

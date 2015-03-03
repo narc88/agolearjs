@@ -32,7 +32,7 @@ module.exports = function(app){
 		});
 	});
 
-	app.get('/api/goalMakers/:tournament_id', function(req, res, next){
+	app.get('/api/participators_stats/:tournament_id', function(req, res, next){
 		ZoneModel.find({ "tournament": req.params.tournament_id }).exec( function(err, zones){
 			var matchdays = [];
 			if (err) throw err;
@@ -42,27 +42,53 @@ module.exports = function(app){
 				};
 			};
 			if (err) throw err;
-			MatchModel.find({"matchday" : { $in : matchdays }, "played" : true }, { "local_goals.player": 1, "visitor_goals.player": 1, "local_incidents.player": 1, "visitor_incidents.player": 1 }).exec(
+			MatchModel.find({"matchday" : { $in : matchdays }, "played" : true }, {"mvp":1, "local_goals.player": 1, "visitor_goals.player": 1, "local_incidents.player": 1, "local_incidents.incident_type": 1, "visitor_incidents.player": 1,"visitor_incidents.incident_type": 1 }).exec(
 				function (err, matches){
 					if (err) throw err;
-					console.log(matches.length)
 					var goals = [];
+					var red_cards = [];
+					var yellow_cards = [];
+					var mvps = [];
 					for (var i = 0; i < matches.length; i++) {
-						for (var j = matches[i].local_goals.length - 1; j >= 0; j--) {
-							goals.push(matches[i].local_goals[j].player)
+						var match = matches[i];
+						mvps.push(match.mvp);
+						for (var j = match.local_goals.length - 1; j >= 0; j--) {
+							goals.push(match.local_goals[j].player)
 						};
-						for (var j = matches[i].visitor_goals.length - 1; j >= 0; j--) {
-							goals.push(matches[i].visitor_goals[j].player)
+						for (var j = match.visitor_goals.length - 1; j >= 0; j--) {
+							goals.push(match.visitor_goals[j].player)
 						};
-						for (var j = matches[i].local_incidents.length - 1; j >= 0; j--) {
-							incidents.push(matches[i].local_incidents[j].player)
+						for (var j = match.local_incidents.length - 1; j >= 0; j--) {
+							var incident = match.local_incidents[j];
+							if(incident.incident_type == "Amonestación"){
+								yellow_cards.push(incident.player)
+							}else if(incident.incident_type == "Expulsión"){
+								red_cards.push(incident.player)
+							}
 						};
-						for (var j = matches[i].visitor_incidents.length - 1; j >= 0; j--) {
-							incidents.push(matches[i].visitor_incidents[j].player)
+
+						for (var j = match.visitor_incidents.length - 1; j >= 0; j--) {
+							var incident = match.visitor_incidents[j];
+							if(incident.incident_type == "Amonestación"){
+								yellow_cards.push(incident.player)
+							}else if(incident.incident_type == "Expulsión"){
+								red_cards.push(incident.player)
+							}
 						};
 					};
 					var hist = {};
-					goals.map( function (a) { if (a in hist) hist[a] ++; else hist[a] = 1; } );
+					var goals_hist = {};
+					goals.map( function (a) { if (a in goals_hist) goals_hist[a] ++; else goals_hist[a] = 1; } );
+					var yellow_cards_hist = {};
+					yellow_cards.map( function (a) { if (a in yellow_cards_hist) yellow_cards_hist[a] ++; else yellow_cards_hist[a] = 1; } );
+					var red_cards_hist = {};
+					red_cards.map( function (a) { if (a in red_cards_hist) red_cards_hist[a] ++; else red_cards_hist[a] = 1; } );
+					var mvps_hist = {};
+					mvps.map( function (a) { if (a in mvps_hist) mvps_hist[a] ++; else mvps_hist[a] = 1; } );
+					hist.goals = goals_hist;
+					hist.yellow_cards = yellow_cards_hist;
+					hist.red_cards = red_cards_hist;
+					hist.mvps = mvps_hist;
 					res.send(hist);
 				}
 			);

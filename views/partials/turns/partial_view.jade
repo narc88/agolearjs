@@ -1,0 +1,7 @@
+table(class="table table-responsive table-striped")
+	tr(ng-repeat="turn in turns") 
+		td {{turn.hour}} 
+		td {{turn.minute}} 
+		td {{turn.day}}
+		td
+			a {{turn.field.name}}
