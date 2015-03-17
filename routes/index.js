@@ -13,6 +13,7 @@ var matches = require('./matches');
 var chronicles = require('./chronicles');
 var suspensions = require('./suspensions');
 var advertisings = require('./advertisings');
+var turns = require('./turns');
 var utils = require('./utils');
 var errors = require('./errors');
 
@@ -42,6 +43,7 @@ module.exports = function(app){
 	chronicles(app);
 	suspensions(app);
 	advertisings(app);
+	turns(app);
 	utils(app);
 	// Error handlers
 
