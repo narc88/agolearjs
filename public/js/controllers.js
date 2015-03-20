@@ -1004,6 +1004,7 @@ function rules_delete($scope, $http, $location, $routeParams) {
 
 /*TUrns*/
 function turns_index($scope, $http) {
+  $scope.days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
   $http.get('/api/turns').
     success(function(data, status, headers, config) {
       $scope.turns = data;
@@ -1022,6 +1023,7 @@ function turns_add($scope, $http, $location) {
 
 
 function turns_view($scope, $http, $routeParams, $rootScope, $location) {
+    $scope.days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
     $http.get('/api/turns/' + $routeParams.id).
       success(function(data) {
         $scope.turn = data;

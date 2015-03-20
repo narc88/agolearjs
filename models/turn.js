@@ -7,6 +7,7 @@ var TurnSchema = new mongoose.Schema({
     minute              :{type:Number, default: 0},
     day                 :{type:Number, default: 0},
     field        :{type: mongoose.Schema.ObjectId, ref: 'Field' },
+    league        :{type: mongoose.Schema.ObjectId, ref: 'League' },
 	created		    	:{type: Date, default: Date.now },
 	modified			:{type: Date, default: Date.now }
 });
