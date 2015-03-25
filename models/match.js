@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var GoalSchema = require('./goal').GoalSchema;
 var IncidentSchema = require('./incident').IncidentSchema;
 var TurnSchema = require('./turn').TurnSchema;
+var TurnEmbedSchema = require('./turn').TurnEmbedSchema;
 var ImageSchema = require('../models/image').ImageSchema;
 var PlayerParticipationSchema = require('../models/player_participation').PlayerParticipationSchema;
 
@@ -21,7 +22,7 @@ var MatchSchema = new mongoose.Schema({
     visitor_team_name    : {type: String},
     local_goals  	    : [GoalSchema],
     visitor_goals	    : [GoalSchema],
-    turn     			: {type: mongoose.Schema.ObjectId, ref: 'Turn' },
+    turn     			: [TurnEmbedSchema],
     local_incidents	    : [IncidentSchema],
     visitor_incidents   : [IncidentSchema],
     mvp     			: {type: mongoose.Schema.ObjectId, ref: 'Player' },
@@ -31,7 +32,6 @@ var MatchSchema = new mongoose.Schema({
     local_players       : [PlayerParticipationSchema],
     visitor_players     : [PlayerParticipationSchema],
     //referees			: [RefereeSchema],
-    turn                : [TurnSchema],
     matchday   			: {type: mongoose.Schema.ObjectId, ref: 'Matchday' },
     images              : [ImageSchema],
     played				: {

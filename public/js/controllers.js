@@ -644,9 +644,12 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
   }
   $http.get('/api/matches/' + $routeParams.id).
     success(function(data) {
+      $scope.visitor_team = data.visitor_team;
+      $scope.local_team = data.local_team;
+
       $scope.match = populateMatchPlayers(data, data);
-      $scope.match.visitor_team.logo_image = $rootScope.imageHelper.getImage($scope.match.visitor_team.images, "escudo");
-      $scope.match.local_team.logo_image = $rootScope.imageHelper.getImage($scope.match.local_team.images, "escudo");
+      $scope.visitor_team.logo_image = $rootScope.imageHelper.getImage($scope.visitor_team.images, "escudo");
+      $scope.local_team.logo_image = $rootScope.imageHelper.getImage($scope.local_team.images, "escudo");
       $scope.submitGoal = function (form, role) {
         $http.post('/api/matches/goals/'+role+"/"+$scope.match._id, $scope.goal).
           success(function(data) {
@@ -659,6 +662,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
                 }
               }
             } else{
+              $('#headingGoal'+role).modal('hide');
               $scope.match = populateMatchPlayers(data, $scope.match);
             }
           });
@@ -757,6 +761,21 @@ function matches_edit($scope, $http, $location, $routeParams) {
     $http.put('/api/matches/' + $routeParams.id, $scope.form).
       success(function(data) {
         $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function matches_change_turn($scope, $http, $location, $routeParams) {
+  $scope.days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+  $scope.form = {};
+  $http.get('/api/turns').
+    success(function(data) {
+      $scope.turns = data;
+    });
+  $scope.submit = function () {
+    $http.put('/api/matches/updateTurn/' + $routeParams.id, {"turn_id" : $scope.turn}).
+      success(function(data) {
+        $location.url('/matches/' + $routeParams.id);
       });
   };
 }
@@ -878,7 +897,7 @@ function advertisings_add($scope, $http, $location, $routeParams ) {
     $scope.advertising.content  = $("#contentarea").html();
     $http.post('/api/advertisings', $scope.advertising).
       success(function(data) {
-        $location.path('/');
+        $location.path('/advertisings');
       });
   };
 }
@@ -1038,16 +1057,19 @@ function turns_view($scope, $http, $routeParams, $rootScope, $location) {
 }
 
 function turns_edit($scope, $http, $location, $routeParams) {
+  $scope.days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
   $scope.form = {};
   $http.get('/api/turns/' + $routeParams.id).
     success(function(data) {
-      $scope.form = data;
+      $scope.form.turn = data;
     });
-
-  $scope.editTurn = function () {
-    $http.put('/api/turns/' + $routeParams.id, $scope.form).
+  $http.get('/api/fields/').success(function(data){
+    $scope.fields = data;
+  })
+  $scope.editTurn = function (addTurn) {
+    $http.put('/api/turns/' + $routeParams.id, $scope.form.turn).
       success(function(data) {
-        $location.url('/readPost/' + $routeParams.id);
+        $location.url('/turns');
       });
   };
 }
@@ -1079,8 +1101,8 @@ function images_add($rootScope, $scope, $http, $window, $location, $routeParams)
       "uniforme" : {"height":115 , "width":50},
       "cara" : {"height":80, "width":80},
       "copa" : {"height":70 , "width":100},
-      "encabezado" : {"height":100 , "width":400},
-      "lateral" : {"height":60 , "width":100}
+      "encabezado" : {"height":90 , "width":400},
+      "lateral" : {"height":40 , "width":180}
       };
   $scope.image = {};
   $scope.image.type = $routeParams.format;

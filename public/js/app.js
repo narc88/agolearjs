@@ -220,6 +220,14 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
       when('/turns', {
         templateUrl: '/partials/turns/index.jade',
         controller: turns_index
+      }).
+      when('/turns/edit/:id', {
+        templateUrl: '/partials/turns/edit.jade',
+        controller: turns_edit
+      }).
+      when('/matches/updateTurn/:id', {
+        templateUrl: '/partials/matches/change_turn.jade',
+        controller: matches_change_turn
       })
       .otherwise({redirectTo: '/otherwise' });
     $locationProvider.html5Mode(true);

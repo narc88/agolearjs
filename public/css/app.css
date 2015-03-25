@@ -212,3 +212,24 @@ input {
 .page_header{
   margin-top: 60px;
 }
+
+#participationsAccordion .panel-heading{
+  margin: 2px;
+}
+
+.match_summary ul li{
+  border-bottom: 1px solid #E8E8E8 ;
+  padding:2px;
+}
+
+.match_summary ul{
+  padding-left: 10px;
+}
+
+.button_summary .visitor > *{
+  float: right;
+}
+
+.button_summary .local > *{
+  float: left;
+}

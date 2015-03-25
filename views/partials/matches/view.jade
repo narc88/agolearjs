@@ -2,7 +2,7 @@ include admin_menu
 div(class="result col-md-12")
 	include partial_view.jade
 
-div(class="incidents col-md-12")
+div(class="incidents match_summary col-md-12")
 	h3 Resumen
 	div(class="local col-md-6")
 		ul
@@ -11,28 +11,19 @@ div(class="incidents col-md-12")
 				span 
 					img(src="/img/pelota.png", style="width:20px")
 					span {{goal.player.name}} {{goal.player.last_name}}
-					span(class="glyphicon glyphicon-remove", aria-hidden="true", ng-click="removeGoal('local', goal._id)")
-			if(RolesHelper.admin(user))
-				li
-					include ../goals/form.jade
+					span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true", ng-click="removeGoal('local', goal._id)")
 			li(ng-repeat="incident in match.local_incidents")
 				span(ng-if="incident.incident_type == 'Amonestación'" class="animate-if")
 					img(src="/img/tarjamarilla.png" , style="width:20px")
 				span(ng-if="incident.incident_type == 'Expulsión'" class="animate-if")
 					img(src="/img/tarjroja.png" , style="width:20px")
 				span {{incident.player.name}} {{incident.player.last_name}}
-				span(class="glyphicon glyphicon-remove", aria-hidden="true", ng-click="removeIncident('local', incident._id)")
-			if(RolesHelper.admin(user))
-				li
-					include ../incidents/form.jade
+				span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true", ng-click="removeIncident('local', incident._id)")
 			li(ng-repeat="suspension in match.local_suspensions")
 				span
 					img(src="/img/suspension.png", style="width:20px")
 				span {{suspension.player.name}} {{suspension.player.last_name}}
-				span(class="glyphicon glyphicon-remove", aria-hidden="true" , ng-click="remove('local', suspension._id)")
-			if(RolesHelper.admin(user))
-				li
-					include ../suspensions/form.jade
+				span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="remove('local', suspension._id)")
 	div(class="visitor col-md-6")
 		ul
 			-var role = "visitor"
@@ -40,35 +31,40 @@ div(class="incidents col-md-12")
 				span 
 					img(src="/img/pelota.png", style="width:15px")
 					span {{goal.player.name}} {{goal.player.last_name}}
-					span(class="glyphicon glyphicon-remove", aria-hidden="true" , ng-click="removeGoal('visitor', goal._id)")
-			if(RolesHelper.admin(user))
-				li
-					include ../goals/form.jade
+					span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="removeGoal('visitor', goal._id)")
 			li(ng-repeat="incident in match.visitor_incidents")
 				span(ng-if="incident.incident_type == 'Amonestación'" class="animate-if")
 					img(src="/img/tarjamarilla.png" , style="width:20px")
 				span(ng-if="incident.incident_type == 'Expulsión'" class="animate-if")
 					img(src="/img/tarjroja.png" , style="width:20px")
 				span {{incident.player.name}} {{incident.player.last_name}}
-				span(class="glyphicon glyphicon-remove", aria-hidden="true", ng-click="removeIncident('visitor', incident._id)")
-			if(RolesHelper.admin(user))
-				li
-					include ../incidents/form.jade
+				span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true", ng-click="removeIncident('visitor', incident._id)")
 			li(ng-repeat="suspension in match.visitor_suspensions")
 				span
 					img(src="/img/suspension.png", style="width:20px")
 				span {{suspension.player.name}} {{suspension.player.last_name}} ({{suspension.number_of_matches}})
-				span(class="glyphicon glyphicon-remove", aria-hidden="true" , ng-click="remove('visitor', suspension._id)")
-			if(RolesHelper.admin(user))
-				li
-					include ../suspensions/form.jade
+				span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="remove('visitor', suspension._id)")
+if(RolesHelper.admin(user))
+	div(class="col-md-12 button_summary")
+		div(class="local col-md-6")
+			-var role = "local"
+			include ../goals/form.jade
+			include ../incidents/form.jade
+			include ../suspensions/form.jade
+		div(class="visitor col-md-6")
+			-var role = "visitor"
+			include ../goals/form.jade
+			include ../incidents/form.jade
+			include ../suspensions/form.jade
+div(class="col-md-12")
 	hr
 	h2 Horario y Cancha
 	div(class="time")
-		span {{match.turn[0].field.name}}
+		span {{match.turn[0].field[0].name}}
 	div(class="hour")
 		span {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
 	hr
+div(class="col-md-12")
 	h2 Jugadores
 	div(class="players")
 		div(class="local col-md-6")

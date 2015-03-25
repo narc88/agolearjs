@@ -5,6 +5,8 @@ var ImageModel 	= require('../models/image').ImageModel;
 var FieldModel = require('../models/field').FieldModel;
 var PlayerModel = require('../models/player').PlayerModel;
 var ZoneModel = require('../models/zone').ZoneModel;
+var TurnModel = require('../models/turn').TurnModel;
+var TournamentModel = require('../models/tournament').TournamentModel;
 var DataGrouper = require('../helpers/dataGrouper').DataGrouper;
 var mongoose = require('mongoose');
 
@@ -14,10 +16,15 @@ module.exports = function(app){
 	app.get('/api/matches', function(req, res, next){
 		MatchModel.find(req.query).populate("visitor_team").populate("local_team").exec( function(err, matches){
 			if (err) throw err;
-			var callback = function(){
-				res.send(matches);
-			}
-			FieldModel.populate(matches, { path: 'turn.field', select: 'name'},callback);
+			res.send(matches);
+		});
+	});
+
+	//Crear un nuevo partido, amistoso, quizá?
+	app.post('/api/matches', function(req, res, next){
+		MatchModel.findOne({ '_id': req.body._id }).exec( function(err, match){
+			if (err) throw err;
+			res.send(match);
 		});
 	});
 
@@ -25,10 +32,7 @@ module.exports = function(app){
 		var team_id = req.query.team
 		MatchModel.find(req.query).sort({'start_datetime': -1}).limit(5).exec( function(err, matches){
 			if (err) throw err;
-			var callback = function(){
-				res.send(matches);
-			}
-			FieldModel.populate(matches, { path: 'turn.field', select: 'name'},callback);
+			res.send(matches);
 		});
 	});
 
@@ -99,9 +103,7 @@ module.exports = function(app){
 		MatchModel.findOne({ _id: req.params.id }).populate("visitor_team").populate("local_team").populate("local_suspensions").populate("visitor_suspensions").exec( function(err, match){
 			if (err) throw err
 			console.log(match)
-			FieldModel.populate(match, { path: 'turn.field', select: 'name'}, function(){
-				res.send(match)
-			});
+			res.send(match)
 		});
 	});
 
@@ -127,6 +129,22 @@ module.exports = function(app){
 			
 		})
 		
+	});
+
+	app.put('/api/matches/updateTurn/:id', function(req, res, next){
+		TurnModel.findOne({ _id : req.body.turn_id}).populate('field', '_id name').exec( function(err, turn){
+			MatchModel.findOne({ _id: req.params.id }).exec( function(err, match){
+				if (err) throw err;
+				if(match){
+					match.turn = turn;
+					//Hay que actualizar el horario del partido también.
+					match.save(function(err){
+						if (err) throw err;
+						res.send(match);
+					})
+				}
+			});
+		})
 	});
 
 	app.put('/api/matches/:id', function(req, res, next){
@@ -227,7 +245,7 @@ module.exports = function(app){
 		var id = mongoose.Types.ObjectId(req.params.id);
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
-			res.send(goal);
+			res.send(incident);
 		}
 		if(req.params.team_role === "local"){
 			MatchModel.update(

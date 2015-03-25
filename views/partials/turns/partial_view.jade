@@ -1,6 +1,6 @@
-table(class="table table-responsive table-striped")
-	tr(ng-repeat="turn in turns | orderBy:['-day','hour', 'minute']") 
-		td {{turn.hour}} : {{turn.minute}}
-		td {{days[turn.day]}}
-		td
-			a {{turn.field.name}}
+td
+	a {{turn.field.name}}
+td {{turn.hour}} : {{turn.minute}} Hs.
+td {{days[turn.day]}}
+td
+	a(href="/turns/edit/{{turn._id}}") Editar

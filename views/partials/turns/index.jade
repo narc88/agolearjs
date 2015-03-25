@@ -1,6 +1,9 @@
 h3 Lista de Turnos
-table.table.table-condensed.table-hover(class="")
-	tr(ng-repeat="turn in turns") 
-		td
+table(class="table table-responsive table-striped")
+	tr
+		th Cancha
+		th Horario
+		th Dia
+		th
+	tr(ng-repeat="turn in turns | orderBy:['field.name', '-day','hour', 'minute']") 
 			include partial_view
-			a(class="btn btn-primary", role="button", href="editTurn()") Editar

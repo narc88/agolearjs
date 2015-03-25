@@ -21,7 +21,7 @@ div(class="tab-content")
 					td GC
 					td DG
 					td Puntos
-				tr(ng-repeat="participator in zone.participations | orderBy:['-points','-own_goals', 'other_goals', 'own_goals-other_goals' ,'-won']"
+				tr(ng-repeat="participator in zone.participations | orderBy:['-points','-own_goals', 'other_goals', 'own_goals-other_goals' ,'-won']")
 					td {{$index + 1}}
 					td 
 						a(href="/teams/{{participator.team}}") {{participator.team_name}}

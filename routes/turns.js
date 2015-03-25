@@ -8,7 +8,7 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/turns', function(req, res, next){
-		TurnModel.find().exec( function(err, turns){
+		TurnModel.find().populate('field').exec( function(err, turns){
 			if (err) throw err;
 			res.send(turns);
 		});
@@ -40,7 +40,10 @@ module.exports = function(app){
 		TurnModel.findOne({ _id: req.params.id }).exec( function(err, turn){
 			if (err) throw err;
 			if(turn){
-				turn.name = req.body.turn.name;
+				turn.hour = req.body.hour;
+				turn.day = req.body.day;
+				turn.minute = req.body.minute;
+				turn.field = req.body.field;
 				turn.modified = new Date();
 				turn.save(function(err){
 					if (err) throw err;

@@ -1,0 +1,8 @@
+form(turn="changeTurn", ng-submit="submit(changeTurn)")
+	.form-group
+		label(for="turn") Turno
+		select(ng-model='turn', turn='turn', id="turn", type='text').form-control.input-lg
+			option(ng-repeat="turn in turns", value="{{turn._id}}") {{days[turn.day]}} {{turn.hour}} {{turn.minute}} Hs. {{turn.field.name}}
+		div(ng-show="changeTurn['turn'].$error.mongoose", style="color: red") {{changeTurn.turn.$error.mongoose}}
+	.form-group
+		input(type="submit", value="Guardar").btn.btn-primary

@@ -1,6 +1,4 @@
-.col-md-9
-	h3 Lista de Publicidades
-	br
-	.col-md-8
-		div(ng-repeat="advertising in advertisings") 
-			include partial_view.jade
+h3 Lista de Publicidades
+a(href="/advertisings/add") Agregar Nueva
+div(ng-repeat="advertising in advertisings") 
+	include partial_view.jade
