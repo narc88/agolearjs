@@ -1,7 +1,6 @@
 h3 Lista de Equipos
-table.table.table-condensed.table-hover
+table.table.table-condensed.table-hover.table-responsive.table-striped
 	tr(ng-repeat="team in teams") 
 		td
 			include partial_view
-			a(class="btn btn-primary", role="button", href="/teams/{{team._id}}") Ver
-			a(class="btn btn-primary", role="button", href="/teams/edit/{{team._id}}") Editar
+			

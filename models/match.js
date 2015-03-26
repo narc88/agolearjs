@@ -37,6 +37,12 @@ var MatchSchema = new mongoose.Schema({
     played				: {
                				 type: Boolean
                			 },
+    lost_for_both       : {
+                             type: Boolean
+                         },
+    walk_over            : {
+                             type: Boolean
+                         },
     parent              : {type: mongoose.Schema.ObjectId, ref: 'Match' },                   
 	created		    	: {type: Date, default: Date.now },
 	modified			: {type: Date, default: Date.now }
