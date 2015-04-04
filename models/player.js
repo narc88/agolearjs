@@ -51,6 +51,7 @@ var PlayerSchema = new mongoose.Schema({
                 },
     active      : {type:Boolean, default:true},
     images      : [ImageSchema],
+    suspensions : {type: mongoose.Schema.ObjectId, ref: 'Suspension' },
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }
 });

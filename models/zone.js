@@ -1,6 +1,6 @@
 var validator = require('validator');
 var mongoose = require('mongoose');
-var ParticipationSchema = require('./participation').ParticipationSchema;
+var ParticipationSchema = require('../models/participation').ParticipationSchema;
 var MatchdaySchema = require('../models/matchday').MatchdaySchema;
 
 var ZoneSchema = new mongoose.Schema({

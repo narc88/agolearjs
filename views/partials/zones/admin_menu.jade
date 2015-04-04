@@ -5,12 +5,14 @@ div(class="btn-group pull-right")
 		span(class="caret")
 	ul(class="dropdown-menu admin_menu", role="menu")
 		li
+			a(href='/chronicles?zone={{zone._id}}') Crónicas
+		li
 			a(href='/zones/{{zone._id}}/add_participation') Agregar Participante
 		li
 			a(href='/zones/{{zone._id}}/create_fixture') Crear Fixture
 		li
 			a(href='/zones/{{zone._id}}/participations/replace') Reemplazar equipo
 		li
-			a(href='/chronicles?zone={{zone._id}}') Crónicas
+			a(href='/zones/{{zone._id}}/participations/suspension') Suspender equipo
 		li
 			a(href='/zones/{{zone._id}}/close') Finalizar zona

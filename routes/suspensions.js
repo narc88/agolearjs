@@ -20,11 +20,16 @@ module.exports = function(app){
 		var team_id = req.query.team
 		TeamModel.findOne({"_id":team_id}).exec( function(err, team){
 			if (err) throw err;
-			players = team.players;
-			SuspensionModel.find({ "accomplished" : false,"player":{$in : players }}).populate("player").exec( function(err, suspensions){
-				if (err) throw err;
-				res.send(suspensions);
-			});
+			if(team.players.length > 0){
+				players = team.players;
+				SuspensionModel.find({ "accomplished" : false,"player":{$in : players }}).populate("player").exec( function(err, suspensions){
+					if (err) throw err;
+					res.send(suspensions);
+				});
+			}else{
+				res.send();
+			}
+			
 		});
 		
 	});
@@ -69,6 +74,8 @@ module.exports = function(app){
 			}
 		});
 	});
+	
+	
 
 	app.put('/api/suspensions/:id', function(req, res, next){
 		SuspensionModel.findOne({ _id: req.params.id }).exec( function(err, suspension){

@@ -14,6 +14,15 @@ module.exports = function(app){
 		});
 	});
 
+	app.get('/api/players/names', function(req, res, next){
+		var queryArray = req.query._id.split(',');
+		PlayerModel.find({"_id" : {$in:  queryArray} }, 'name last_name').exec( function(err, players){
+			if (err) throw err;
+			res.send(players);
+		});
+	});
+
+
 	app.get('/api/players/:id', function(req, res, next){
 		PlayerModel.findOne({ _id: req.params.id }).exec( function(err, player){
 			if (err) throw err;

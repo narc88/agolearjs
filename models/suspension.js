@@ -12,7 +12,8 @@ var SuspensionSchema = new mongoose.Schema({
     accomplished		: {
                				 type: Boolean, default:false
                			 },
-    number_of_matches                 : { type: Number},                  
+    number_of_matches   : { type: Number},        
+    undetermined_time   : { type: Boolean, default: false},           
 	created		    	: {type: Date, default: Date.now },
 	modified			: {type: Date, default: Date.now }
 });

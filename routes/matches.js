@@ -14,6 +14,7 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/matches', function(req, res, next){
+		console.log(req.query)
 		MatchModel.find(req.query).populate("visitor_team").populate("local_team").exec( function(err, matches){
 			if (err) throw err;
 			res.send(matches);
@@ -37,6 +38,30 @@ module.exports = function(app){
 	});
 
 	app.get('/api/participators_stats/:tournament_id', function(req, res, next){
+		var groupByPlayer = function(arr){
+		    var a = [], b = [], prev = "";
+		    arr.sort();
+		    for ( var i = 0; i < arr.length; i++ ) {
+		        if ( arr[i].toString() != prev ) {
+		        	obj = {}
+			    	obj.key = arr[i];
+			        obj.value = 1;
+			        a.push(obj)
+		        } else {
+		            a[a.length-1].value ++;
+		        }
+		        prev = obj.key;
+		    }
+		    function compare(a,b) {
+			  if (a.value < b.value)
+			     return 1;
+			  if (a.value > b.value)
+			    return -1;
+			  return 0;
+			}
+			var top_scorers = a.sort(compare).slice(0, 10);
+		    return top_scorers;
+		  }
 		ZoneModel.find({ "tournament": req.params.tournament_id }).exec( function(err, zones){
 			var matchdays = [];
 			if (err) throw err;
@@ -83,6 +108,7 @@ module.exports = function(app){
 					var hist = {};
 					var goals_hist = {};
 					goals.map( function (a) { if (a in goals_hist) goals_hist[a] ++; else goals_hist[a] = 1; } );
+					var goals_hist_2 = groupByPlayer(goals);
 					var yellow_cards_hist = {};
 					yellow_cards.map( function (a) { if (a in yellow_cards_hist) yellow_cards_hist[a] ++; else yellow_cards_hist[a] = 1; } );
 					var red_cards_hist = {};
@@ -90,6 +116,7 @@ module.exports = function(app){
 					var mvps_hist = {};
 					mvps.map( function (a) { if (a in mvps_hist) mvps_hist[a] ++; else mvps_hist[a] = 1; } );
 					hist.goals = goals_hist;
+					hist.top_scorers = goals_hist_2;
 					hist.yellow_cards = yellow_cards_hist;
 					hist.red_cards = red_cards_hist;
 					hist.mvps = mvps_hist;
@@ -102,7 +129,6 @@ module.exports = function(app){
 	app.get('/api/matches/:id', function(req, res, next){
 		MatchModel.findOne({ _id: req.params.id }).populate("visitor_team").populate("local_team").populate("local_suspensions").populate("visitor_suspensions").exec( function(err, match){
 			if (err) throw err
-			console.log(match)
 			res.send(match)
 		});
 	});
@@ -129,6 +155,20 @@ module.exports = function(app){
 			
 		})
 		
+	});
+
+	app.put('/api/matches/updateWalkOver/:id', function(req, res){
+		var query = req.body.data
+		MatchModel.update(
+		    { _id: req.params.id}, 
+		    {$set:  {"walk_over" : query.lost_for_both}}, callback)	
+	});
+
+	app.put('/api/matches/updateSetAsLostForBoth/:id', function(req, res){
+		var query = req.body.data
+		MatchModel.update(
+		    { _id: req.params.id}, 
+		    {$set: {"lost_for_both" : query.lost_for_both}}, callback)	
 	});
 
 	app.put('/api/matches/updateTurn/:id', function(req, res, next){
@@ -243,17 +283,22 @@ module.exports = function(app){
 		var team_role = ""
 		var incident = new IncidentModel(req.body);
 		var id = mongoose.Types.ObjectId(req.params.id);
-		var callback = function(err, numAffected, status){
-			if(err) throw err;
-			res.send(incident);
-		}
+		
 		if(req.params.team_role === "local"){
+			var callback = function(err, numAffected, status){
+				if(err) throw err;
+				res.send(incident);
+			}
 			MatchModel.update(
 			    { "_id": req.params.id}, 
 			    {$push: {"local_incidents": incident}}, callback
 			)
 		}else{			
 			if(req.params.team_role === "visitor"){
+				var callback = function(err, numAffected, status){
+					if(err) throw err;
+					res.send(incident);
+				}
 				MatchModel.update(
 				    { "_id": req.params.id}, 
 				    {$push: {"visitor_incidents": incident}}, callback
@@ -316,22 +361,27 @@ module.exports = function(app){
 		var id = mongoose.Types.ObjectId(req.params.id);
 		if(req.params.team_role === "local"){
 			team_role = "local_incidents";
+			var callback = function(err, numAffected, status){
+				if(err) throw err;
+				res.send(true);
+			}
 			MatchModel.update(
 			    { "local_incidents._id": id}, 
 			    {$pull: {"local_incidents" :{_id : id }}}, callback)
 		}else{
 			if(req.params.team_role === "visitor"){
 				team_role = "visitor_incidents";
+				var callback = function(err, numAffected, status){
+					if(err) throw err;
+					res.send(true);
+				}
 				MatchModel.update(
 				    { "visitor_incidents._id": id}, 
 				    {$pull: {"visitor_incidents" :{_id : id }}}, callback)
 			}			
 		}
 		
-		var callback = function(err, numAffected, status){
-			if(err) throw err;
-			res.send(true);
-		}
+		
 		
 	});
 

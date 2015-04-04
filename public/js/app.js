@@ -132,27 +132,6 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
         templateUrl: '/partials/tournaments/delete.jade',
         controller: teams_delete
       }).
-      /*
-       when('/matchdays', {
-        templateUrl: '/partials/matchdays/index.jade',
-        controller: matchdays_index
-      }).
-      when('/matchdays/add', {
-        templateUrl: '/partials/matchdays/form.jade',
-        controller: matchdays_add
-      }).
-      when('/matchdays/:id', {
-        templateUrl: '/partials/matchdays/view.jade',
-        controller: matchdays_view
-      }).
-      when('/matchdays/edit/:id', {
-        templateUrl: '/partials/matchdays/edit.jade',
-        controller: matchdays_edit
-      }).
-      when('/matchdays/delete/:id', {
-        templateUrl: '/partials/matchdays/delete.jade',
-        controller: teams_delete
-      }).*/
       when('/matches', {
         templateUrl: '/partials/matches/index.jade',
         controller: matches_index
@@ -289,4 +268,51 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
           $(".carousel-inner > .item").first().addClass("active")
           $(".carousel-indicators > li").first().addClass("active")
         });
+    }).controller('ScorersAndOthersController', function ($scope, $http, $window, $rootScope) {
+      var playersString = function(players){
+        var scorers = [];
+        for (var i = 0; i < players.length; i++) {
+          if(i!=0){
+            scorers += ",";
+          }
+          scorers += players[i].key;
+        };
+        return scorers;
+      }
+      var getPlayers = function(players){
+        $http.get('/api/players/names?_id='+playersString(players)).
+          success(function(data) {
+            var top_scorers = $rootScope.tournament_stats.participators_stats.top_scorers;
+            for (var i = 0; i < top_scorers.length; i++) {
+                var key = top_scorers[i].key;
+                $rootScope.tournament_stats.participators_stats.top_scorers[i].player = $.grep(data, function(e){ return e._id == key; })[0];
+            };
+        });
+      }
+      $rootScope.$on('tournament_stats', function (event, data) {
+        console.log(data); // 'Data to send'
+        getPlayers($rootScope.tournament_stats.participators_stats.top_scorers)
+      });
+      $scope.getLessBeaten = function(){
+        var less_beaten_temp = [];
+        for (var i = 0; i < $rootScope.zones.length; i++) {
+            var zone = $rootScope.zones[i]
+            for (var k = 0; k < zone.participations.length; k++) {
+                var team = {};
+                team._id = zone.participations[k]._id;
+                team.name = zone.participations[k].team_name;
+                team.other_goals = zone.participations[k].other_goals;
+                less_beaten_temp.push(team);
+            };
+        };
+        function compare(a,b) {
+          if (a.other_goals < b.other_goals)
+             return -1;
+          if (a.other_goals > b.other_goals)
+            return 1;
+          return 0;
+        }
+        $rootScope.tournament_stats.less_beaten = less_beaten_temp.sort(compare).slice(0, 10);
+      }
+     
     });

@@ -35,13 +35,13 @@ var MatchSchema = new mongoose.Schema({
     matchday   			: {type: mongoose.Schema.ObjectId, ref: 'Matchday' },
     images              : [ImageSchema],
     played				: {
-               				 type: Boolean
+               				 type: Boolean, default:false
                			 },
     lost_for_both       : {
-                             type: Boolean
+                             type: Boolean, default:false
                          },
     walk_over            : {
-                             type: Boolean
+                             type: Boolean, default:false
                          },
     parent              : {type: mongoose.Schema.ObjectId, ref: 'Match' },                   
 	created		    	: {type: Date, default: Date.now },

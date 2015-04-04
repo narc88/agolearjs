@@ -15,6 +15,7 @@ function main($rootScope,$scope, $http) {
       $scope.countries = data;
       $scope.default_country = data[0];
     });*/
+  $rootScope.tournament_stats = {};
   $rootScope.menu = {};
   $rootScope.imageTypes = {};
   $rootScope.imageTypes.team = ["normal", "uniforme", "escudo"];
@@ -43,7 +44,11 @@ function main($rootScope,$scope, $http) {
   //Service that responds with the json structure of the main menu
    $http.get('/api/menu').
     success(function(data, status, headers, config) {
-      $rootScope.menu.tournaments = data;
+      $rootScope.menu.tournaments = data.tournaments;
+      for (var i = 0; i < $rootScope.menu.tournaments.length; i++) {
+        $rootScope.menu.tournaments[i].zones = $.grep(data.zones, function(e){ return e.tournament == $rootScope.menu.tournaments[i]._id; });
+
+      };
     });
 
 }
@@ -205,10 +210,47 @@ function zones_add($scope, $http, $location) {
 }
 
 function zones_view($scope, $http, $routeParams, $rootScope, $location) {
+  var getStats = function(){
+    if( $rootScope.tournament_stats.id != $scope.zone.tournament){
+      $http.get('/api/zonesOfTournament?tournament='+$scope.zone.tournament+'&exclude='+$scope.zone._id).
+        success(function(zones) {
+          if(zones){
+            $rootScope.zones = zones;
+          }else{
+            $rootScope.zones = [];
+          }
+          $rootScope.zones.push($rootScope.zone);
+
+          $http.get('/api/participators_stats/'+$scope.zone.tournament).
+            success(function(data) {
+              $rootScope.tournament_stats.participators_stats = data;
+              $rootScope.tournament_stats.id = $scope.zone.tournament;
+
+              $scope.$emit('tournament_stats', $rootScope.tournament_stats.id );
+
+              for (var k = $rootScope.zones.length - 1; k >= 0; k--) {
+                var zone = $rootScope.zones[k];
+                for (var i = zone.participations.length - 1; i >= 0; i--) {
+                  var participation = zone.participations[i];
+                  for (var j = participation.players.length - 1; j >= 0; j--) {
+                    var player = participation.players[j];
+                    player.goals = searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.goals);
+                    player.yellow_cards = searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.yellow_cards);
+                    player.red_cards =  searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.red_cards);
+                    player.mvps =  searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.mvps);
+                    $rootScope.zones[k].participations[i].players[j] = player;
+                    $scope.zone = $rootScope.zones[$rootScope.zones.length-1];
+                  };
+                };
+              };
+          }); 
+        });
+    }
+  }
   var searchInParticipatorStatsByPlayer = function(id , objArray){
     return objArray[id] || 0;
   }
-  if((typeof $rootScope.zone === "undefined") || ($routeParams.id != $rootScope.zone.id)){
+  if((typeof $rootScope.zones === "undefined") || ($.grep($rootScope.zones, function(e){ return e._id == $routeParams.id; }).length == 0) ){
     $http.get('/api/zones/' + $routeParams.id).
       success(function(data) {
         
@@ -223,29 +265,11 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
           if(!$rootScope.tournament_stats){
             $rootScope.tournament_stats = {};
           }
-        if( $rootScope.tournament_stats.id != $scope.zone.tournament){
-          $http.get('/api/participators_stats/'+$scope.zone.tournament).
-            success(function(data) {
-              $rootScope.tournament_stats.participators_stats = data;
-              $rootScope.tournament_stats.id = $scope.zone.tournament;
-              for (var i = $scope.zone.participations.length - 1; i >= 0; i--) {
-                var participation = $scope.zone.participations[i];
-                for (var j = participation.players.length - 1; j >= 0; j--) {
-                  var player = participation.players[j];
-                  player.goals = searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.goals);
-                  player.yellow_cards = searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.yellow_cards);
-                  player.red_cards =  searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.red_cards);
-                  player.mvps =  searchInParticipatorStatsByPlayer( player._id,  $rootScope.tournament_stats.participators_stats.mvps);
-                  $scope.zone.participations[i].players[j] = player;
-                };
-              };
-          });
-        }
-        
+        getStats();
     });
 
   }else{
-    $scope.zone = $rootScope.zone;
+    $scope.zone = $.grep($rootScope.zones, function(e){ return e._id == $routeParams.id; })[0];
   }
   
 }
@@ -621,6 +645,18 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
       }
     };
   }
+  var hasYellowCard = function(player){
+    $.each($scope.match.local_incidents, function( index, incident ) {
+        if(incident.player == player){
+          return true;
+        }
+    });
+    $.each($scope.match.visitor_incidents, function( index, incident ) {
+        if(incident.player == player){
+          return true;
+        }
+    });
+  }
   var populateMatchPlayers = function(data, match){
     for (var i = data.local_goals.length - 1; i >= 0; i--) {
       data.local_goals[i].player = searchPlayer(data.local_goals[i].player, match.local_players);
@@ -650,6 +686,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
       $scope.match = populateMatchPlayers(data, data);
       $scope.visitor_team.logo_image = $rootScope.imageHelper.getImage($scope.visitor_team.images, "escudo");
       $scope.local_team.logo_image = $rootScope.imageHelper.getImage($scope.local_team.images, "escudo");
+
       $scope.submitGoal = function (form, role) {
         $http.post('/api/matches/goals/'+role+"/"+$scope.match._id, $scope.goal).
           success(function(data) {
@@ -667,7 +704,11 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             }
           });
       };
+
       $scope.submitIncident = function  (form, role) {
+        if( ($scope.incident.incident_type === "Amonestación") && (hasYellowCard($scope.incident.player)) ){
+
+        }
         $http.post('/api/matches/incidents/'+role+"/"+$scope.match._id+"/"+$rootScope.zone.tournament, $scope.incident).
           success(function(data) {
             if (data.error) {
@@ -683,6 +724,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             }
           });
       };
+
       $scope.submitSuspension = function  (form, role) {
         $http.post('/api/suspensions/'+role+'/'+$scope.match._id, $scope.suspension).
           success(function(data) {
@@ -705,6 +747,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             }
           });
       };
+
       $scope.removeGoal = function  (role, id) {
         $http.delete('/api/matches/goals/'+role+'/'+id).
           success(function(data) {
@@ -715,6 +758,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             }
           });
       };
+
       $scope.removeIncident = function  (role, id) {
         $http.delete('/api/matches/incidents/'+role+'/'+id).
           success(function(data) {
@@ -725,6 +769,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             }
           });
       };
+
       $scope.removeSuspension = function  (role, id) {
         $http.delete('/api/matches/suspensions/'+role+'/'+id).
           success(function(data) {
@@ -735,18 +780,41 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             }
           });
       };
+
       $scope.updateParticipations = function  () {
         $http.post('/api/zones/'+$scope.match.matchday+'/update_participations', {"match_id" : $scope.match._id}).
           success(function(data) {
             
           });
       };
-      $scope.setMatchAsPlayed = function () {
+
+      $scope.setMatchAsPlayed = function (played) {
         $http.post('/api/matches/setAsPlayed', {"match_id" : $scope.match._id}).
           success(function(data) {
             updateParticipations();
           });
       };
+
+      $scope.submitWalkOver = function (walk_over) {
+        $http.put('/api/matches/update/'+$scope.match.id,  { "data" : {"walk_over" : walk_over}}).
+          success(function(data) {
+            $scope.match.walk_over = walk_over;
+          }).
+          error(function(data, status, headers, config) {
+            $scope.match.walk_over = !walk_over;
+          });
+      };
+
+       $scope.submitLostForBoth = function (lost_for_both) {
+        $http.put('/api/matches/update/'+$scope.match.id, { "data" : {"lost_for_both" : lost_for_both}}).
+          success(function(data) {
+            $scope.match.lost_for_both = lost_for_both;
+          }).
+          error(function(data, status, headers, config) {
+            $scope.match.lost_for_both = !lost_for_both;
+          });
+      };
+      
     });
 }
 

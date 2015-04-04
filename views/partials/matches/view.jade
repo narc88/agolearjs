@@ -45,19 +45,36 @@ div(class="incidents match_summary col-md-12")
 				span {{suspension.player.name}} {{suspension.player.last_name}} ({{suspension.number_of_matches}})
 				span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="remove('visitor', suspension._id)")
 if(RolesHelper.admin(user))
-	div(class="col-md-12 button_summary")
-		div(class="local col-md-6")
-			-var role = "local"
-			include ../goals/form.jade
-			include ../incidents/form.jade
-			include ../suspensions/form.jade
-		div(class="visitor col-md-6")
-			-var role = "visitor"
-			include ../goals/form.jade
-			include ../incidents/form.jade
-			include ../suspensions/form.jade
+	div(class="panel panel-default col-md-12 ")
+		div(class=" panel-body button_summary")
+			div(class="local col-md-4")
+				-var role = "local"
+				include ../goals/form.jade
+				include ../incidents/form.jade
+				include ../suspensions/form.jade
+			div(class="col-md-4")
+				table
+					tr
+						td
+							span Partido ya jugado
+						td
+							input(class="", ng-model='match.played', ng-change="setMatchAsPlayed(match.played)", name='name', id="name", type='checkbox')
+					tr
+						td
+							span Walk Over
+						td
+							input(class="", ng-model='match.walk_over', ng-change="submitWalkOver(match.walk_over)", name='name', id="name", type='checkbox')
+					tr
+						td
+							span Perdido para ambos
+						td
+							input(class="",  ng-model='match.lost_for_both', ng-change="submitLostForBoth(match.lost_for_both)", name='name', id="name", type='checkbox')
+			div(class="visitor col-md-4")
+				-var role = "visitor"
+				include ../goals/form.jade
+				include ../incidents/form.jade
+				include ../suspensions/form.jade
 div(class="col-md-12")
-	hr
 	h2 Horario y Cancha
 	div(class="time")
 		span {{match.turn[0].field[0].name}}

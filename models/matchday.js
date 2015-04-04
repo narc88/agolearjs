@@ -2,7 +2,7 @@ var validator = require('validator');
 var mongoose = require('mongoose');
 var ImageSchema = require('../models/image').ImageSchema;
 
-var MatchdaySchema = new mongoose.Schema({
+var MatchdaySchema  =  exports.MatchdaySchema = new mongoose.Schema({
     matchday_number	: { 
 				type: Number,
 				required:true

@@ -62,9 +62,39 @@ block body
 					a(href="/matches/{{match._id}}") Partido
 				li()
 					a(href="/advertisings/add") Publicidades
+		div(ng-show="tournament_stats.id", ng-controller="ScorersAndOthersController")
+			ul(class="nav nav-tabs")
+				li(role="presentation", class="active")
+					a(data-target="#top_scorers", aria-controls="top_scorers", role="tab", data-toggle="tab") Goleadores
+				li(role="presentation")
+					a(data-target="#less_beaten", aria-controls="less_beaten", role="tab", data-toggle="tab", ng-click="getLessBeaten()") Menos Vencidos
+			div( class="tab-content")
+				div(role="tabpanel", class="tab-pane active" ,id="top_scorers")
+					table.table-condensed.table-hover(class="table table-responsive table-striped")
+						tr
+							th Nombre y Apellido
+							th Goles
+						tr(ng-repeat="player in tournament_stats.participators_stats.top_scorers")
+							td
+								a(href="/players/{{player.key}}")  {{player.player.name}} {{player.player.last_name}}
+							td
+								span {{player.value}}
+				div(role="tabpanel", class="tab-pane" ,id="less_beaten")
+					table.table-condensed.table-hover(class="table table-responsive table-striped")
+						tr
+							th Equipo
+							th Goles en contra
+						tr(ng-repeat="team in tournament_stats.less_beaten")
+							td
+								a(href="/teams/{{team._id}}")  {{team.name}}
+							td
+								span {{team.other_goals}}
+				div(role="tabpanel", class="tab-pane active" ,id="top_scorers")
+			
+						
 		div(ng-controller="SidebarAdvertisingsController")
 			include partials/advertisings/sidebar.jade
-	div(class="col-md-9")
+	div(class="col-md-7")
 		div(ng-view)
 
 	//Javascript

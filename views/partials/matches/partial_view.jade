@@ -4,12 +4,12 @@ div(class="local col-md-6")
 			img(ng-if="!isUndefinedOrNull(local_team.logo_image)", ng-src="/photos/team/{{local_team._id}}/{{local_team.logo_image.filename}}", width="100px" ,style="width:100px,max-height:100px;")
 			img(ng-if="isUndefinedOrNull(local_team.logo_image)", ng-src="/img/logoteam.png", width="100px" ,style="width:100px,max-height:100px;")
 	div(class="col-md-8")
-		p {{match.local_team_name}}
-		span {{match.local_goals.length}}
+		h4 {{local_team.name}}
+		h5 {{match.local_goals.length}}
 div(class="visitor col-md-6")
 	div(class="col-md-8")
-		p {{match.visitor_team_name}}
-		span {{match.visitor_goals.length}}
+		h4 {{visitor_team.name}}
+		h5 {{match.visitor_goals.length}}
 	div(class="col-md-4")
 		a(href="#", class="thumbnail")
 			img(ng-if="!isUndefinedOrNull(visitor_team.logo_image)", ng-src="/photos/team/{{visitor_team._id}}/{{visitor_team.logo_image.filename}}", width="100px" ,style="width:100px,max-height:100px;")

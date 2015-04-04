@@ -15,7 +15,7 @@ module.exports = function(app){
 	});
 
 	app.get('/api/teams/:id', function(req, res, next){
-		TeamModel.findOne({ _id: req.params.id }).populate("players").exec( function(err, team){
+		TeamModel.findOne({ _id: req.params.id }).populate("players", "name last_name").exec( function(err, team){
 			if (err) throw err;
 			res.send(team);
 		});
@@ -59,4 +59,41 @@ module.exports = function(app){
 		});
 	});
 	//End of RESTful routes
+
+	//Prohibition
+	app.post('/api/teams/:id/suspension', function(req, res){
+		var players = req.body.players;
+		var callback = function(err, numAffected, status){
+			if(err) throw err;
+			req.send(true);
+		}
+		for (var i = 0; i < players.length; i++) {
+			var suspension = new SuspensionModel();
+			suspension.reason = req.body.reason;
+			suspension.undetermined_time = true;
+			suspension.player = players[i];
+			suspension.save(function(err){
+				console.log("Suspension for player"+suspension.player);
+			})
+		};
+		
+	});
+
+	app.delete('/api/players/prohibition/:player_id', function(req, res, next){
+		var callback = function(err, numAffected, status){
+			if(err) throw err;
+			req.send(true);
+		}
+		if(req.params.team_role === "Local"){
+			team_role = "local_players";
+		}else{			
+			if(req.params.team_role === "Visitor"){
+				team_role = "visitor_players";
+			}
+		}
+		MatchModel.update(
+		    { "_id": req.params.match_id}, 
+		    {$pull: {team_role : req.params.id }}, callback
+		)
+	});
 }

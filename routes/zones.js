@@ -14,6 +14,19 @@ module.exports = function(app){
 		});
 	});
 
+	app.get('/api/zonesOfTournament', function(req, res, next){
+		if(req.query.exclude){
+			var excluded = [];
+			excluded.push(req.query.exclude);
+		}
+		
+		ZoneModel.find({"tournament" : req.query.tournament, "_id" : { $nin:excluded}}).exec( function(err, zones){
+			if (err) throw err;
+			console.log(zones.length)
+			res.send(zones);
+		});
+	});
+
 	app.get('/api/zones/:id', function(req, res, next){
 		ZoneModel.findOne({ _id: req.params.id }).exec( function(err, zone){
 			if (err) throw err;
@@ -90,6 +103,10 @@ module.exports = function(app){
 				    }
 			);
 		});
+	});
+
+	//Suspension for all players included on a team participation
+	app.post('/api/zones/:id/participations/suspension', function(req, res, next){
 		
 	});
 
@@ -180,7 +197,7 @@ module.exports = function(app){
 	
 	var update_participation = function(participant_id, zone){
 		var matchdays = zone.matchdays;
-		MatchModel.find({ "matchday" : {$in :  matchdays }, $or: [ {"visitor_team" : participant_id } , {"local_team" : participant_id }]}).exec( function(err, matches){
+		MatchModel.find({ "lost_for_both": false, "matchday" : {$in :  matchdays }, $or: [ {"visitor_team" : participant_id } , {"local_team" : participant_id }]}).exec( function(err, matches){
 			if (err) throw err;
 			var points = 0;
 			var won_matches = 0;

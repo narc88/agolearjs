@@ -4,7 +4,7 @@ var PlayerSchema = require('./player').PlayerSchema;
 var IncidentSchema = require('./incident').IncidentSchema;
 var PlayerParticipationSchema = require('../models/player_participation').PlayerParticipationSchema;
 
-var PaticipationSchema = new mongoose.Schema({
+var ParticipationSchema =  exports.ParticipationSchema = new mongoose.Schema({
     team     		    : {type: mongoose.Schema.ObjectId, ref: 'Team' },
     //Needs to be updated
     team_name	 	    : {type: String},
@@ -38,4 +38,4 @@ var PaticipationSchema = new mongoose.Schema({
 	modified			: {type: Date, default: Date.now }
 });
 
-exports.PaticipationModel = mongoose.model('Paticipation', PaticipationSchema);
+exports.PaticipationModel = mongoose.model('Paticipation', ParticipationSchema);
