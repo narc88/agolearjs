@@ -210,6 +210,60 @@ function zones_add($scope, $http, $location) {
 }
 
 function zones_view($scope, $http, $routeParams, $rootScope, $location) {
+
+  $scope.selectTeam = function(team_id){
+    $scope.selected_team = {};
+    $scope.selected_team.team_id = team_id;
+  };
+
+  $scope.selectTeamForReplacement = function(team_id){
+    $scope.selected_team = {};
+    $scope.selected_team.team_id = team_id;
+    if(!$rootScope.all_teams){
+       $http.get('/api/teamNames').
+        success(function(teams) {
+            $rootScope.all_teams = teams;
+        })
+    }
+   
+  };
+
+  $scope.addTeamSuspension = function(form){
+    var participator = $.grep($scope.zone.participations, function(e){ return e.team == $scope.selected_team.team_id; })[0];
+    var players = [];
+    for (var i = 0; i < participator.players.length; i++) {
+      players.push( participator.players[i]._id);
+    };
+    $http.post('/api/teams/'+$scope.selected_team.team_id+'/suspension', {"players" : players, "reason" : $scope.selected_team.reason}).
+      success(function(data) {
+        $scope.zone.suspensions = $scope.zone.suspensions.concat(data);
+        $scope.zone.team_suspensions.push($scope.selected_team.team_id);
+        $('#teamSuspension').modal('hide');
+      });
+  };
+
+  $scope.removeTeamSuspension = function(team_id){
+    if(confirm("¿Confirma que desea borrar la suspensión?")){
+       $http.delete('/api/teams/'+team_id+'/suspension/').
+      success(function(data) {
+        var index = $scope.zone.team_suspensions.indexOf(data);
+        $scope.zone.team_suspensions.splice(index, 1);
+      });
+    }
+  };
+
+  $scope.replaceTeam = function(team_id){
+    if(confirm("¿Confirma que desea reemplazar el equipo? Esto modificará todos los partidos donde interviene el equipo a reemplazar, para esta zona.")){
+       $http.post('/api/zones/'+team_id+'/suspension/').
+        success(function(data) {
+          var index = $scope.zone.team_suspensions.indexOf(data);
+          $scope.zone.team_suspensions.splice(index, 1);
+        });
+    }
+   
+  };
+
+
   var getStats = function(){
     if( $rootScope.tournament_stats.id != $scope.zone.tournament){
       $http.get('/api/zonesOfTournament?tournament='+$scope.zone.tournament+'&exclude='+$scope.zone._id).
@@ -261,6 +315,10 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
         $http.get('/api/suspensions/suspendedPlayers').
           success(function(data) {
             $scope.zone.suspensions = data;
+        });
+          $http.get('/api/suspendedTeams').
+          success(function(data) {
+            $scope.zone.team_suspensions = data;
         });
           if(!$rootScope.tournament_stats){
             $rootScope.tournament_stats = {};
@@ -805,7 +863,7 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
           });
       };
 
-       $scope.submitLostForBoth = function (lost_for_both) {
+      $scope.submitLostForBoth = function (lost_for_both) {
         $http.put('/api/matches/update/'+$scope.match.id, { "data" : {"lost_for_both" : lost_for_both}}).
           success(function(data) {
             $scope.match.lost_for_both = lost_for_both;
@@ -814,7 +872,9 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
             $scope.match.lost_for_both = !lost_for_both;
           });
       };
+
       
+
     });
 }
 

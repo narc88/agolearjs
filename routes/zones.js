@@ -81,8 +81,9 @@ module.exports = function(app){
 
 	app.post('/api/zones/:id/participations/replace', function(req, res){
 		//Reemplaza un equipo con otro entre los participantes
-		
-		TeamModel.findOne({ _id: req.body.new_team_id }).exec( function(err, team){
+		var replaced_id = req.body.team_id;
+		var replacer = req.body.replacer_team
+		TeamModel.findOne({ _id: replacer }).exec( function(err, team){
 			if (err) throw err;
 			var participation = new ParticipationModel();
 			participation.team_id = team._id;
@@ -102,6 +103,13 @@ module.exports = function(app){
 						)
 				    }
 			);
+			ZoneModel.findOne({_id: req.params.id}).exec(function(err, zone){
+				var matchday = [];
+				matchday = zone.matchday;
+				MatchModel.update({"matchday" : {$in : zone.matchday}, "played":false, $or : [{"local_team": replaced_id },{"visitor_team": replaced_id }]}).exec(function(err, matches){
+
+				});
+			})
 		});
 	});
 

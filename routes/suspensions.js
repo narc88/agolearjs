@@ -15,6 +15,17 @@ module.exports = function(app){
 		});
 	});
 
+	app.get('/api/suspendedTeams', function(req, res, next){
+		var team_ids = [];
+		TeamModel.find({'suspensions.accomplished' : false}).exec( function(err, teams){
+			if (err) throw err;
+			for (var i = 0; i < teams.length; i++) {
+				team_ids.push(teams[i]._id)
+			};
+			res.send(team_ids);
+		});
+	});
+
 	//Reacondicionar
 	app.get('/api/suspensionsByTeam', function(req, res, next){
 		var team_id = req.query.team
@@ -74,7 +85,7 @@ module.exports = function(app){
 			}
 		});
 	});
-	
+
 	
 
 	app.put('/api/suspensions/:id', function(req, res, next){
