@@ -172,6 +172,18 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
         templateUrl: '/partials/chronicles/delete.jade',
         controller: chronicles_delete
       }).
+      when('/rules/add/:tournament_id', {
+        templateUrl: '/partials/rules/form.jade',
+        controller: rules_add
+      }).
+      when('/rules/:id', {
+        templateUrl: '/partials/rules/view.jade',
+        controller: rules_view
+      }).
+      when('/rules/edit/:id', {
+        templateUrl: '/partials/rules/edit.jade',
+        controller: rules_edit
+      }).
       when('/images/add/:param/:id/:format', {
         templateUrl: '/partials/images/upload.jade',
         controller: images_add
@@ -293,6 +305,7 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
         console.log(data); // 'Data to send'
         getPlayers($rootScope.tournament_stats.participators_stats.top_scorers)
       });
+      
       $scope.getLessBeaten = function(){
         var less_beaten_temp = [];
         for (var i = 0; i < $rootScope.zones.length; i++) {
@@ -302,6 +315,7 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
                 team._id = zone.participations[k]._id;
                 team.name = zone.participations[k].team_name;
                 team.other_goals = zone.participations[k].other_goals;
+                team.played = zone.participations[k].won+ zone.participations[k].tied+ zone.participations[k].lost;
                 less_beaten_temp.push(team);
             };
         };

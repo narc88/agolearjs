@@ -70,6 +70,9 @@ module.exports = function(app){
 					extension = "gif";
 				}
 				var image = new ImageModel();
+				if(req.body.filename.length == 0){
+					req.body.filename = "noname";
+				}
 				image.filename =  validator.toString(req.body.filename +"."+ extension);
 				image.type =  req.body.type;
 				var destination_file = path+"/"+image.filename;
@@ -84,7 +87,7 @@ module.exports = function(app){
 					model.images.push(image);
 					model.save(function(err){
 						if(err) throw err;
-						res.send(model._id, image);
+						res.send(image);
 					});
 				});
 			}

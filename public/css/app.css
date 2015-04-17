@@ -233,3 +233,11 @@ input {
 .button_summary .local > *{
   float: left;
 }
+
+.content{
+  padding:5px;
+}
+
+.summary{
+  padding:8px;
+}

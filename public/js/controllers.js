@@ -15,6 +15,7 @@ function main($rootScope,$scope, $http) {
       $scope.countries = data;
       $scope.default_country = data[0];
     });*/
+  $rootScope.locationBeforeImage = '';
   $rootScope.tournament_stats = {};
   $rootScope.menu = {};
   $rootScope.imageTypes = {};
@@ -252,15 +253,45 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
     }
   };
 
-  $scope.replaceTeam = function(team_id){
+  $scope.submitReplaceTeam = function(){
     if(confirm("¿Confirma que desea reemplazar el equipo? Esto modificará todos los partidos donde interviene el equipo a reemplazar, para esta zona.")){
-       $http.post('/api/zones/'+team_id+'/suspension/').
+       $http.post('/api/zones/'+$scope.zone._id+'/participations/replace', {"data":{'team_id' : $scope.selected_team.team_id, 'replacer_team': $scope.selected_team.replacer_team}}).
         success(function(data) {
           var index = $scope.zone.team_suspensions.indexOf(data);
           $scope.zone.team_suspensions.splice(index, 1);
+          $('#replaceTeam').modal('hide');
         });
     }
-   
+  };
+
+  $scope.selectTeamToAddPlayers = function(participator){
+    $scope.selected_team = {};
+    $scope.selected_team.team_id = participator.team;
+    $scope.selected_team.players = [];
+     $http.get('/api/teams/'+participator.team+'/players').
+      success(function(players) {
+        for (var i = 0; i < players.length; i++) {
+          var found = $.grep(participator.players, function(e){ return e._id == players[i]._id; });
+          if(found.length == 0){
+             $scope.selected_team.players.push(players[i]);
+          };
+        };
+          
+      })
+    
+  };
+
+  $scope.submitAddPlayers = function(addPlayers){
+    var ids = Object.keys(addPlayers.players);
+    $http.post('/api/zones/'+$scope.zone._id+'/participation/'+ $scope.selected_team.team_id +'/players', {"players": ids}).
+        success(function(data) {
+          for (var i = 0; i < $scope.zone.participations.length; i++) {
+            if($scope.zone.participations[i].team == $scope.selected_team.team_id){
+              $scope.zone.participations[i].players = data;
+            }
+          };
+          $('#addPlayersToParticipation').modal('hide');
+        });
   };
 
 
@@ -472,16 +503,12 @@ function teams_add($scope, $http, $location) {
 }
 
 function teams_view($scope, $http, $routeParams, $rootScope) {
-  function trigger(event,data) {
-    $scope.team.images.push(data.image);
-  }
   $http.get('/api/teams/' + $routeParams.id).success(function(data) {
     $scope.team = data;
     $scope.team.logo_image = $rootScope.imageHelper.getImage($scope.team.images, "escudo");
     for (var i = $scope.team.players.length - 1; i >= 0; i--) {
       $scope.team.players[i].cara_image =  $rootScope.imageHelper.getImage($scope.team.players[i].images, "cara");
     };
-    $scope.$on('savedImage', trigger);
   });
   $http.get('/api/suspensionsByTeam?team=' + $routeParams.id).success(function(data) {
     $scope.suspensions = data;
@@ -495,6 +522,7 @@ function teams_view($scope, $http, $routeParams, $rootScope) {
         $scope.team.images = $scope.team.images.filter(function(img) { return img._id == image_id; });
       });
   };
+  $rootScope.locationBeforeImage = "/teams/"+$routeParams.id;
 }
 
 function teams_edit($scope, $http, $location, $routeParams) {
@@ -540,8 +568,23 @@ function tournaments_index($scope, $http) {
 
 function tournaments_add($scope, $http, $location) {
   $scope.form = {};
+  $scope.tournament = {
+    number_of_teams : 1,
+    number_of_zones : 1,
+    tournament_type : 1,
+    yellow_card_limit : 5,
+    winner_points : 3,
+    tied_points : 1,
+    presentation_points : 0,
+    cant_teams_for_next_round : 0,
+    double_playoff_match : false,
+    double_league_match : false,
+    suspension_increment : true
+  }
+
+
   $scope.submitTournament = function () {
-    $http.post('/api/tournaments', $scope.form).
+    $http.post('/api/tournaments', $scope.tournament).
       success(function(data) {
         if (data.error) {
           for (var object in data.error.errors) {
@@ -552,7 +595,7 @@ function tournaments_add($scope, $http, $location) {
             }
           }
         } else{
-          $location.path('/');
+          $location.path('/tournaments/'+data._id);
         }        
       });
   };
@@ -564,6 +607,7 @@ function tournaments_view($scope, $http, $routeParams, $rootScope) {
       success(function(data) {
         $scope.tournament = data;
         $rootScope.tournament = data;
+        $rootScope.locationBeforeImage = '/tournaments/'+$routeParams.id;
       });
   }else{
     $scope.tournament = $rootScope.tournament
@@ -952,7 +996,7 @@ function chronicles_add($scope, $http, $location, $routeParams ) {
     $scope.chronicle.content  = $("#contentarea").html();
     $http.post('/api/chronicles', $scope.chronicle).
       success(function(data) {
-        $location.path('/');
+        $location.path('/chronicles/'+data._id);
       });
   };
 }
@@ -965,6 +1009,7 @@ function chronicles_view($scope, $http, $routeParams, $rootScope, $sce) {
       $scope.content_chronicle = $sce.trustAsHtml($scope.chronicle.content);
       $scope.content_summary = $sce.trustAsHtml($scope.chronicle.summary);
     });
+  $rootScope.locationBeforeImage = "/chronicles/"+$routeParams.id;
 }
 
 function chronicles_edit($scope, $http, $location, $routeParams) {
@@ -1001,7 +1046,48 @@ function chronicles_delete($scope, $http, $location, $routeParams) {
   };
 }
 
+/*roles*/
+function roles_add($scope, $http, $location, $routeParams ) {
+  var queryString = $.param( $routeParams );
+  $scope.form = {};
+  $scope.submitRole = function () {
+    if(queryString.match){
+      $scope.role.match = queryString.match;
+    }
+    $scope.role.content  = $("#contentarea").html();
+    $http.post('/api/roles', $scope.role).
+      success(function(data) {
+        $location.path('/roles/'+data._id);
+      });
+  };
+}
 
+function roles_view($scope, $http, $routeParams, $rootScope, $sce) {
+  $http.get('/api/roles/' + $routeParams.id).
+    success(function(data) {
+      $scope.role = data;
+      $scope.role.preview_image = $rootScope.imageHelper.getImage($scope.role.images, "completa");
+      $scope.content_role = $sce.trustAsHtml($scope.role.content);
+      $scope.content_summary = $sce.trustAsHtml($scope.role.summary);
+    });
+  $rootScope.locationBeforeImage = "/roles/"+$routeParams.id;
+}
+
+function roles_edit($scope, $http, $location, $routeParams) {
+  $scope.role = {};
+  $http.get('/api/roles/' + $routeParams.id).
+    success(function(data) {
+      $scope.role = data;
+    });
+
+  $scope.editRole = function () {
+    $scope.role.content  = $("#contentarea").html();
+    $http.put('/api/roles/' + $routeParams.id, $scope.role).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
 
 /*advertising*/
 function advertisings_index($scope, $http, $location, $routeParams , $sce, $rootScope) {
@@ -1088,19 +1174,18 @@ function rules_index($scope, $http, $location, $routeParams , $sce, $rootScope) 
       for (var i = 0; i < data.length; i++) {
         data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "completa");
         data[i].trusted_content = $sce.trustAsHtml(data[i].content);
-        data[i].trusted_summary = $sce.trustAsHtml(data[i].summary);
       };
       $scope.rules = data;
     });
 }
 
-function rules_add($scope, $http, $location) {
+function rules_add($scope, $http, $location, $routeParams) {
   $scope.form = {};
   $scope.submitRule = function () {
     $scope.rule.content  = $("#contentarea").html();
-    $http.post('/api/rules', $scope.rule).
+    $http.post('/api/rules/'+$routeParams.tournament_id, $scope.rule).
       success(function(data) {
-        $location.path('/');
+        $location.path('/tournaments/'+$routeParams.tournament_id);
       });
   };
 }
@@ -1255,7 +1340,8 @@ function images_add($rootScope, $scope, $http, $window, $location, $routeParams)
             }
           }
         } else{
-          $rootScope.$broadcast('savedImage', {id:$routeParams.id,image:image})
+          
+          $location.url($rootScope.locationBeforeImage);
         }
       })
       .error(function (data, status, headers, config) {

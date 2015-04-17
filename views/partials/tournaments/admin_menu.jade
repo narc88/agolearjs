@@ -1,15 +1,19 @@
-<!-- Single button -->
-div(class="btn-group pull-right")
-	button(type="button", class="btn  btn-primary dropdown-toggle", data-toggle="dropdown", aria-expanded="false")
-		span Acciones 
-		span(class="caret")
-	ul(class="dropdown-menu admin_menu", role="menu")
-		-model = "tournament" 
-		li(ng-repeat="type in imageTypes.#{model}")
-			a(href="/images/add/#{model}/{{tournament._id}}/{{type}}") Agregar imagen {{type}}
-		li
-			a(href='/chronicles?zone={{zone._id}}') Crónicas
-		li
-			a(href='/tournaments/{{tournament._id}}/classify_to_playoff') Clasificar a playoff
-		li
-			a(href='/zones/{{tournament._id}}/end_tournament') Finalizar torneo
+if(RolesHelper.admin(user))
+	<!-- Single button -->
+	div(class="btn-group pull-right")
+		button(type="button", class="btn  btn-primary dropdown-toggle", data-toggle="dropdown", aria-expanded="false")
+			span Acciones 
+			span(class="caret")
+		ul(class="dropdown-menu admin_menu", role="menu")
+			-model = "tournament" 
+			li(ng-repeat="type in imageTypes.#{model}")
+				a(href="/images/add/#{model}/{{tournament._id}}/{{type}}") Agregar imagen {{type}}
+			li
+				a(href='/chronicles?zone={{tournament._id}}') Crónicas
+			li
+				a(ng-if='tournament.rule', href='/rules/{{tournament._id}}') Reglamento
+				a(ng-if='!tournament.rule', href='/rules/add/{{tournament._id}}') Agregar Reglamento
+			li
+				a(href='/tournaments/{{tournament._id}}/classify_to_playoff') Clasificar a playoff
+			li
+				a(href='/zones/{{tournament._id}}/end_tournament') Finalizar torneo

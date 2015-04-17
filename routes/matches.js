@@ -158,13 +158,21 @@ module.exports = function(app){
 	});
 
 	app.put('/api/matches/updateWalkOver/:id', function(req, res){
+		var callback = function(err, numAffected, status){
+			if(err) throw err;
+			res.send(true);
+		}
 		var query = req.body.data
 		MatchModel.update(
 		    { _id: req.params.id}, 
-		    {$set:  {"walk_over" : query.lost_for_both}}, callback)	
+		    {$set:  {"walk_over" : query.walk_over}}, callback)	
 	});
 
 	app.put('/api/matches/updateSetAsLostForBoth/:id', function(req, res){
+		var callback = function(err, numAffected, status){
+			if(err) throw err;
+			res.send(true);
+		}
 		var query = req.body.data
 		MatchModel.update(
 		    { _id: req.params.id}, 

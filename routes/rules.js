@@ -1,5 +1,6 @@
 var RuleModel 	= require('../models/rule').RuleModel;
 var ImageModel 	= require('../models/image').ImageModel;
+var TournamentModel = require('../models/tournament').TournamentModel;
 
 var mongoose = require('mongoose');
 
@@ -21,11 +22,15 @@ module.exports = function(app){
 		});
 	});
 
-	app.post('/api/rules', function(req, res){
-		var rule = new RuleModel(req.body)
-		rule.save(function(err){
-			if(err) throw err;
-			res.send(rule);
+	app.post('/api/rules/:tournament_id', function(req, res){
+		var rule = new RuleModel(req.body);
+		TournamentModel.update({_id : req.params.tournament_id}, {$set : { "rule" : rule.id}},function(err, numAffected, status){
+			rule.save(function(err){
+				console.log(err);
+				console.log(numAffected);
+				if(err) throw err;
+				res.send(true);
+			});
 		});
 	});
 

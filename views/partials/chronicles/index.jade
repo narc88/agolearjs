@@ -1,6 +1,6 @@
-.col-md-9
-	h3 Lista de Crónicas
-	br
-	.col-md-8
-		div(ng-repeat="chronicle in chronicles") 
-			include partial_view.jade
+h3 Lista de Crónicas
+if(RolesHelper.admin(user))
+	a(href='/chronicles/add') Crear Nueva
+br
+div(ng-repeat="chronicle in chronicles") 
+	include partial_view.jade

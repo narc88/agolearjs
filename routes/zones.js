@@ -1,6 +1,9 @@
 var ZoneModel = require('../models/zone').ZoneModel;
+var TeamModel  = require('../models/team').TeamModel;
 var ImageModel 	= require('../models/image').ImageModel;
 var MatchdayModel = require('../models/matchday').MatchdayModel;
+var PlayerModel = require('../models/player').PlayerModel;
+var ParticipationModel = require('../models/participation').ParticipationModel;
 var MatchModel = require('../models/match').MatchModel;
 var mongoose = require('mongoose');
 module.exports = function(app){
@@ -81,35 +84,43 @@ module.exports = function(app){
 
 	app.post('/api/zones/:id/participations/replace', function(req, res){
 		//Reemplaza un equipo con otro entre los participantes
-		var replaced_id = req.body.team_id;
-		var replacer = req.body.replacer_team
+		var id = mongoose.Types.ObjectId(req.params.id);
+		var replaced_id = mongoose.Types.ObjectId(req.body.data.team_id);
+		var replacer = mongoose.Types.ObjectId(req.body.data.replacer_team);
 		TeamModel.findOne({ _id: replacer }).exec( function(err, team){
 			if (err) throw err;
 			var participation = new ParticipationModel();
-			participation.team_id = team._id;
-			participation.name = team.name;
+			participation.team = team._id;
+			participation.team_name = team.name;
 
-			var callback = function(err, numAffected, status){
-				if(err) throw err;
-				req.send(goal);
-			}
 			ZoneModel.update(
-			    { _id: req.params.id}, 
+			    { _id: id}, 
 			    {$push: {"participations": participation}}, 
 				    function(err, numAffected, status){
+				    	console.log("push"+numAffected)
 				    	 ZoneModel.update(
-						    { "participations._id": req.params.id}, 
-						    {$pull: {"participations" :{_id : req.params.id}}}, callback
+						    { _id: id}, 
+						    {$pull: {"participations" :{ team :replaced_id}}}, function(err, numAffected, status){
+						    	console.log("pull"+numAffected)
+						    	ZoneModel.findOne({_id: id}).exec(function(err, zone){
+									if(err) throw err;
+									var matchdays = [];
+									matchdays = zone.matchdays;
+									MatchModel.update({"matchday" : {$in : matchdays}, "played": false, "local_team": replaced_id },{ $set : {"local_team" : replacer}},{upsert: false, multi: true}).exec(function(err, numAffected, status){
+										console.log(numAffected);
+										if(err) throw err;
+										MatchModel.update({"matchday" : {$in : matchdays}, "played": false, "visitor_team": replaced_id },{ $set : {"visitor_team" : replacer}},{upsert: false, multi: true}).exec(function(err, numAffected, status){
+											console.log(numAffected);
+											if(err) throw err;
+											res.send(participation);
+										});
+									});
+								});
+						    }
 						)
 				    }
 			);
-			ZoneModel.findOne({_id: req.params.id}).exec(function(err, zone){
-				var matchday = [];
-				matchday = zone.matchday;
-				MatchModel.update({"matchday" : {$in : zone.matchday}, "played":false, $or : [{"local_team": replaced_id },{"visitor_team": replaced_id }]}).exec(function(err, matches){
-
-				});
-			})
+			
 		});
 	});
 
@@ -271,6 +282,21 @@ module.exports = function(app){
 				};
 			});
 	}
+
+	app.post('/api/zones/:zone_id/participation/:team_id/players', function(req, res, next){
+		var selected_players = req.body.players;
+		PlayerModel.find({_id :{ $in : selected_players}}).populate('players', 'name last_name dni').exec( function(err, players){
+			if (err) throw err;
+			ZoneModel.update(
+			    { _id: req.params.zone_id, 'participations.team' : req.params.team_id}, 
+			    {$push: {"participations.$.players": players}}, 
+				    function(err, numAffected, status){
+				    	res.send(players);
+				    });
+			
+		});
+	});
+
 
 	
 }

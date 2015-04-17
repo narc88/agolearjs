@@ -14,6 +14,7 @@ var chronicles = require('./chronicles');
 var suspensions = require('./suspensions');
 var advertisings = require('./advertisings');
 var turns = require('./turns');
+var rules = require('./rules');
 var utils = require('./utils');
 var errors = require('./errors');
 
@@ -45,6 +46,7 @@ module.exports = function(app){
 	advertisings(app);
 	turns(app);
 	utils(app);
+	rules(app);
 	// Error handlers
 
 	app.get('*', function(req, res) {

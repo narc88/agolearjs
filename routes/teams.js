@@ -15,6 +15,13 @@ module.exports = function(app){
 		});
 	});
 
+	app.get('/api/teams/:id/players', function(req, res, next){
+		TeamModel.findOne({_id : req.params.id}).populate('players', 'name last_name dni').exec( function(err, team){
+			if (err) throw err;
+			res.send(team.players);
+		});
+	});
+
 	app.get('/api/teamNames', function(req, res, next){
 		TeamModel.find({}, 'name').exec( function(err, teams){
 			if (err) throw err;

@@ -16,7 +16,7 @@ module.exports = function(app){
 	});
 
 	app.get('/api/tournaments/:id', function(req, res, next){
-		TournamentModel.findOne({ _id: req.params.id }).populate({path:'zones', select: 'name'}).exec( function(err, tournament){
+		TournamentModel.findOne({ _id: req.params.id }).exec( function(err, tournament){
 			if (err) throw err;
 			res.send(tournament);
 		});
@@ -26,9 +26,10 @@ module.exports = function(app){
 		//Recibir datos del formulario
 
 		//Cuantos equipos
+		console.log(req.body)
 
 		//Creacion de zonas clásicas.
-		var tournament = new TournamentModel(req.body.tournament);
+		var tournament = new TournamentModel(req.body);
 		for (var i = tournament.number_of_zones.length - 1; i >= 0; i--) {
 			zone = new ZoneModel();
 			zone.zone_type = "League";

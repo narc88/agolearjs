@@ -38,4 +38,4 @@ var ParticipationSchema =  exports.ParticipationSchema = new mongoose.Schema({
 	modified			: {type: Date, default: Date.now }
 });
 
-exports.PaticipationModel = mongoose.model('Paticipation', ParticipationSchema);
+exports.ParticipationModel = mongoose.model('Paticipation', ParticipationSchema);

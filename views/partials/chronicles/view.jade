@@ -1,4 +1,6 @@
-h1 {{chronicle.title}}
+include admin_menu.jade
+
+h3 {{chronicle.title}}
 div(class="summary", ng-bind-html="content_summary")
 div(class="content", ng-bind-html="content_chronicle") 
 
@@ -6,3 +8,5 @@ div(class="row")
 	div(ng-repeat="image in chronicle.images", class="col-xs-6 col-md-3")
 		a(href="#", class="thumbnail")
 			img(ng-src="/photos/chronicle/{{chronicle._id}}/{{image.filename}}" alt="{{image.filename}}")
+div(class="row")
+	include ../socials/shareBar.jade

@@ -1,11 +1,12 @@
-<!-- Single button -->
-div(class="btn-group pull-right")
-	button(type="button", class="btn  btn-primary dropdown-toggle", data-toggle="dropdown", aria-expanded="false")
-		span Acciones 
-		span(class="caret")
-	ul(class="dropdown-menu admin_menu", role="menu")
-		li
-			a(href='/teams/{{team._id}}/edit') Editar
-		-model = "team" 
-		li(ng-repeat="type in imageTypes.#{model}")
-			a(href="/images/add/#{model}/{{team._id}}/{{type}}") Agregar imagen {{type}}
+if(RolesHelper.admin(user))
+	<!-- Single button -->
+	div(class="btn-group pull-right")
+		button(type="button", class="btn  btn-primary dropdown-toggle", data-toggle="dropdown", aria-expanded="false")
+			span Acciones 
+			span(class="caret")
+		ul(class="dropdown-menu admin_menu", role="menu")
+			li
+				a(href='/teams/{{team._id}}/edit') Editar
+			-model = "team" 
+			li(ng-repeat="type in imageTypes.#{model}")
+				a(href="/images/add/#{model}/{{team._id}}/{{type}}") Agregar imagen {{type}}

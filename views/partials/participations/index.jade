@@ -9,12 +9,12 @@ div(class="panel-group", id="participationsAccordion", role="tablist", aria-mult
 							strong (Suspendido)
 				if(RolesHelper.admin(user))
 					div(class="btn-group pull-right", role="group")
-						span(ng-if="zone.team_suspensions.indexOf(participator.team) < 0") 
-							button(ng-click="selectTeam(participator.team)",type="button",data-toggle="modal", title="Suspender equipo completo",data-target="#teamSuspension", class="btn btn-sm")
-								span(class="glyphicon glyphicon-remove-circle", aria-hidden="true")
-						span(ng-if="zone.team_suspensions.indexOf(participator.team) >= 0") 
-							button(ng-click="removeTeamSuspension(participator.team)",type="button",data-toggle="modal", title="Remover suspension", class="btn btn-sm")
-								span(class="glyphicon glyphicon-ok-circle", aria-hidden="true")
+						button(ng-click="selectTeamToAddPlayers(participator)",type="button",data-toggle="modal",data-target="#addPlayersToParticipation", class="btn btn-sm", title="Agregar Jugadores") 
+							span(class="glyphicon glyphicon-plus-sign", aria-hidden="true")
+						button(ng-if="zone.team_suspensions.indexOf(participator.team) < 0",ng-click="selectTeam(participator.team)",type="button",data-toggle="modal", title="Suspender equipo completo",data-target="#teamSuspension", class="btn btn-sm")
+							span(class="glyphicon glyphicon-remove-circle", aria-hidden="true")
+						button(ng-if="zone.team_suspensions.indexOf(participator.team) >= 0", ng-click="removeTeamSuspension(participator.team)",type="button",data-toggle="modal", title="Remover suspension", class="btn btn-sm")
+							span(class="glyphicon glyphicon-ok-circle", aria-hidden="true")
 						button(type="button",ng-click="selectTeamForReplacement(participator.team)" ,title="Reemplazar equipo",data-toggle="modal",data-target="#replaceTeam",  class="btn btn-sm")
 							span(class="glyphicon glyphicon glyphicon-refresh", aria-hidden="true")
 			div(id="collapse{{participator._id}}", class="panel-collapse collapse", role="tabpanel", aria-labelledby="headingOne")
@@ -27,7 +27,7 @@ div(class="panel-group", id="participationsAccordion", role="tablist", aria-mult
 							th Amarillas
 							th Rojas
 							th Jugador del Partido
-						tr(ng-repeat="player in participator.players | orderBy:['name','last_name']")
+						tr(ng-if="participator.players.length >= 0", ng-repeat="player in participator.players | orderBy:['name','last_name']")
 							td
 								a(href="/players/{{player._id}}")  {{player.name}} {{player.last_name}}
 							td
@@ -48,6 +48,7 @@ div(class="panel-group", id="participationsAccordion", role="tablist", aria-mult
 							td
 								span {{player.mvps}}
 								img(src="/img/estrella.png" , style="width:20px")
+					
 div(class="modal fade", tabindex="-1", role="dialog", id="teamSuspension", aria-hidden="true" )
 	div(class="modal-dialog")
 		div(class="modal-content")
@@ -72,13 +73,31 @@ div(class="modal fade", tabindex="-1", role="dialog", id="replaceTeam", aria-hid
 					span(aria-hidden="true")&times;
 				h4(class="modal-title", id="myModalLabel") Reemplazar equipo
 			div(class="modal-body")
-				form(name="replaceTeam", ng-submit="addTeamSuspension(replaceTeam)")
+				form(name="replaceTeam", ng-submit="submitReplaceTeam(replaceTeam)")
 					.form-group
 						input(type="hidden", ng-value="selected_team" ,ng-model='selected_team.team_id')
 						label(for="replacer_team") Equipo que lo reemplazará.
 						select(ng-model='selected_team.replacer_team', name='replacer_team', id="replacer_team", type='text').form-control.input-sm
 							option( value="", selected) Ninguno
 							option(ng-repeat="team in all_teams", value="{{team._id}}") {{team.name}}
+					.form-group
+						input(type="submit", value="Guardar").btn.btn-primary.btn-xs
+						button(type="button", class="btn btn-default btn-xs", data-dismiss="modal") Close
+div(class="modal fade", tabindex="-1", role="dialog", id="addPlayersToParticipation", aria-hidden="true" )
+	div(class="modal-dialog")
+		div(class="modal-content")
+			div(class="modal-header")
+				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+					span(aria-hidden="true")&times;
+				h4(class="modal-title", id="myModalLabel") Seleccionar jugadores
+			div(class="modal-body")
+				form(name="addPlayers", ng-submit="submitAddPlayers(addPlayers)")
+					table.table.table-responsive.table-striped
+							tr(ng-repeat="player in selected_team.players")
+								td
+									input( type="checkbox",ng-model="addPlayers.players[player._id]", value="{{player._id}}")
+								td
+									span {{player.name}} {{player.last_name}} - Dni: {{player.dni}}
 					.form-group
 						input(type="submit", value="Guardar").btn.btn-primary.btn-xs
 						button(type="button", class="btn btn-default btn-xs", data-dismiss="modal") Close
