@@ -1,14 +1,14 @@
-
+var validator = require('validator');
 var mongoose = require('mongoose');
 var ImageSchema = require('../models/image').ImageSchema;
 
-var UserSchema = new mongoose.Schema({
+var UserSchema = exports.Schema = new mongoose.Schema({
 	username	: { 
 				type: String, 
 				unique:true,
 				required: true,
 				validate : [
-                     function(v) { return validator.isAlphanumeric(v); },
+                     function(v) { return validator.isAlphanumeric(v.replace(/\s/g, '')); },
                      'Nombre inválido, solo se permiten letras y números, sin espacios'
                  	]
 			},
@@ -16,18 +16,13 @@ var UserSchema = new mongoose.Schema({
     			type: String, 
     			required: true,
     			validate : [
-                     function(v) { return validator.isEmail(v); },
+                     function(v) { return validator.isEmail(v.replace(/\s/g, '')); },
                      'Email inválido'
                  	]
     		},
-	password : { 
+	encrypted_password : { 
 				type: String, 
-				unique:true,
-				required: true,
-				validate : [
-                     function(v) { return validator.isAlphanumeric(v); },
-                     'Nombre inválido, solo se permiten letras y números, sin espacios'
-                 	]
+				required: true
 			},
 	facebook_id	: { type: Number},
 	reset_password_token	: String,

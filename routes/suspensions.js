@@ -1,7 +1,4 @@
-var SuspensionModel 	= require('../models/suspension').SuspensionModel;
-var ZoneModel 	= require('../models/zone').ZoneModel;
-var MatchModel = require('../models/match').MatchModel;
-var TeamModel = require('../models/team').TeamModel;
+var Models = require('../model_factory');
 var mongoose = require('mongoose');
 
 module.exports = function(app){
@@ -9,15 +6,27 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/suspensions', function(req, res, next){
-		SuspensionModel.find(req.query).exec( function(err, suspensions){
+		var models = Models(req.tenant);
+		models.suspension.find({'accomplished':false}).populate('player', 'name last_name').exec( function(err, suspensions){
 			if (err) throw err;
+			console.log(suspensions.length)
+			res.send(suspensions);
+		});
+	});
+
+	app.get('/api/suspensions/accomplished', function(req, res, next){
+		var models = Models(req.tenant);
+		models.suspension.find({'accomplished':true}).populate('player', 'name last_name').exec( function(err, suspensions){
+			if (err) throw err;
+			console.log(suspensions.length)
 			res.send(suspensions);
 		});
 	});
 
 	app.get('/api/suspendedTeams', function(req, res, next){
+		var models = Models(req.tenant);
 		var team_ids = [];
-		TeamModel.find({'suspensions.accomplished' : false}).exec( function(err, teams){
+		models.team.find({'suspensions.accomplished' : false}).exec( function(err, teams){
 			if (err) throw err;
 			for (var i = 0; i < teams.length; i++) {
 				team_ids.push(teams[i]._id)
@@ -28,12 +37,13 @@ module.exports = function(app){
 
 	//Reacondicionar
 	app.get('/api/suspensionsByTeam', function(req, res, next){
+		var models = Models(req.tenant);
 		var team_id = req.query.team
-		TeamModel.findOne({"_id":team_id}).exec( function(err, team){
+		models.team.findOne({"_id":team_id}).exec( function(err, team){
 			if (err) throw err;
 			if(team.players.length > 0){
 				players = team.players;
-				SuspensionModel.find({ "accomplished" : false,"player":{$in : players }}).populate("player").exec( function(err, suspensions){
+				models.suspension.find({ "accomplished" : false,"player":{$in : players }}).populate("player").exec( function(err, suspensions){
 					if (err) throw err;
 					res.send(suspensions);
 				});
@@ -46,7 +56,8 @@ module.exports = function(app){
 	});
 
 	app.get('/api/suspensions/suspendedPlayers', function(req, res, next){
-		SuspensionModel.find({ "accomplished": false }).exec( function(err, suspensions){
+		var models = Models(req.tenant);
+		models.suspension.find({ "accomplished": false }).exec( function(err, suspensions){
 			if (err) throw err;
 			var suspended =[];
 			for (var i = suspensions.length - 1; i >= 0; i--) {
@@ -57,17 +68,19 @@ module.exports = function(app){
 	});
 
 	//Called from matches view
-	app.post('/api/suspensions/:role/:id', function(req, res, next){
+	app.post('/sapi/suspensions/:role/:id', function(req, res, next){
+		var models = Models(req.tenant);
 		var match_role = '';
 		if(req.params.role === "local"){
 			match_role = "local_suspension";
 		}else if(req.params.role === "visitor"){
 			match_role = "visitor_suspension";
 		}
-		MatchModel.findOne({ _id: req.params.id }).exec( function(err, match){
+		models.match.findOne({ _id: req.params.id }).exec( function(err, match){
 			if (err) throw err;
 			if(match){
 				var suspension = new SuspensionModel(req.body);
+				suspension.match = match._id;
 				if(match_role === "local_suspension"){
 					match.local_suspensions.push(suspension._id);
 				}else{			
@@ -86,10 +99,24 @@ module.exports = function(app){
 		});
 	});
 
+	app.put('/sapi/suspensions/setAsAccomplished', function(req, res, next){
+		var models = Models(req.tenant);
+		models.suspension.findOne({ _id: req.body.suspension._id }).exec( function(err, suspension){
+			if (err) throw err;
+			if(suspension){
+				suspension.accomplished = true;
+				suspension.save(function(err){
+					if (err) throw err;
+					res.send(true);
+				});
+			}
+		});
+	});
 	
 
-	app.put('/api/suspensions/:id', function(req, res, next){
-		SuspensionModel.findOne({ _id: req.params.id }).exec( function(err, suspension){
+	app.put('/sapi/suspensions/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.suspension.findOne({ _id: req.params.id }).exec( function(err, suspension){
 			if (err) throw err;
 			if(suspension){
 				suspension.name = req.body.suspension.name;
@@ -102,8 +129,9 @@ module.exports = function(app){
 		});
 	});
 
-	app.delete('/api/suspensions/:id', function(req, res, next){
-		SuspensionModel.remove({ _id: req.params.id }).exec( function(err, suspension){
+	app.delete('/sapi/suspensions/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.suspension.remove({ _id: req.params.id }).exec( function(err, suspension){
 			if (err) {
 				res.send(err)
 			} 

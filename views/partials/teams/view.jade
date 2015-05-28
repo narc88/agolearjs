@@ -3,13 +3,23 @@ if(RolesHelper.admin(user))
 h3 Equipo
 div(ng-show="team")
 	include partial_view
+	span(ng-if="!isUndefinedOrNull(team.team_image)")
+		img(ng-src="/photos/team/{{team._id}}/{{team.team_image.filename}}", style="max-width:360px;max-height:360px;")
+	span(ng-if="isUndefinedOrNull(team.team_image)")
+		img(ng-src="/img/barrerajugadores.jpg",  style="max-width:360px;max-height:360px;")
+	span(class="pull-right", ng-if="!isUndefinedOrNull(team.uniform_image)")
+		img(ng-src="/photos/team/{{team._id}}/{{team.uniform_image.filename}}", style="max-width:250px;max-height:250px;")
+	span(class="pull-right", ng-if="isUndefinedOrNull(team.uniform_image)")
+		img(ng-src="/img/uniform.png",  style="max-width:250px;max-height:250px;")
+	div(class="col-md-12")
+		div(ng-if="suspensions.length > 0", ng-model="suspensions")
+			div(ng-repeat="suspension in suspensions")
+				include ../suspensions/partial_view.jade
+		div(ng-if="last_played_matches.length > 0", ng-model="last_played_matches")
+			div(ng-repeat="match in last_played_matches")
+				include ../matches/partial_view.jade
+	h4 Lista de jugadores
 	include player_list.jade
-	div(ng-if="suspensions.length > 0", ng-model="suspensions")
-		div(ng-repeat="suspension in suspensions")
-			include ../suspensions/partial_view.jade
-	div(ng-if="last_played_matches.length > 0", ng-model="last_played_matches")
-		div(ng-repeat="match in last_played_matches")
-			include ../matches/partial_view.jade
 div(class="row")
 	div(ng-repeat="image in team.images", class="col-xs-6 col-md-3")
 		a(href="#", class="thumbnail")
@@ -17,3 +27,14 @@ div(class="row")
 		if(RolesHelper.admin(user))
 			a(ng-click="removeImage(image._id)")
 				button(type="button" class="btn btn-danger") Borrar
+if(RolesHelper.admin(user))
+	div(class="modal fade", tabindex="-1", role="dialog", id="addNewPlayer", aria-hidden="true" )
+		div(class="modal-dialog")
+			div(class="modal-content")
+				div(class="modal-header")
+					button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+						span(aria-hidden="true")&times;
+					h4(class="modal-title", id="myModalLabel") Jugador
+				div(class="modal-body")
+					include ../players/form.jade
+	include ../players/form_modal.jade

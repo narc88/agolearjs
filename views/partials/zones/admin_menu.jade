@@ -7,9 +7,11 @@ if(RolesHelper.admin(user))
 		ul(class="dropdown-menu admin_menu", role="menu")
 			li
 				a(href='/chronicles?zone={{zone._id}}') Crónicas
-			li
-				a(href='/zones/{{zone._id}}/add_participation') Agregar Participante
-			li
+			li(ng-if="zone.matchdays.length == 0")
 				a(href='/zones/{{zone._id}}/create_fixture') Crear Fixture
+			li()
+				a(href='/zones/{{zone.tournament}}/classified') Ver clasificados
+			li(ng-if="zone.participations.length == 0")
+				a(href='/tournaments/{{tournament._id}}/teams') Seleccionar equipos
 			li
 				a(href='/zones/{{zone._id}}/close') Finalizar zona

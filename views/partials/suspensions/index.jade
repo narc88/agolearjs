@@ -1,0 +1,43 @@
+h3 Lista de Suspensiones
+ul(class="nav nav-tabs")
+	li(role="presentation", class="active")
+		a(data-target="#suspensions", aria-controls="suspensions", role="tab", data-toggle="tab") Suspensiones Activas
+	li(role="presentation")
+		a(data-target="#accomplished", aria-controls="accomplished", role="tab", data-toggle="tab") Cumplidas
+div(class="tab-content")
+	div(role="tabpanel", class="tab-pane active" ,id="suspensions")
+		table.table.table-striped.table-responsive
+			tr 
+				th Nombre
+				th Razón
+				th Total partidos
+				th Restan
+				th Partido
+				if(RolesHelper.admin(user))
+					th Acciones
+			tr(ng-repeat="suspension in suspensions | orderBy:['player.name','player.last_name']") 
+				td
+					a(href="/players/{{suspension.player._id}}") {{suspension.player.name}} {{suspension.player.last_name}} 
+				td {{suspension.reason}}
+				td {{suspension.number_of_matches}}
+				td ({{suspension.number_of_matches - suspension.matches.length}})
+				td 
+					a(href='/matches/{{suspension.match}}', title="Partido en el cual se origina la suspensión") Ver
+				if(RolesHelper.admin(user))
+					td
+						a(ng-click="markAsAccomplished(suspension)") Completada
+	div(role="tabpanel", class="tab-pane active" ,id="accomplished")
+		table.table.table-striped.table-responsive
+			tr 
+				th Nombre
+				th Razón
+				th Total partidos
+				th Partido
+			tr(ng-repeat="suspension in accomplished_suspensions | orderBy:['suspension.created']") 
+				td 
+					a(href="/players/{{suspension.player._id}}") {{suspension.player.name}} {{suspension.player.last_name}} 
+				td {{suspension.reason}}
+				td {{suspension.number_of_matches}}
+				td 
+					a(href='/matches/{{suspension.match}}', title="Partido en el cual se origina la suspensión") Ver
+			

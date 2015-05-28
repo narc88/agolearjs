@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var IncidentSchema = new mongoose.Schema({
     minute              : {type: Number},
     player     			: {type: mongoose.Schema.ObjectId, ref: 'Player' },
+    tournament          : {type: mongoose.Schema.ObjectId, ref: 'Tournament' },
     incident_type		: {
                				 type: String
                			 },
@@ -15,4 +16,5 @@ var IncidentSchema = new mongoose.Schema({
 });
 
 exports.IncidentSchema = IncidentSchema;
+exports.Schema = IncidentSchema;
 exports.IncidentModel = mongoose.model('Incident', IncidentSchema);

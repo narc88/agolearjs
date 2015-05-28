@@ -1,0 +1,24 @@
+h4 Seleccionar equipos para el torneo 
+
+span (Al enviar los datos, serán automaticamente ubicados en las zonas disponibles)
+
+div(ng-repeat="participation in participations")
+	div(class="panel panel-default")
+		div(class="panel-heading") Grupo # {{$index+1}}
+		div(class="panel-body")
+			span(ng-repeat="team in participation")
+				.col-md-3
+					span {{team.team_name}}
+div(class="alert alert-info",role="alert",ng-if="participations.length > 0") Puede volver a sortear los grupos cambiando la selección debajo y clickando "Sortear grupos nuevamente" 
+
+button(ng-if="participations.length > 0", ng-click="goToTournament()",class="btn-primary btn") Aceptar
+
+form(name="addTeams", ng-submit="submitAddTeams(addTeams)")
+	.form-group
+		.col-md-4(ng-repeat="team in teams")
+			.col-md-3
+				input(type="checkbox", ng-model="addTeams.teams[team._id]", value="{{team._id}}")
+			.col-md-9
+				span {{team.name}}
+	.form-group
+		input(type="submit", value="Sortear Grupos").btn.btn-primary.btn-xs

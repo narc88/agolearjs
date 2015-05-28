@@ -8,4 +8,6 @@ var CitySchema = new mongoose.Schema({
 	modified    :{ type: Date, default: Date.now }
 })
 
+
+exports.Schema = CitySchema;
 exports.CityModel = mongoose.model('City', CitySchema);

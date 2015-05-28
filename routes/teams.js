@@ -1,7 +1,4 @@
-var TeamModel = require('../models/team').TeamModel;
-var SuspensionModel = require('../models/suspension').SuspensionModel;
-var ImageModel 	= require('../models/image').ImageModel;
-
+var Models = require('../model_factory');
 var mongoose = require('mongoose');
 
 module.exports = function(app){
@@ -9,36 +6,41 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/teams', function(req, res, next){
-		TeamModel.find().exec( function(err, teams){
+		var models = Models(req.tenant);
+		models.team.find().sort( { name: 1 } ).exec( function(err, teams){
 			if (err) throw err;
 			res.send(teams);
 		});
 	});
 
 	app.get('/api/teams/:id/players', function(req, res, next){
-		TeamModel.findOne({_id : req.params.id}).populate('players', 'name last_name dni').exec( function(err, team){
+		var models = Models(req.tenant);
+		models.team.findOne({_id : req.params.id}).populate('players', 'name last_name dni').sort( { 'players.name': 1,'players.last_name': 1 } ).exec( function(err, team){
 			if (err) throw err;
 			res.send(team.players);
 		});
 	});
 
 	app.get('/api/teamNames', function(req, res, next){
-		TeamModel.find({}, 'name').exec( function(err, teams){
+		var models = Models(req.tenant);
+		models.team.find({}, 'name').exec( function(err, teams){
 			if (err) throw err;
 			res.send(teams);
 		});
 	});
 
 	app.get('/api/teams/:id', function(req, res, next){
-		TeamModel.findOne({ _id: req.params.id }).populate("players", "name last_name").exec( function(err, team){
+		var models = Models(req.tenant);
+		models.team.findOne({ _id: req.params.id }).populate("players").exec( function(err, team){
 			if (err) throw err;
 			res.send(team);
 		});
 	});
 
-	app.post('/api/teams', function(req, res){
+	app.post('/sapi/teams', function(req, res){
+		var models = Models(req.tenant);
 		console.log(req.body)
-		var team = new TeamModel(req.body);
+		var team = new models.team(req.body);
 		team.validate(function(error) {
 		    if (error) {
 		      	res.send({ error : error });
@@ -51,8 +53,9 @@ module.exports = function(app){
 		});
 	});
 
-	app.put('/api/teams/:id', function(req, res, next){
-		TeamModel.findOne({ _id: req.params.id }).exec( function(err, team){
+	app.put('/sapi/teams/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.team.findOne({ _id: req.params.id }).exec( function(err, team){
 			if (err) throw err;
 			if(team){
 				team.name = req.body.team.name;
@@ -66,7 +69,8 @@ module.exports = function(app){
 	});
 
 	app.delete('/api/teams/:id', function(req, res, next){
-		TeamModel.remove({ _id: req.params.id }).exec( function(err, team){
+		var models = Models(req.tenant);
+		models.team.remove({ _id: req.params.id }).exec( function(err, team){
 			if (err) {
 				res.send(err)
 			} 
@@ -77,6 +81,7 @@ module.exports = function(app){
 
 	//Prohibition for all players and team
 	app.post('/api/teams/:id/suspension', function(req, res){
+		var models = Models(req.tenant);
 		console.log(req.body.reason)
 		var players = req.body.players;
 		var callback = function(err, numAffected, status){
@@ -92,23 +97,25 @@ module.exports = function(app){
 				console.log("Suspension for player"+suspension.player);
 			})
 		};
-		var suspension = new SuspensionModel();
+		var suspension = new models.suspension();
 		suspension.reason = req.body.reason;
 		suspension.undetermined_time = true;
-		TeamModel.update(
+		models.team.update(
 		    { "_id": req.params.id}, 
 		    {$push: {"suspensions" : suspension }}, callback
 		)
 	});
 
 	app.delete('/api/teams/:team_id/suspension', function(req, res, next){
+		var models = Models(req.tenant);
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
 			res.send(req.params.team_id);
 		}
-		TeamModel.update(
+		models.team.update(
 				   { _id: req.params.team_id, "suspensions.accomplished": false },
 				   { $set: { "suspensions.$.accomplished" : true } }, callback
 		)
 	});
+
 }

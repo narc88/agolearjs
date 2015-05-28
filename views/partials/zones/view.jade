@@ -42,20 +42,26 @@ div(class="tab-content")
 					th Fecha Numero
 					th Fecha de disputa
 					th Ver partidos
-					th
+					if(RolesHelper.admin(user))
+						th
+						th
 				tr(ng-repeat="matchday in zone.matchdays | orderBy:['number']") 
 					td
-						div(ng-show="matchday.closed")
+						div(ng-if="matchday.played")
 							span(class="label label-success") Jugada
-						div(ng-hide="matchday.closed")
+						div(ng-if="!matchday.played")
 							span(class="label label-info") No jugada aún
-					td {{matchday.matchday_number}}
 					td {{ matchday.dispute_day | date:'yyyy-MM-dd' }}
-					td
-						a(href="/matches?matchday={{matchday._id}}") Ver
-					td
 						if(RolesHelper.admin(user))
+							button(ng-if="!matchday.closed", ng-click="selectMatchday(matchday._id)",data-toggle="modal",data-target="#submitMatchdayDisputeDay") Cambiar
+					td {{matchday.matchday_number}}
+					td
+						a(ng-click="openMatchday(matchday)",data-toggle="modal",data-target="#openMatchday") Ver Partidos
+					if(RolesHelper.admin(user))
+						td
 							a(href="/matchday/edit/{{matchday._id}}") Editar
+						td
+							a(ng-click="loadMatchesToRenderList(matchday)") Generar Panillas
 		div(ng-if="zone.zone_type === 'Playoff'")
 			h4 Avance
 			table.table.table-condensed.table-hover
@@ -67,17 +73,30 @@ div(class="tab-content")
 					th
 				tr(ng-repeat="matchday in zone.matchdays | orderBy:['number']") 
 					td
-						div(ng-show="matchday.closed")
+						div(ng-if="matchday.closed")
 							span(class="label label-success") Jugada
-						div(ng-hide="matchday.closed")
+						div(ng-if="!matchday.closed")
 							span(class="label label-info") No jugada aún
-					td {{matchday.matchday_number}}
+					td {{matchday.matchday_name}}
 					td {{ matchday.dispute_day | date:'yyyy-MM-dd' }}
+						if(RolesHelper.admin(user))
+							button(ng-if="!matchday.closed", ng-click="selectMatchday(matchday._id)",data-toggle="modal",data-target="#submitMatchdayDisputeDay") Cambiar
+					td {{matchday.matchday_number}}
 					td
-						a(href="/matches?matchday={{matchday._id}}") Ver
+						a(ng-click="openMatchday(matchday)",data-toggle="modal",data-target="#openMatchday") Ver Partidos
 					td
 						if(RolesHelper.admin(user))
 							a(href="/matchday/edit/{{matchday._id}}") Editar
+		include ../matchdays/dispute_day
 	div(role="tabpanel", class="tab-pane" ,id="participations")
 		include ../participations/index.jade
 include ../socials/shareBar.jade
+div(class="modal fade", tabindex="-1", role="dialog", id="openMatchday", aria-hidden="true" )
+	div(class="modal-dialog")
+		div(class="modal-content")
+			div(class="modal-header")
+				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+					span(aria-hidden="true")&times;
+				h4(class="modal-title", id="myModalLabel") Fecha
+			div(class="modal-body")
+				include ../matches/list.jade

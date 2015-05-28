@@ -11,7 +11,7 @@ var EventEmitter = require('events').EventEmitter;
 
 mongoose.set('debug', true);
 
-mongoose.connect(private_config.connection_string, function(err){
+mongoose.connect(private_config.connection_driver+private_config.agolear.db_user+':'+private_config.agolear.db_pass+'@'+private_config.connection_string+':'+private_config.connection_port+'/'+private_config.agolear.db_user, function(err){
 	if(err) throw err;
 	var app = express();
 	var server = require('http').createServer(app);

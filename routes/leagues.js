@@ -1,36 +1,46 @@
-var LeagueModel = require('../models/league').LeagueModel;
-var ImageModel 	= require('../models/image').ImageModel;
-
+var Models = require('../model_factory');
 var mongoose = require('mongoose');
 
 module.exports = function(app){
 
 
 	// RESTful routes
-	app.get('/api/leagues', function(req, res, next){
-		LeagueModel.find().exec( function(err, leagues){
+	app.get('/sapi/leagues', function(req, res, next){
+		var models = Models(req.tenant);
+		models.league.find().exec( function(err, leagues){
 			if (err) throw err;
 			res.send(leagues);
 		});
 	});
 
 	app.get('/api/leagues/:id', function(req, res, next){
-		LeagueModel.findOne({ _id: req.params.id }).exec( function(err, league){
+		var models = Models(req.tenant);
+		models.league.findOne({ _id: req.params.id }).exec( function(err, league){
 			if (err) throw err;
 			res.send(league);
 		});
 	});
 
-	app.post('/api/leagues', function(req, res){
-		var league = new LeagueModel(req.body.league);
+	app.get('/api/myleague/', function(req, res, next){
+		var models = Models(req.tenant);
+		models.league.findOne({ 'slug': req.tenant }).exec( function(err, league){
+			if (err) throw err;
+			res.send(league);
+		});
+	});
+
+	app.post('/sapi/leagues', function(req, res){
+		var models = Models(req.tenant);
+		var league = new models.league(req.body.league);
 		league.save(function(err){
 			if(err) throw err;
 			req.send(league);
 		});
 	});
 
-	app.put('/api/leagues/:id', function(req, res, next){
-		LeagueModel.findOne({ _id: req.params.id }).exec( function(err, league){
+	app.put('/sapi/leagues/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.league.findOne({ _id: req.params.id }).exec( function(err, league){
 			if (err) throw err;
 			if(league){
 				league.name = req.body.name;
@@ -48,8 +58,9 @@ module.exports = function(app){
 		});
 	});
 
-	app.delete('/api/leagues/:id', function(req, res, next){
-		LeagueModel.remove({ _id: req.params.id }).exec( function(err, league){
+	app.delete('/sapi/leagues/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.league.remove({ _id: req.params.id }).exec( function(err, league){
 			if (err) {
 				res.send(err)
 			} 

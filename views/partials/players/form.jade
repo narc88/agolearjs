@@ -1,4 +1,4 @@
-form(name="addTeam", ng-submit="submitPlayer(addPlayer)")
+form( name="addPlayer", ng-submit="submitPlayer(form)")
 	.form-group
 		label(for="name") Nombre
 		input(ng-model='form.player.name', name='name', id="name", type='text').form-control.input-sm
@@ -20,11 +20,11 @@ form(name="addTeam", ng-submit="submitPlayer(addPlayer)")
 		input(ng-model='form.player.phone', name='phone', id="phone", type='text').form-control.input-sm
 		div(ng-show="addPlayer['phone'].$error.mongoose", style="color: red") {{addPlayer.phone.$error.mongoose}}
 	.form-group
-		label(for="birthdate") Fecha de nacimiento
+		label(for="birthdate") Fecha de nacimiento (Ejemplo: 1999-06-25 / AAAA-MM-DD)
 		.div(class='input-group date', id='datetimepicker1')
-			input(ng-model='form.player.dni',type='text', class="form-control")
-				span(class="input-group-addon")
-					span(class="glyphicon glyphicon-calendar")
+			input(ng-model='form.player.birthdate',type='date', class="form-control")
+			span(class="input-group-addon")
+				span(class="glyphicon glyphicon-calendar")
 	.form-group
 		label(for="address") Dirección
 		input(ng-model='form.player.address', name='address', id="address", type='text').form-control.input-sm
@@ -33,5 +33,13 @@ form(name="addTeam", ng-submit="submitPlayer(addPlayer)")
 		label(for="blood_type") Grupo Sanguíneo
 		input(ng-model='form.player.blood_type', name='blood_type', id="blood_type", type='text').form-control.input-sm
 		div(ng-show="addPlayer['blood_type'].$error.mongoose", style="color: red") {{addPlayer.blood_type.$error.mongoose}}
+	.form-group
+		label(for="inactive") Inactivo
+		input(ng-model='form.player.inactive', name='inactive', id="inactive", type='checkbox').form-control.input-sm
+	.form-group
+		label(for="team_role") Rol dentro del equipo
+		select(ng-model='form.player.team_role', name='team_role', id="team_role").form-control.input-sm
+			option(value="Jugador", selected) Jugador
+			option(value="Capitan") Capitan
 	.form-group
 		input(type="Submit", value="Guardar").btn.btn-primary

@@ -11,4 +11,5 @@ var GoalSchema = new mongoose.Schema({
 	modified			: {type: Date, default: Date.now }
 });
 exports.GoalSchema = GoalSchema;
+exports.Schema = GoalSchema;
 exports.GoalModel = mongoose.model('Goal', GoalSchema);

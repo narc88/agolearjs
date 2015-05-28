@@ -1,6 +1,4 @@
-var CountryModel = require('../models/country').CountryModel;
-var StateModel = require('../models/state').StateModel;
-var CityModel = require('../models/city').CityModel;
+var Models = require('../model_factory');
 var CheckAuth = require('../middleware/checkAuth');
 var _ = require('underscore');
 
@@ -8,21 +6,24 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/countries', function(req, res, next){
-		CountryModel.find().exec( function(err, countries){
+		var models = Models(req.tenant);
+		models.country.find().exec( function(err, countries){
 			if (err) throw err;
 			res.send(countries);
 		});
 	});
 
 	app.get('/api/countries/:id', function(req, res, next){
-		CountryModel.findOne({ _id: req.params.id }).exec( function(err, country){
+		var models = Models(req.tenant);
+		models.country.findOne({ _id: req.params.id }).exec( function(err, country){
 			if (err) throw err;
 			res.send(country);
 		});
 	});
 
 	app.post('/api/countries', function(req, res){
-		var country = new CountryModel(req.body.country);
+		var models = Models(req.tenant);
+		var country = new models.country(req.body.country);
 		country.save(function(err){
 			if(err) throw err;
 			req.send(country);
@@ -30,7 +31,8 @@ module.exports = function(app){
 	});
 
 	app.put('/api/countries/:id', function(req, res, next){
-		CountryModel.findOne({ _id: req.params.id }).exec( function(err, country){
+		var models = Models(req.tenant);
+		models.country.findOne({ _id: req.params.id }).exec( function(err, country){
 			if (err) throw err;
 			if(country){
 				country.name = req.body.country.name;
@@ -44,7 +46,8 @@ module.exports = function(app){
 	});
 
 	app.delete('/api/countries/:id', function(req, res, next){
-		CountryModel.remove({ _id: req.params.id }).exec( function(err, country){
+		var models = Models(req.tenant);
+		models.country.remove({ _id: req.params.id }).exec( function(err, country){
 			if (err) {
 				res.send(err)
 			} 

@@ -1,30 +1,28 @@
-var RuleModel 	= require('../models/rule').RuleModel;
-var ImageModel 	= require('../models/image').ImageModel;
-var TournamentModel = require('../models/tournament').TournamentModel;
-
+var Models = require('../model_factory');
 var mongoose = require('mongoose');
 
 module.exports = function(app){
-
-
 	// RESTful routes
 	app.get('/api/rules', function(req, res, next){
-		RuleModel.find().exec( function(err, rules){
+		var models = Models(req.tenant);
+		models.rule.find().exec( function(err, rules){
 			if (err) throw err;
 			res.send(rules);
 		});
 	});
 
 	app.get('/api/rules/:id', function(req, res, next){
-		RuleModel.findOne({ _id: req.params.id }).exec( function(err, rule){
+		var models = Models(req.tenant);
+		models.rule.findOne({ _id: req.params.id }).exec( function(err, rule){
 			if (err) throw err;
 			res.send(rule);
 		});
 	});
 
-	app.post('/api/rules/:tournament_id', function(req, res){
-		var rule = new RuleModel(req.body);
-		TournamentModel.update({_id : req.params.tournament_id}, {$set : { "rule" : rule.id}},function(err, numAffected, status){
+	app.post('/sapi/rules/:tournament_id', function(req, res){
+		var models = Models(req.tenant);
+		var rule = new models.rule(req.body);
+		models.tournament.update({_id : req.params.tournament_id}, {$set : { "rule" : rule.id}},function(err, numAffected, status){
 			rule.save(function(err){
 				console.log(err);
 				console.log(numAffected);
@@ -34,8 +32,9 @@ module.exports = function(app){
 		});
 	});
 
-	app.put('/api/rules/:id', function(req, res, next){
-		RuleModel.findOne({ _id: req.params.id }).exec( function(err, rule){
+	app.put('/sapi/rules/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.rule.findOne({ _id: req.params.id }).exec( function(err, rule){
 			if (err) throw err;
 			if(rule){
 				rule.title = req.body.rule.title;
@@ -50,8 +49,9 @@ module.exports = function(app){
 		});
 	});
 
-	app.delete('/api/rules/:id', function(req, res, next){
-		RuleModel.remove({ _id: req.params.id }).exec( function(err, rule){
+	app.delete('/sapi/rules/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.rule.remove({ _id: req.params.id }).exec( function(err, rule){
 			if (err) {
 				res.send(err)
 			} 
@@ -59,4 +59,15 @@ module.exports = function(app){
 		});
 	});
 	//End of RESTful routes
+
+	app.get('/api/ruless', function(req, res, next){
+		// later on inside a route, or wherever
+		console.log('rules')
+		var models = Models(req.tenant);
+		models.user.find().exec( function(err, rules){
+			if (err) throw err;
+			res.send(rules);
+		});
+	});
+
 }

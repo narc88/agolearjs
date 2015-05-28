@@ -1,6 +1,12 @@
-h1 
-	a(href="/advertisings/{{advertising._id}}") {{advertising.title}}
-div(class="description") {{advertising.description}}
-div(class="type") {{advertising.type}}
-div(class="expiration") {{advertising.expiration}}
-div(class="link") {{advertising.link}}
+div(class="panel panel-default")
+	div(class="panel-heading")
+		a(href="/advertisings/{{advertising._id}}") {{advertising.title}}
+	div(class="panel-body")
+		img(ng-src="/photos/advertising/{{advertising._id}}/{{advertising.preview_image.filename}}", alt="{{advertising.title}}", style="max-width:100%")
+		div(class="description") {{advertising.description}}
+		div(class="type") {{advertising.type}}
+		div(class="expiration") {{advertising.expiration}}
+		div(class="link")
+			a(ng-href="advertising.link") {{advertising.link}}
+	a(ng-click="deleteAdvertising(advertising)")
+		button(type="button" class="btn btn-danger") Borrar

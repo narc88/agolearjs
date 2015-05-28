@@ -2,7 +2,24 @@ include admin_menu
 h3 Torneo
 div(ng-show="tournament")
 	include partial_view
-	p Zonas del Torneo
 	div(ng-repeat="zone in tournament.zones") 
 		include ../zones/partial_view
-	a(class="btn btn-primary", role="button", href="/tournaments/{{tournament._id}}") Ver
+div(class="modal fade", tabindex="-1", role="dialog", id="selectTurns", aria-hidden="true" )
+	div(class="modal-dialog")
+		div(class="modal-content")
+			div(class="modal-header")
+				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+					span(aria-hidden="true")&times;
+				h4(class="modal-title", id="myModalLabel") Seleccionar Turnos 
+			div(class="modal-body")
+				form(name="addTurns", ng-submit="submitSelectedTurns(addTurns)")
+					table.table.table-responsive.table-striped
+							tr(ng-repeat="turn in turns |  orderBy:['field.name', '-day','hour', 'minute']")
+								td
+									input( type="checkbox",ng-model="addTurns.turns[turn._id]", value="{{turn._id}}")
+								td
+									span  {{turn.field.name}} - {{days[turn.day]}} {{turn.hour}} : {{turn.minute}} Hs.
+
+					.form-group
+						input(type="submit", value="Guardar").btn.btn-primary.btn-xs
+						button(type="button", class="btn btn-default btn-xs", data-dismiss="modal") Close

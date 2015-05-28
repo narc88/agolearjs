@@ -43,9 +43,12 @@ var MatchSchema = new mongoose.Schema({
     walk_over            : {
                              type: Boolean, default:false
                          },
-    parent              : {type: mongoose.Schema.ObjectId, ref: 'Match' },                   
+    parent              : {type: mongoose.Schema.ObjectId, ref: 'Match' },
+    visitor_son              : {type: mongoose.Schema.ObjectId, ref: 'Match' },
+    local_son              : {type: mongoose.Schema.ObjectId, ref: 'Match' },                   
 	created		    	: {type: Date, default: Date.now },
 	modified			: {type: Date, default: Date.now }
 });
 
+exports.Schema = MatchSchema;
 exports.MatchModel = mongoose.model('Match', MatchSchema);

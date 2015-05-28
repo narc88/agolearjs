@@ -1,12 +1,43 @@
-include admin_menu
+if(RolesHelper.admin(user))
+	include admin_menu
 h3 Jugador
-div(ng-show="player")
-	include partial_view
-	div(class="col-md-6 pull-right")
-		span(ng-if="player.cuerpo_image")
-			img(ng-src="/photos/player/{{player._id}}/{{player.cuerpo_image.filename}}", style="max-width:150px;max-height:500px")
-		span(ng-if="!player.cuerpo_image")
-			img(ng-src="/img/cuerpocompleto.jpg" , style="max-width:150px;max-height:500px")
+div(ng-show="player", class="col-md-12")
+	div(class="panel panel-default")
+		div(class=" panel-body")
+			div(class="col-md-3")
+				span(ng-if="player.cara_image")
+					img(ng-src="/photos/player/{{player._id}}/{{player.cara_image.filename}}", style="max-width:50px;max-height:90px")
+				span(ng-if="!player.cara_image")
+					img(ng-src="/img/caricatura.jpg" , style="max-width:50px;max-height:90px")
+			div(class="col-md-9")
+				h4
+					a(href="/players/{{player._id}}") {{player.last_name}} {{player.name}}
+				p
+					span Fecha de nacimiento: {{player.birthdate | date:'yyyy-MM-dd'}}
+					span Dni: {{player.dni}}
+					span Grupo Sanguíneo: {{player.blood_type }}
+div(class="col-md-7 pull-left")
+	table(class="table table-responsive table-striped" , style="text-align:center")
+		tr
+			th Goles
+			td aaaaa
+		tr
+			th Jugador del Partido
+			td {{mvps.length}}
+		tr
+			th Amonestación
+			td {{player.yellow_cards}}
+		tr
+			th Doble Amonestación
+			td {{player.double_yellow_cards}}
+		tr
+			th Rojas
+			td {{player.red_cards}}
+div(class="col-md-5 pull-right")
+	span(ng-if="player.cuerpo_image")
+		img(ng-src="/photos/player/{{player._id}}/{{player.cuerpo_image.filename}}", style="max-width:150px;max-height:500px")
+	span(ng-if="!player.cuerpo_image")
+		img(ng-src="/img/cuerpocompleto.jpg" , style="max-width:150px;max-height:500px")
 div(class="row")
 	div(ng-repeat="image in player.images", class="col-xs-6 col-md-3")
 		a(href="#", class="thumbnail")
@@ -14,3 +45,5 @@ div(class="row")
 		if(RolesHelper.admin(user))
 			a(ng-click="removeImage(image._id)")
 				button(type="button" class="btn btn-danger") Borrar
+if(RolesHelper.admin(user))
+	include ../players/form_modal.jade

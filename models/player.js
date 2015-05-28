@@ -1,5 +1,7 @@
 var validator = require('validator');
 var mongoose = require('mongoose');
+var GoalSchema = require('../models/goal').GoalSchema;
+var IncidentSchema = require('../models/incident').IncidentSchema;
 var ImageSchema = require('../models/image').ImageSchema;
 
 var PlayerSchema = new mongoose.Schema({
@@ -23,12 +25,8 @@ var PlayerSchema = new mongoose.Schema({
                 },
 	dni	: { 
 				type: String,
-				trim: true,
-				validate : [
-                     function(v) { return validator.isNumeric(v.replace(/\s/g, '')); },
-                     'El dni solo debe estar compuesto por numeros'
-                 	]
-                },
+				trim: true
+               },
     email	: { 
     			type: String, 
     			validate : [
@@ -40,6 +38,10 @@ var PlayerSchema = new mongoose.Schema({
 				type: String,
 				trim: true,
 				},
+    team_role  : { 
+                type: String,
+                trim: true,
+                },
     birthdate   : { type: Date},
     address	: { 
 				type: String,
@@ -49,11 +51,13 @@ var PlayerSchema = new mongoose.Schema({
                 type: String,
                 trim: true
                 },
-    active      : {type:Boolean, default:true},
+    inactive      : {type:Boolean, default:false},
     images      : [ImageSchema],
+    goals       : [GoalSchema],
+    incidents   : [IncidentSchema],
     suspensions : {type: mongoose.Schema.ObjectId, ref: 'Suspension' },
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }
 });
-
+exports.Schema = PlayerSchema;
 exports.PlayerModel = mongoose.model('Player', PlayerSchema);

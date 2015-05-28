@@ -14,4 +14,5 @@ var AdvertisingSchema = new mongoose.Schema({
 	modified       		: { type: Date, default: Date.now }
 });
 
-exports.AdvertisingModel = mongoose.model('Advertising', AdvertisingSchema);
+exports.Schema = AdvertisingSchema;
+exports.Model = mongoose.model('Advertising', AdvertisingSchema);

@@ -1,22 +1,21 @@
 
-var crypto = require('crypto'), 
-    assert = require('assert');
-var algorithm = 'aes256';
-var key = '))(#%Giombu&&EJA%eaeapepe#$wipiwipi$';
-
-
-exports.encrypt = function (data_to_crypt) {
-  var cipher = crypto.createCipher(algorithm, key);  
-  var encrypted = cipher.update(data_to_crypt, 'utf8', 'hex') + cipher.final('hex');
-  return encrypted;
+// Nodejs encryption with CTR
+var crypto = require('crypto'),
+algorithm = 'aes-256-ctr',
+password = 'd6F3Efeq';
+ 
+exports.encrypt = function(text){
+	var cipher = crypto.createCipher(algorithm,password)
+	var crypted = cipher.update(text,'utf8','hex')
+	crypted += cipher.final('hex');
+	return crypted;
 }
-
-
-exports.decrypt = function (data_to_uncrypt) {
-  var decipher = crypto.createDecipher(algorithm, key);
-  var decrypted = decipher.update(data_to_uncrypt, 'hex', 'utf8') + decipher.final('utf8');
-  return decrypted;
-}
+exports.decrypt = function(text){
+	var decipher = crypto.createDecipher(algorithm,password)
+	var dec = decipher.update(text,'hex','utf8')
+	dec += decipher.final('utf8');
+	return dec;
+} 
 
 exports.random_text_code = function (){
 	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";

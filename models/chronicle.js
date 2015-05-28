@@ -12,4 +12,5 @@ var ChronicleSchema = new mongoose.Schema({
 	modified       		: { type: Date, default: Date.now }
 });
 
+exports.Schema = ChronicleSchema;
 exports.ChronicleModel = mongoose.model('Chronicle', ChronicleSchema);

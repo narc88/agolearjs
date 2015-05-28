@@ -1,5 +1,4 @@
-var CityModel 	= require('../models/city').CityModel;
-var ImageModel 	= require('../models/image').ImageModel;
+var Models = require('../model_factory');
 
 var mongoose = require('mongoose');
 
@@ -8,21 +7,24 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/cities', function(req, res, next){
-		CityModel.find().exec( function(err, cities){
+		var models = Models(req.tenant);
+		models.city.find().exec( function(err, cities){
 			if (err) throw err;
 			res.send(cities);
 		});
 	});
 
 	app.get('/api/cities/:id', function(req, res, next){
-		CityModel.findOne({ _id: req.params.id }).exec( function(err, city){
+		var models = Models(req.tenant);
+		models.city.findOne({ _id: req.params.id }).exec( function(err, city){
 			if (err) throw err;
 			res.send(city);
 		});
 	});
 
 	app.post('/api/cities', function(req, res){
-		var city = new CityModel(req.body.city);
+		var models = Models(req.tenant);
+		var city = new models.city(req.body.city);
 		city.save(function(err){
 			if(err) throw err;
 			req.send(city);
@@ -30,7 +32,8 @@ module.exports = function(app){
 	});
 
 	app.put('/api/cities/:id', function(req, res, next){
-		CityModel.findOne({ _id: req.params.id }).exec( function(err, city){
+		var models = Models(req.tenant);
+		models.city.findOne({ _id: req.params.id }).exec( function(err, city){
 			if (err) throw err;
 			if(city){
 				city.name = req.body.city.name;
@@ -44,7 +47,8 @@ module.exports = function(app){
 	});
 
 	app.delete('/api/cities/:id', function(req, res, next){
-		CityModel.remove({ _id: req.params.id }).exec( function(err, city){
+		var models = Models(req.tenant);
+		models.city.remove({ _id: req.params.id }).exec( function(err, city){
 			if (err) {
 				res.send(err)
 			} 

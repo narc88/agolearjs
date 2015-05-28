@@ -240,4 +240,27 @@ input {
 
 .summary{
   padding:8px;
+  font-style: oblique;
+}
+
+.media-detail{
+  font-size: 13px;
+}
+
+.chronicle{
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.chronicle h3{
+  margin-top: 5px;
+}
+
+.link-button{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.classified{
+  background-color: #9be466 !important;
 }

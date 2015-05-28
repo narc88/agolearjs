@@ -8,4 +8,5 @@ var CountrySchema = new mongoose.Schema({
 	modified       		: { type: Date, default: Date.now }
 });
 
+exports.Schema = CountrySchema;
 exports.CountryModel = mongoose.model('Country', CountrySchema);

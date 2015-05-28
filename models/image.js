@@ -7,5 +7,5 @@ var ImageSchema =  exports.ImageSchema = new mongoose.Schema({
 	created    		    : {type: Date, default: Date.now },
 	modified			: {type: Date, default: Date.now }
 })	
-
+exports.Schema = ImageSchema;
 exports.ImageModel = mongoose.model('Image', ImageSchema);

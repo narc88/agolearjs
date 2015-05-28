@@ -4,6 +4,5 @@ div(class="btn-group pull-right")
 		span Acciones 
 		span(class="caret")
 	ul(class="dropdown-menu admin_menu", role="menu")
-		-model = "advertising" 
-		li(ng-repeat="type in imageTypes.#{model}")
-			a(href="/images/add/#{model}/{{advertising._id}}/{{type}}") Agregar imagen {{type}}
+		li
+			a(href="/images/add/advertising/{{advertising._id}}/{{advertising.type}}") Agregar imagen {{advertising.type}}

@@ -2,14 +2,14 @@ var validator = require('validator');
 var mongoose = require('mongoose');
 var ImageSchema = require('../models/image').ImageSchema;
 
-var TournamentSchema = new mongoose.Schema({
+var TournamentSchema = exports.Schema = new mongoose.Schema({
 	name	: { 
 				type: String,
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAlphanumeric(v); },
-                     'Nombre invalido, no se aceptan numeros ni simbolos'
+                     function(v) { return validator.isAscii(v.replace(/\s/g, '')); },
+                     'Nombre invalido, no se aceptan simbolos'
                  	]
                 },
     number_of_teams	: { 

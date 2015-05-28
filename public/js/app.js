@@ -1,6 +1,6 @@
 'use strict';
 // Declare app level module which depends on filters, and services
-var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).run([
+var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike', 'angular-datepicker']).run([
       '$rootScope', function ($rootScope) {
           $rootScope.facebookAppId = '202443209924902'; // set your facebook app id here
       }
@@ -9,8 +9,11 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
     $routeProvider.
       
       when('/login', {
-        templateUrl: '/partials/users/login.jade',
-        controller: login
+        templateUrl: '/partials/users/login.jade'
+      }).
+      when('/reset_password', {
+        templateUrl: '/partials/users/resetPassword.jade',
+        controller: ResetPassCtrl
       }).
       when('/users', {
         templateUrl: '/partials/users/index.jade',
@@ -76,21 +79,9 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
         templateUrl: '/partials/players/index.jade',
         controller: players_index
       }).
-      when('/players/add', {
-        templateUrl: '/partials/players/form.jade',
-        controller: players_add
-      }).
       when('/players/:id', {
         templateUrl: '/partials/players/view.jade',
         controller: players_view
-      }).
-      when('/players/edit/:id', {
-        templateUrl: '/partials/players/edit.jade',
-        controller: players_edit
-      }).
-      when('/players/delete/:id', {
-        templateUrl: '/partials/players/delete.jade',
-        controller: player_delete
       }).
       when('/teams', {
         templateUrl: '/partials/teams/index.jade',
@@ -116,6 +107,10 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
         templateUrl: '/partials/tournaments/index.jade',
         controller: tournaments_index
       }).
+      when('/zones/:tournament_id/classified', {
+        templateUrl: '/partials/zones/classified.jade',
+        controller: tournaments_classified
+      }).
       when('/tournaments/add', {
         templateUrl: '/partials/tournaments/form.jade',
         controller: tournaments_add
@@ -123,6 +118,10 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
       when('/tournaments/:id', {
         templateUrl: '/partials/tournaments/view.jade',
         controller: tournaments_view
+      }).
+      when('/tournaments/select_teams/:id', {
+        templateUrl: '/partials/tournaments/select_teams.jade',
+        controller: tournaments_select_teams
       }).
       when('/tournaments/edit/:id', {
         templateUrl: '/partials/tournaments/edit.jade',
@@ -144,10 +143,6 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
         templateUrl: '/partials/matches/view.jade',
         controller: matches_view
       }).
-      when('/matches/edit/:id', {
-        templateUrl: '/partials/matches/edit.jade',
-        controller: matches_edit
-      }).
       when('/matches/delete/:id', {
         templateUrl: '/partials/matches/delete.jade',
         controller: matches_delete
@@ -165,12 +160,12 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
         controller: chronicles_view
       }).
       when('/chronicles/edit/:id', {
-        templateUrl: '/partials/chronicles/edit.jade',
+        templateUrl: '/partials/chronicles/form.jade',
         controller: chronicles_edit
       }).
-      when('/chronicles/delete/:id', {
-        templateUrl: '/partials/chronicles/delete.jade',
-        controller: chronicles_delete
+      when('/suspensions', {
+        templateUrl: '/partials/suspensions/index.jade',
+        controller: suspensions_index
       }).
       when('/rules/add/:tournament_id', {
         templateUrl: '/partials/rules/form.jade',
@@ -203,10 +198,6 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike']).ru
       when('/advertisings/edit/:id', {
         templateUrl: '/partials/advertisings/edit.jade',
         controller: advertisings_edit
-      }).
-      when('/advertisings/delete/:id', {
-        templateUrl: '/partials/advertisings/delete.jade',
-        controller: advertisings_delete
       }).
       when('/turns', {
         templateUrl: '/partials/turns/index.jade',
@@ -242,7 +233,7 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
     };
   }).config(function ($httpProvider) {
       $httpProvider.interceptors.push('authInterceptor');
-    }).controller('UserCtrl', function ($scope, $http, $window) {
+    }).controller('UserCtrl', function ($scope, $http, $window, $rootScope) {
       $scope.user = {username: 'john.doe', password: 'foobar'};
       $scope.message = '';
       $scope.submit = function () {
@@ -251,11 +242,12 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
           .success(function (data, status, headers, config) {
             $window.sessionStorage.token = data.token;
             $scope.message = 'Welcome';
+            $rootScope.account = data.token;
           })
           .error(function (data, status, headers, config) {
             // Erase the token if the user fails to log in
             delete $window.sessionStorage.token;
-
+            $rootScope.account = null;
             // Handle login errors here
             $scope.message = 'Error: Invalid user or password';
           });
@@ -267,8 +259,6 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
             data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "encabezado");
           };
           $scope.advertisings = data;
-          $(".carousel-inner > .item").first().addClass("active")
-          $(".carousel-indicators > li").first().addClass("active")
         });
     }).controller('SidebarAdvertisingsController', function ($scope, $http, $window, $rootScope) {
      $http.get('/api/advertisings?type=lateral').
@@ -277,8 +267,11 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
             data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "lateral");
           };
           $scope.advertisings = data;
-          $(".carousel-inner > .item").first().addClass("active")
-          $(".carousel-indicators > li").first().addClass("active")
+        });
+    }).controller('LeagueController', function ($scope, $http, $window, $rootScope) {
+     $http.get('/api/myleague').
+        success(function(data) {
+         // data.logo_image = $rootScope.imageHelper.getImage(data.images, "logo");
         });
     }).controller('ScorersAndOthersController', function ($scope, $http, $window, $rootScope) {
       var playersString = function(players){
@@ -329,4 +322,15 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
         $rootScope.tournament_stats.less_beaten = less_beaten_temp.sort(compare).slice(0, 10);
       }
      
+    }).config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($q, $location) {
+        return {
+            'responseError': function (rejection) {
+                if(rejection.status === 401) {
+                    $location.url('/login');;
+                }
+                return $q.reject(rejection);
+            }
+        };
     });
+}]);

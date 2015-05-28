@@ -11,9 +11,11 @@ if(RolesHelper.admin(user))
 			li
 				a(href='/chronicles?zone={{tournament._id}}') Crónicas
 			li
+				a(href='/zones/{{tournament._id}}/classified') Ver clasificados
+			li
 				a(ng-if='tournament.rule', href='/rules/{{tournament._id}}') Reglamento
 				a(ng-if='!tournament.rule', href='/rules/add/{{tournament._id}}') Agregar Reglamento
-			li
-				a(href='/tournaments/{{tournament._id}}/classify_to_playoff') Clasificar a playoff
+			li(nf-if="canClassiffy()")
+				a(href='/tournaments/select_teams/{{tournament._id}}') Clasificar a playoff
 			li
 				a(href='/zones/{{tournament._id}}/end_tournament') Finalizar torneo

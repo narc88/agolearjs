@@ -2,7 +2,7 @@ var validator = require('validator');
 var mongoose = require('mongoose');
 var FieldReducedSchema = require('./field').FieldReducedSchema;
 
-var TurnSchema = new mongoose.Schema({
+var TurnSchema = exports.Schema = new mongoose.Schema({
     hour                :{type:Number, default: 0},
     minute              :{type:Number, default: 0},
     day                 :{type:Number, default: 0},

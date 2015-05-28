@@ -5,7 +5,8 @@
 	"homepage": "https://github.com/angular/angular-seed",
 	"license": "MIT",
 	"private": true,
-	"dependencies": {
+	"dependencies":{
+		"bootstrap" : "*",
 		"angular": "1.2.x",
 		"angular-route": "1.2.x",
 		"angular-loader": "1.2.x",
@@ -14,6 +15,9 @@
 		"angular-jwt": "0.0.6",
 		"angular-scenario": "~1.2",
 		"cropit": "0.2",
-		"angular-sanitize": "~1.2.x"
+		"angular-sanitize": "~1.2.x",
+		"angular-bootstrap": "~0.12.1",
+		"angular-native-picker": "1.0.2",
+		"html2canvas" : "*"
 	}
 }

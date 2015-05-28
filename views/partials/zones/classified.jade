@@ -1,0 +1,27 @@
+if(RolesHelper.admin(user))
+	p En verde aparecen los equipos clasificados a la siguiente ronda.
+table.table.table-condensed.table-hover(class="table table-responsive table-striped")
+	tr
+		th Pos
+		th Equipo
+		th PJ
+		th G
+		th E
+		th P
+		td GF
+		td GC
+		td DG
+		td Puntos
+	tr(ng-repeat="participator in participators | orderBy:['-participations.points','-participations.own_goals', 'participations.other_goals', 'participations.own_goals-participations.other_goals' ,'-participations.won']" ,ng-class="{classified : classified($index)}")
+		td {{$index + 1}}
+		td 
+			a(href="/teams/{{participator.participations.team}}") {{participator.participations.team_name}}
+		td {{participator.participations.won+participator.participations.lost+participator.participations.tied}}
+		td {{participator.participations.won}}
+		td {{participator.participations.tied}}
+		td {{participator.participations.lost}}
+		td {{participator.participations.own_goals}}
+		td {{participator.participations.other_goals}}
+		td {{participator.participations.own_goals-participator.participations.other_goals}}
+		td {{participator.participations.points}}
+button(type="button", class="btn btn-default", ng-click="createPlayoff()") Calcular playoff

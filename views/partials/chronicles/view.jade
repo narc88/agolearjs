@@ -1,12 +1,28 @@
 include admin_menu.jade
+div(class="panel panel-default pull-left col-md-12")
+	div(class="panel-body")
+		div(class="col-md-12")
+			span(class="pull-left")
+				span{{ chronicle.modified | date:'yyyy-MM-dd'}}
+			span(class="pull-right")
+				a(href="/matches/{{chronicle.match}}") Ver Partido
+		div(class="col-md-12")
+			h3 {{chronicle.title}}
+			div(class="summary", ng-bind-html="content_summary")
+			div(class="content", ng-bind-html="content_chronicle") 
 
-h3 {{chronicle.title}}
-div(class="summary", ng-bind-html="content_summary")
-div(class="content", ng-bind-html="content_chronicle") 
-
-div(class="row")
-	div(ng-repeat="image in chronicle.images", class="col-xs-6 col-md-3")
-		a(href="#", class="thumbnail")
-			img(ng-src="/photos/chronicle/{{chronicle._id}}/{{image.filename}}" alt="{{image.filename}}")
-div(class="row")
-	include ../socials/shareBar.jade
+			div(class="row")
+				div(ng-repeat="image in chronicle.images", class="col-xs-6 col-md-3")
+					a(ng-click="selectImage(image)", class="thumbnail", data-toggle="modal",data-target="#imageView")
+						img(ng-src="/photos/chronicle/{{chronicle._id}}/{{image.filename}}" alt="{{image.filename}}")
+			div(class="row")
+				include ../socials/shareBar.jade
+div(class="modal fade", tabindex="-1", role="dialog", id="imageView", aria-hidden="true" )
+	div(class="modal-dialog")
+		div(class="modal-content")
+			div(class="modal-header")
+				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+					span(aria-hidden="true")&times;
+				h4(class="modal-title", id="myModalLabel") Imagen
+			div(class="modal-body")
+				img(ng-src="/photos/chronicle/{{chronicle._id}}/{{selected_image.filename}}" alt="{{selected_image.filename}}" style="max-width:100%;")

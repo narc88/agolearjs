@@ -1,4 +1,4 @@
-var AdvertisingModel 	= require('../models/advertising').AdvertisingModel;
+var Models = require('../model_factory');
 var ImageModel 	= require('../models/image').ImageModel;
 
 var mongoose = require('mongoose');
@@ -8,29 +8,33 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/advertisings', function(req, res, next){
-		AdvertisingModel.find(req.query).exec( function(err, advertisings){
+		var models = Models(req.tenant);
+		models.advertising.find(req.query).exec( function(err, advertisings){
 			if (err) throw err;
 			res.send(advertisings);
 		});
 	});
 
 	app.get('/api/advertisings/:id', function(req, res, next){
-		AdvertisingModel.findOne({ _id: req.params.id }).exec( function(err, advertising){
+		var models = Models(req.tenant);
+		models.advertising.findOne({ _id: req.params.id }).exec( function(err, advertising){
 			if (err) throw err;
 			res.send(advertising);
 		});
 	});
 
-	app.post('/api/advertisings', function(req, res){
-		var advertising = new AdvertisingModel(req.body)
+	app.post('/sapi/advertisings', function(req, res){
+		var models = Models(req.tenant);
+		var advertising = new models.advertising(req.body)
 		advertising.save(function(err){
 			if(err) throw err;
 			res.send(advertising);
 		});
 	});
 
-	app.put('/api/advertisings/:id', function(req, res, next){
-		AdvertisingModel.findOne({ _id: req.params.id }).exec( function(err, advertising){
+	app.put('/sapi/advertisings/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.advertising.findOne({ _id: req.params.id }).exec( function(err, advertising){
 			if (err) throw err;
 			if(advertising){
 				advertising.title = req.body.advertising.title;
@@ -47,8 +51,9 @@ module.exports = function(app){
 		});
 	});
 
-	app.delete('/api/advertisings/:id', function(req, res, next){
-		AdvertisingModel.remove({ _id: req.params.id }).exec( function(err, advertising){
+	app.delete('/sapi/advertisings/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.advertising.remove({ _id: req.params.id }).exec( function(err, advertising){
 			if (err) {
 				res.send(err)
 			} 

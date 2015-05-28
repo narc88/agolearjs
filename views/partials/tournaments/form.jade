@@ -7,16 +7,29 @@ form(name="addTournament", ng-submit="submitTournament(addTournament)")
 				option(value="1", selected="selected") Liga
 				option(value="2") Liga y Playoff 
 				option(value="3") Liga y Liguilla
+	.form-group.col-md-6.col-xs-6
+		.col-md-6.col-xs-6
+			label(for="type_of_zone_name") Nombre de zona
+		.col-md-6.col-xs-6
+			select(ng-model='tournament.type_of_zone_name', name='type_of_zone_name', id="type_of_zone_name").form-control
+				option(value="1", selected="selected") Letras
+				option(value="2") Numeros
 	.form-group.col-md-12.col-xs-12
 		label(for="name") Nombre
 		input(ng-model='tournament.name', name='name', id="name", type='text').form-control.input-sm
 		div(ng-show="addTournament['name'].$error.mongoose", style="color: red") {{addTournament.name.$error.mongoose}}
 	.form-group.col-md-6.col-xs-6
 		.col-md-8.col-xs-8
-			label(for="double_playoff_match") Partido de Ida y Vuelta
+			label(for="double_playoff_match") Partido de Ida y Vuelta en Playoff
 		.col-md-4.col-xs-4
 			input(ng-model='tournament.double_playoff_match', name='double_playoff_match', id="double_playoff_match", type='checkbox').form-control.input-sm
 		div(ng-show="addTournament['double_playoff_match'].$error.mongoose", style="color: red") {{addTournament.double_playoff_match.$error.mongoose}}
+	.form-group.col-md-6.col-xs-6
+		.col-md-8.col-xs-8
+			label(for="double_league_match") Partido de Ida y Vuelta en Liga
+		.col-md-4.col-xs-4
+			input(ng-model='tournament.double_league_match', name='double_league_match', id="double_league_match", type='checkbox').form-control.input-sm
+		div(ng-show="addTournament['double_league_match'].$error.mongoose", style="color: red") {{addTournament.double_league_match.$error.mongoose}}
 	.form-group.col-md-6.col-xs-6
 		.col-md-8.col-xs-8
 			label(for="suspension_increment") Suspensión incremental

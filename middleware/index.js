@@ -10,10 +10,6 @@ var util = require('../helpers/util');
 
 module.exports = function(app){
 
-	var secret_sauce = 'this_is_my_secret_sauce';
-	var sessionStore = new express.session.MemoryStore();
-	var cookieParser = express.cookieParser(secret_sauce);
-
 	// all environments
 	app.set('port', process.env.PORT || 3000);
 	app.set('views', path.join(__dirname, '../views'));
@@ -21,12 +17,17 @@ module.exports = function(app){
 	app.use(express.favicon());
 	app.use(express.logger('dev'));
 	app.use(express.methodOverride());
+	app.use(express.bodyParser());
 	app.use(express.static(path.join(__dirname, '../public')));
 	app.set('photos',path.join(__dirname,'../public/photos/'));
-	app.use('/api', expressJwt({secret: secret_sauce}));
+	app.use('/sapi', expressJwt({secret: private_config.secret_sauce}));
 	app.use(express.json());
 	app.use(express.urlencoded());
-	app.use(function (req, res, next) {		
+	app.use(function (req, res, next) {
+		console.log('Host is'+req.host)	
+		if(req.host == 'localhost'){
+			req.tenant = 'agolear' || 'ligaaltosdelparacao';
+		}
 		try {
 		 	if(req.headers.authorization){
 				res.locals.user = jwt.decode(req.headers.authorization.split(" ")[1], true )
@@ -55,30 +56,5 @@ module.exports = function(app){
 			pass:  private_config.mail_password,
 		}
 	});
-
-	app.post('/login', function (req, res) {
-	  //TODO validate req.body.username and req.body.password
-	  //if is invalid, return 401
-	  console.log("auth")
-	  if (!(req.body.username === 'john.doe' && req.body.password === 'foobar')) {
-	    res.send(401, 'Wrong user or password');
-	    return;
-	  }
-
-	  var profile = {
-	    name: 'John',
-	    last_name: 'Doe',
-	    email: 'john@doe.com',
-	    id: 123
-	  };
-
-	  // We are sending the profile inside the token
-	  var token = jwt.sign(profile, secret_sauce, { expiresInMinutes: 60*5 });
-
-	  res.json({ token: token });
-	});
-	
-	
-
 	
 }

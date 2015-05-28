@@ -2,7 +2,6 @@ div(class="imageCropper")
 	include crop.jade
 	form( name="addImage", ng-submit="submit('#{model}', addImage)")
 		.form-group.col-md-6
-			input(type="text", ng-model="image.filename", placeholder='Nombre de archivo', class="required").form-control
 			imput(type="hidden", ng-model="image.type", value="{{image.type}}")
 		.form-group.pull-right
 			input(type="submit", value="Guardar").btn.btn-primary

@@ -1,0 +1,16 @@
+<!-- Single button -->
+if(RolesHelper.admin(user))
+	div(class="btn-group pull-right")
+		button(type="button", class="btn  btn-primary dropdown-toggle", data-toggle="dropdown", aria-expanded="false")
+			span Acciones 
+			span(class="caret")
+		ul(class="dropdown-menu admin_menu", role="menu")
+			li
+				a(href='/chronicles/add') Crear Nueva
+			li
+				a(href='/chronicles/edit/{{chronicle._id}}') Editar
+			li
+				a(ng-click="removeChronicle()") Borrar
+			-model = "chronicle" 
+			li(ng-repeat="type in imageTypes.#{model}")
+				a(href="/images/add/#{model}/{{chronicle._id}}/{{type}}") Agregar imagen {{type}}

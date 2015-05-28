@@ -1,13 +1,14 @@
 var validator = require('validator');
 var mongoose = require('mongoose');
 
-var SuspensionSchema = new mongoose.Schema({
+var SuspensionSchema = exports.Schema = new mongoose.Schema({
     reason    : { 
                 type: String,
                 trim: true,
                 },
     player     : {type: mongoose.Schema.ObjectId, ref: 'Player' },
     //Matches he missed due to the suspension
+    match             : {type: mongoose.Schema.ObjectId, ref: 'Match' },
     matches             : [{type: mongoose.Schema.ObjectId, ref: 'Match' }],
     accomplished		: {
                				 type: Boolean, default:false

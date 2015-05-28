@@ -1,4 +1,4 @@
-var ChronicleModel 	= require('../models/chronicle').ChronicleModel;
+var Models = require('../model_factory');
 var ImageModel 	= require('../models/image').ImageModel;
 
 var mongoose = require('mongoose');
@@ -8,29 +8,33 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/chronicles', function(req, res, next){
-		ChronicleModel.find(req.query).exec( function(err, chronicles){
+		var models = Models(req.tenant);
+		models.chronicle.find(req.query).limit(30).sort('-modified').exec( function(err, chronicles){
 			if (err) throw err;
 			res.send(chronicles);
 		});
 	});
 
 	app.get('/api/chronicles/:id', function(req, res, next){
-		ChronicleModel.findOne({ _id: req.params.id }).exec( function(err, chronicle){
+		var models = Models(req.tenant);
+		models.chronicle.findOne({ _id: req.params.id }).exec( function(err, chronicle){
 			if (err) throw err;
 			res.send(chronicle);
 		});
 	});
 
-	app.post('/api/chronicles', function(req, res){
-		var chronicle = new ChronicleModel(req.body)
+	app.post('/sapi/chronicles', function(req, res){
+		var models = Models(req.tenant);
+		var chronicle = new models.chronicle(req.body.chronicle)
 		chronicle.save(function(err){
 			if(err) throw err;
 			res.send(chronicle);
 		});
 	});
 
-	app.put('/api/chronicles/:id', function(req, res, next){
-		ChronicleModel.findOne({ _id: req.params.id }).exec( function(err, chronicle){
+	app.put('/sapi/chronicles/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.chronicle.findOne({ _id: req.params.id }).exec( function(err, chronicle){
 			if (err) throw err;
 			if(chronicle){
 				chronicle.title = req.body.chronicle.title;
@@ -45,8 +49,9 @@ module.exports = function(app){
 		});
 	});
 
-	app.delete('/api/chronicles/:id', function(req, res, next){
-		ChronicleModel.remove({ _id: req.params.id }).exec( function(err, chronicle){
+	app.delete('/sapi/chronicles/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.chronicle.remove({ _id: req.params.id }).exec( function(err, chronicle){
 			if (err) {
 				res.send(err)
 			} 

@@ -1,6 +1,4 @@
-var MatchdayModel = require('../models/matchday').MatchdayModel;
-var ImageModel 	= require('../models/image').ImageModel;
-
+var Models = require('../model_factory');
 var mongoose = require('mongoose');
 
 module.exports = function(app){
@@ -8,7 +6,8 @@ module.exports = function(app){
 
 	// RESTful routes
 	app.get('/api/matchdays', function(req, res, next){
-		MatchdayModel.find().exec( function(err, matchdays){
+		var models = Models(req.tenant);
+		models.matchday.find().exec( function(err, matchdays){
 			if (err) throw err;
 			res.send(matchdays);
 		});
@@ -16,22 +15,25 @@ module.exports = function(app){
 
 	
 	app.get('/api/matchdays/:id', function(req, res, next){
-		MatchdayModel.findOne({ _id: req.params.id }).exec( function(err, matchday){
+		var models = Models(req.tenant);
+		models.matchday.findOne({ _id: req.params.id }).exec( function(err, matchday){
 			if (err) throw err;
 			res.send(matchday);
 		});
 	});
 
-	app.post('/api/matchdays', function(req, res){
-		var matchday = new MatchdayModel(req.body.matchday);
+	app.post('/sapi/matchdays', function(req, res){
+		var models = Models(req.tenant);
+		var matchday = new models.matchday(req.body.matchday);
 		matchday.save(function(err){
 			if(err) throw err;
 			req.send(matchday);
 		});
 	});
 
-	app.put('/api/matchdays/:id', function(req, res, next){
-		MatchdayModel.findOne({ _id: req.params.id }).exec( function(err, matchday){
+	app.put('/sapi/matchdays/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.matchday.findOne({ _id: req.params.id }).exec( function(err, matchday){
 			if (err) throw err;
 			if(matchday){
 				matchday.name = req.body.matchday.name;
@@ -44,8 +46,9 @@ module.exports = function(app){
 		});
 	});
 
-	app.delete('/api/matchdays/:id', function(req, res, next){
-		MatchdayModel.remove({ _id: req.params.id }).exec( function(err, matchday){
+	app.delete('/sapi/matchdays/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.matchday.remove({ _id: req.params.id }).exec( function(err, matchday){
 			if (err) {
 				res.send(err)
 			} 

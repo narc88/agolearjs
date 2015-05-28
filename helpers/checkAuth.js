@@ -9,13 +9,17 @@ function isUser(user, callback){
 }
 
 function isAdmin(user){
-	return true;
-	var index = user.roles.indexOf(UserRoles.getAdmin());
-	if (index == -1) {
-		return false
-	} else {
-		return true
+	if(user){
+		var index = user.roles.indexOf(UserRoles.getAdmin());
+		if (index == -1) {
+			return false;
+		} else {
+			return true;
+		}
+	}else{
+		return false;
 	}
+	
 }
 
 exports.user = function (user) {

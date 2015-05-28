@@ -3,11 +3,14 @@ var mongoose = require('mongoose');
 var SuspensionSchema 	= require('../models/suspension').SuspensionSchema;
 var ImageSchema = require('../models/image').ImageSchema;
 
-var TeamSchema = new mongoose.Schema({
+var TeamSchema = exports.Schema = new mongoose.Schema({
     name	: { 
 				type: String,
 				trim: true,
 				required:true},
+	summary  : { 
+				type: String,
+				trim: true},
 	suspensions: [SuspensionSchema],
     players     : [{type: mongoose.Schema.ObjectId, ref: 'Player' }],
     images 		: [ImageSchema],

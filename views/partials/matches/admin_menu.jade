@@ -6,10 +6,6 @@ if(RolesHelper.admin(user))
 			span(class="caret")
 		ul(class="dropdown-menu admin_menu", role="menu")
 			li
-				a(ng-click="update()") Guardar
-			li
-				a(href='/matches/{{match._id}}/edit') Editar
-			li
 				a(href='/chronicles/add?match={{match._id}}') Agregar Crónica
 			li
 				a(href='/matches/updateTurn/{{match._id}}') Cambiar horario

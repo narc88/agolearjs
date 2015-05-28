@@ -1,12 +1,15 @@
-div(class="media")
-	a(class="pull-left", href="#")
-		span(ng-if="isUndefinedOrNull(team.logo_image)")
-			img(ng-src="/photos/team/{{team._id}}/{{team.logo_image.filename}}", width="100px" ,style="width:100px,max-height:100px;")
-		span(ng-if="!isUndefinedOrNull(team.logo_image)")
-			img(ng-src="/img/logoteam.png", width="100px" ,style="width:100px,max-height:100px;")
-	div(class="media-body")
-		h4(class="media-heading")
-			a(href="/teams/{{team._id}}") {{team.name}}
-		span(class="pull-right")
-			a(class="btn btn-primary", role="button", href="/teams/edit/{{team._id}}") Editar
+div(class="panel panel-default")
+	div(class="panel-body")
+		div(class="media")
+			a(class="pull-left", href="#")
+				span(ng-if="!isUndefinedOrNull(team.logo_image)")
+					img(ng-src="/photos/team/{{team._id}}/{{team.logo_image.filename}}", style="max-width:60px;max-height:60px;")
+				span(ng-if="isUndefinedOrNull(team.logo_image)")
+					img(ng-src="/img/logoteam.png",  style="max-width:60px;max-height:60px;")
+			div(class="media-body")
+				h4(class="media-heading")
+					a(href="/teams/{{team._id}}") {{team.name}} 
+						span(ng-if="team.suspensions.length > 0") Suspendido.
+					p(class="media-detail") {{team.summary}}
+					p(class="media-detail") {{team.players.length}} jugadores. 
 

@@ -3,14 +3,14 @@ var mongoose = require('mongoose');
 var ParticipationSchema = require('../models/participation').ParticipationSchema;
 var MatchdaySchema = require('../models/matchday').MatchdaySchema;
 
-var ZoneSchema = new mongoose.Schema({
+var ZoneSchema = exports.Schema = new mongoose.Schema({
     name	: { 
 				type: String,
 				trim: true,
 				required:true,
 				validate : [
-                     function(v) { return validator.isAlpha(v.replace(/\s/g, '')); },
-                     'Nombre invalido, no se aceptan numeros ni simbolos'
+                     function(v) { return validator.isAscii(v.replace(/\s/g, '')); },
+                     'Nombre invalido, no se aceptan simbolos'
                  	]
                 },
     zone_type     : { 

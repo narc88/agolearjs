@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 var CitySchema = require('./city').CitySchema;
 
-var StateSchema  = StateSchema = new mongoose.Schema({
+var StateSchema  = exports.Schema  = new mongoose.Schema({
 	name				: { type: String, required: true},
 	country      		: { type: mongoose.Schema.ObjectId, ref: 'Country' },
 	created        		: { type: Date, default: Date.now },

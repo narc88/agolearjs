@@ -20,53 +20,44 @@ block body
 							a(id="chroniclesButton", href="/chronicles")
 								span Noticias
 						li
-							a(id="myLeague", href="/leagues/54a129722730630d7c0015e3")
+							a(id="myLeague", href="/leagues/{{league._id}}")
 								span Mi Liga
-						if(RolesHelper.admin(user))
-							li(class="dropdown")
-								a(id="dropAdmin", href="#", class="dropdown-toggle", data-toggle="dropdown", aria-haspopup="true", role="button", aria-expanded="false")
-									span Administracion
-									span(class="caret")
-								ul(class="dropdown-menu" role="menu" aria-labelledby="dropAdmin")
-									li(role="presentation")
-										a(role="menuitem" tabindex="-1" href="/teams") Equipos
-									li(role="presentation")
-										a(role="menuitem" tabindex="-1" href="/tournaments") Torneos
-									li(role="presentation")
-										a(role="menuitem" tabindex="-1" href="/chronicles") Crónicas
-									li(role="presentation")
-										a(role="menuitem" tabindex="-1" href="/turns") Turnos
-									li(role="presentation")
-										a(role="menuitem" tabindex="-1" href="/fields") Canchas
-									li(role="presentation")
-										a(role="menuitem" tabindex="-1" href="/suspensions") Suspensiones
-									li(role="presentation")
-										a(role="menuitem" tabindex="-1" href="/news") Novedades
-									li(role="presentation")
-										a(role="menuitem" tabindex="-1" href="/advertisings") Publicidades
+						li(class="dropdown", ng-if="account")
+							a(id="dropAdmin", href="#", class="dropdown-toggle", data-toggle="dropdown", aria-haspopup="true", role="button", aria-expanded="false")
+								span Administracion
+								span(class="caret")
+							ul(class="dropdown-menu" role="menu" aria-labelledby="dropAdmin")
+								li(role="presentation")
+									a(role="menuitem" tabindex="-1" href="/teams") Equipos
+								li(role="presentation")
+									a(role="menuitem" tabindex="-1" href="/tournaments") Torneos
+								li(role="presentation")
+									a(role="menuitem" tabindex="-1" href="/chronicles") Crónicas
+								li(role="presentation")
+									a(role="menuitem" tabindex="-1" href="/turns") Turnos
+								li(role="presentation")
+									a(role="menuitem" tabindex="-1" href="/fields") Canchas
+								li(role="presentation")
+									a(role="menuitem" tabindex="-1" href="/suspensions") Suspensiones
+								li(role="presentation")
+									a(role="menuitem" tabindex="-1" href="/news") Novedades
+								li(role="presentation")
+									a(role="menuitem" tabindex="-1" href="/advertisings") Publicidades
 					ul(class="nav navbar-nav navbar-right")
-						li(class="")
+						li(ng-if="!account")
 							a(id="chroniclesButton", href="/login")
 								span Entrar
-	div(class="col-md-12 page_header")
-		div(class="col-md-6 col-xs-6")
-			h3 Altos del paracao
-		div(class="col-md-6 col-xs-6")
-			div(ng-controller="HeaderAdvertisingsController", class="pull-right")
-				include partials/advertisings/header.jade
+	div(ng-controller="LeagueController", class="page_header col-md-6")
+		div(class="col-md-4 ")
+			img(ng-if="league.logo_image", class="media-object" src="/photos/league/{{league._id}}/{{league.logo_image.filename}}" alt="Copa" style="max-width:100px;max-height:100px;")
+			img(ng-if="!league.logo_image", class="media-object" src="/img/agolear.png" alt="Agolear.com" style="max-width:100px;max-height:100px;")
+		div(class="col-md-8 ") 
+			h3 {{league.name}} 
+			p {{league.slogan}} 
+	div(class="col-md-6 col-xs-10 page_header" , class="pull-right")
+		div(ng-controller="HeaderAdvertisingsController", id="header_advertisings")
+			include partials/advertisings/header.jade
 	div(class="col-md-3")
-		div(class="breadcrumb")
-			ul
-				li(ng-if="tournament")
-					a( href="/tournaments/{{tournament._id}}") Torneo
-				li(ng-if="zone")
-					a( href="/zones/{{zone._id}}") Zona
-				li(ng-if="matchday")
-					a( href="/matchdays/{{matchday._id}}") Fecha
-				li(ng-if="match")
-					a(href="/matches/{{match._id}}") Partido
-				li()
-					a(href="/advertisings/add") Publicidades
 		div(ng-show="tournament_stats.id", ng-controller="ScorersAndOthersController")
 			ul(class="nav nav-tabs")
 				li(role="presentation", class="active")
@@ -95,9 +86,7 @@ block body
 							td
 								span {{team.other_goals}}
 				div(role="tabpanel", class="tab-pane active" ,id="top_scorers")
-			
-						
-		div(ng-controller="SidebarAdvertisingsController")
+		div(ng-controller="SidebarAdvertisingsController", id="sidebar_advertisings")
 			include partials/advertisings/sidebar.jade
 	div(class="col-md-7")
 		div(ng-view)
@@ -107,27 +96,31 @@ block body
 	script(src='/bower_components/angular/angular.js')
 	script(src='/bower_components/angular-route/angular-route.js')
 	script(src='/bower_components/angular-sanitize/angular-sanitize.js')
+	script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+	script(src='/bower_components/html2canvas/build/html2canvas.min.js')
+	script(src='/bower_components/angular-native-picker/build/angular-datepicker.js')
 	script(src='/js/angulike.js')
 	script(src='/js/app.js')
 	script(src='/js/services.js')
 	script(src='/js/controllers.js')
 	script(src='/js/filters.js')
-	script(src='/js/lib/bootstrap/bootstrap.min.js')
+	script(src='/js/ellipsis.js')
 	script(src='/js/editor.js')
 	script(src='/js/index.js')
 	script(src="/bower_components/cropit/dist/jquery.cropit.min.js")
-	script(src='/js/jspdf/jspdf.js')
-	script(src='/js/jspdf/standard_font_metrics.js')
-	script(src='/js/jspdf/from_html.js')
-	script(src='/js/jspdf/split_text_to_size.js')
+	script(src='/js/lib/jspdf/jspdf.js')
+	script(src='/js/lib/jspdf/standard_font_metrics.js')
+	script(src='/js/lib/jspdf/table.js')
+	script(src='/js/lib/jspdf/split_text_to_size.js')
 	script(src='/js/underscore.js')
 	
 
 	//Css
 	link(rel='stylesheet', href='/bower_components/html5-boilerplate/css/normalize.css')
 	link(rel='stylesheet', href='/bower_components/html5-boilerplate/css/main.css')
-	link(rel='stylesheet', href='/css/bootstrap/bootstrap.min.css')
-	link(rel='stylesheet', href='/css/bootstrap/bootstrap-theme.min.css')
+	link(rel='stylesheet', href='/bower_components/angular-native-picker/build/themes/default.css')
+	link(rel='stylesheet', href='/bower_components/angular-native-picker/build/themes/default.date.css')
+	link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+	link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
 	link(rel='stylesheet', href='/css/editor.css')
 	link(rel='stylesheet', href='/css/app.css')
-	link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")

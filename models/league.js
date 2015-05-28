@@ -15,7 +15,6 @@ var LeagueSchema = new mongoose.Schema({
     slug	: { 
 				type: String,
 				trim: true,
-				required:true,
 				validate : [
                      function(v) { return validator.isAlpha(v.replace(/\s/g, '')); },
                      'Nombre invalido, no se aceptan numeros ni simbolos'
@@ -23,16 +22,10 @@ var LeagueSchema = new mongoose.Schema({
                 },
 	slogan	: { 
 				type: String,
-				trim: true,
-				required:true,
-				validate : [
-                     function(v) { return validator.isAscii(v.replace(/\s/g, '')); },
-                     'Nombre invalido'
-                 	]
+				trim: true
                 },
     email	: { 
     			type: String, 
-    			required: true,
     			validate : [
                      function(v) { return validator.isEmail(v.replace(/\s/g, '')); },
                      'Email inválido'
@@ -40,26 +33,16 @@ var LeagueSchema = new mongoose.Schema({
     		},
     introduction	: { 
 				type: String,
-				trim: true,
-				required:true,
-				validate : [
-                     function(v) { return validator.isAscii(v.replace(/\s/g, '')); },
-                     'Nombre invalido'
-                 	]
+				trim: true
                 },
     description	: { 
 				type: String,
-				trim: true,
-				validate : [
-                     function(v) { return validator.isAscii(v.replace(/\s/g, '')); },
-                     'Nombre invalido'
-                 	]
+				trim: true
                 },
     tournaments : [{ type: mongoose.Schema.ObjectId, ref: 'Tournament' }],
-	user		: { type: mongoose.Schema.ObjectId, ref: 'User' },
     images      : [ImageSchema],
 	created    	: {type: Date, default: Date.now },
 	modified	: {type: Date, default: Date.now }
 });
-
+exports.Schema = LeagueSchema;
 exports.LeagueModel = mongoose.model('League', LeagueSchema);

@@ -46,6 +46,7 @@
     "shelljs": "^0.2.6",
     "socket.io": "~0.9.16",
     "underscore": "^1.6.0",
-    "validator": "~3.18.0"
+    "validator": "~3.18.0",
+    "debug": "*"
   }
 }

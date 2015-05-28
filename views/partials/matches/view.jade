@@ -1,9 +1,9 @@
 include admin_menu
-div(class="result col-md-12")
-	include partial_view.jade
-
+div(class="panel panel-default  col-md-12 pull-right")
+	div(class="panel-body")
+		include partial_view.jade
 div(class="incidents match_summary col-md-12")
-	h3 Resumen
+	h4 Resumen
 	div(class="local col-md-6")
 		ul
 			-var role = "local"
@@ -11,10 +11,14 @@ div(class="incidents match_summary col-md-12")
 				span 
 					img(src="/img/pelota.png", style="width:20px")
 					span {{goal.player.name}} {{goal.player.last_name}}
+						span(ng-if="goal.own_goal") (ec)
 					span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true", ng-click="removeGoal('local', goal._id)")
 			li(ng-repeat="incident in match.local_incidents")
 				span(ng-if="incident.incident_type == 'Amonestación'" class="animate-if")
 					img(src="/img/tarjamarilla.png" , style="width:20px")
+				span(ng-if="incident.incident_type == 'Doble Amonestación'" class="animate-if")
+					img(src="/img/tarjamarilla.png" , style="width:15px")
+					img(src="/img/tarjamarilla.png" , style="width:15px")
 				span(ng-if="incident.incident_type == 'Expulsión'" class="animate-if")
 					img(src="/img/tarjroja.png" , style="width:20px")
 				span {{incident.player.name}} {{incident.player.last_name}}
@@ -22,7 +26,7 @@ div(class="incidents match_summary col-md-12")
 			li(ng-repeat="suspension in match.local_suspensions")
 				span
 					img(src="/img/suspension.png", style="width:20px")
-				span {{suspension.player.name}} {{suspension.player.last_name}}
+				span {{suspension.player.name}} {{suspension.player.last_name}} ({{suspension.number_of_matches}})
 				span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="remove('local', suspension._id)")
 	div(class="visitor col-md-6")
 		ul
@@ -31,19 +35,25 @@ div(class="incidents match_summary col-md-12")
 				span 
 					img(src="/img/pelota.png", style="width:15px")
 					span {{goal.player.name}} {{goal.player.last_name}}
+						span(ng-if="goal.own_goal") (ec)
 					span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="removeGoal('visitor', goal._id)")
 			li(ng-repeat="incident in match.visitor_incidents")
 				span(ng-if="incident.incident_type == 'Amonestación'" class="animate-if")
 					img(src="/img/tarjamarilla.png" , style="width:20px")
+				span(ng-if="incident.incident_type == 'Doble Amonestación'" class="animate-if")
+					img(src="/img/tarjamarilla.png" , style="width:15px")
+					img(src="/img/tarjamarilla.png" , style="width:15px")
 				span(ng-if="incident.incident_type == 'Expulsión'" class="animate-if")
 					img(src="/img/tarjroja.png" , style="width:20px")
 				span {{incident.player.name}} {{incident.player.last_name}}
-				span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true", ng-click="removeIncident('visitor', incident._id)")
+				if(RolesHelper.admin(user))
+					span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true", ng-click="removeIncident('visitor', incident._id)")
 			li(ng-repeat="suspension in match.visitor_suspensions")
 				span
 					img(src="/img/suspension.png", style="width:20px")
 				span {{suspension.player.name}} {{suspension.player.last_name}} ({{suspension.number_of_matches}})
-				span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="remove('visitor', suspension._id)")
+				if(RolesHelper.admin(user))
+					span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="remove('visitor', suspension._id)")
 if(RolesHelper.admin(user))
 	div(class="panel panel-default col-md-12 ")
 		div(class=" panel-body button_summary")
@@ -69,28 +79,48 @@ if(RolesHelper.admin(user))
 							span Perdido para ambos
 						td
 							input(class="",  ng-model='match.lost_for_both', ng-change="submitLostForBoth(match.lost_for_both)", name='name', id="name", type='checkbox')
+					tr
+						td
+							span Jugador Del Partido
+							br
+							select(class="",  ng-model='match.mvp', ng-change="submitMVP(match.mvp)", name='mvp', id="mvp")
+								optgroup(label="{{match.local_team_name}}")
+									option(ng-repeat=" player in match.local_players | orderBy:['name' ,'last_name']", value="{{player._id}}")  {{player.name}} {{player.last_name}}
+								optgroup(label="{{match.visitor_team_name}}")
+									option(ng-repeat=" player in match.visitor_players| orderBy:['name' ,'last_name']", value="{{player._id}}") {{player.name}} {{player.last_name}}
 			div(class="visitor col-md-4")
 				-var role = "visitor"
 				include ../goals/form.jade
 				include ../incidents/form.jade
 				include ../suspensions/form.jade
 div(class="col-md-12")
-	h2 Horario y Cancha
-	div(class="time")
-		span {{match.turn[0].field[0].name}}
-	div(class="hour")
-		span {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
-	hr
+	div(class="col-md-6 pull-left")
+		h4 Horario y Cancha
+		div(class="time")
+			span {{match.turn[0].field[0].name}}
+		div(class="hour")
+			span {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
+	div(class="col-md-6  pull-right")
+		h4 Jugador del Partido
+		span(ng-if="mvp_player.cara_image")
+			img(ng-src="/photos/player/{{mvp_player._id}}/{{mvp_player.cara_image.filename}}", style="max-width:50px;max-height:90px")
+		span(ng-if="!mvp_player.cara_image")
+			img(ng-src="/img/caricatura.jpg" , style="max-width:50px;max-height:90px")
+		a(href="/players/{{mvp_player._id}}") {{mvp_player.last_name}} {{mvp_player.name}}
 div(class="col-md-12")
-	h2 Jugadores
+	h4 Jugadores
 	div(class="players")
 		div(class="local col-md-6")
 			ul
 				li(ng-repeat="player in match.local_players")
 					a(href="/players/{{player._id}}")
 						span {{player.name}} {{player.last_name}}
+					if(RolesHelper.admin(user))
+						span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="removePlayer('local' , player._id)")
 		div(class="visitor col-md-6")
 			ul
 				li(ng-repeat="player in match.visitor_players")
 					a(href="/players/{{player._id}}")
 						span {{player.name}} {{player.last_name}}
+					if(RolesHelper.admin(user))
+						span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="removePlayer('visitor', player._id)")

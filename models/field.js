@@ -15,4 +15,5 @@ var FieldSchema = new mongoose.Schema({
 
 
 exports.FieldReducedSchema = FieldReducedSchema;
+exports.Schema = FieldSchema;
 exports.FieldModel = mongoose.model('Field', FieldSchema);

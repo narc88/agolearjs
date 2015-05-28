@@ -1,7 +1,14 @@
 div(class="media")
 	a(class="pull-left", href="#")
-		img(class="media-object" src="..." alt="...")
+		img(ng-if="tournament.copa_image", class="media-object" src="/photos/tournament/{{tournament._id}}/{{tournament.copa_image.filename}}" alt="Copa" style="max-width:80px;max-height:160px;")
+		img(ng-if="!tournament.copa_image", class="media-object" src="/img/index.jpeg" alt="Copa" style="max-width:80px;max-height:160px;")
 	div(class="media-body")
 		h4(class="media-heading")
 			a(href="/tournaments/{{tournament._id}}")  {{tournament.name}}
-		span Equipos: {{tournament.number_of_teams}} |  Zonas: {{tournament.number_of_zones}} |  Tipo: {{tournament.tournament_type}}
+		span Equipos: {{tournament.number_of_teams}} |  
+		span Zonas: {{tournament.number_of_zones}} |  
+		span Tipo: {{tournament_types[tournament.tournament_type-1]}} |
+		span(ng-if="tournament.double_league_match") Ida y Vuelta en Liga |
+		span(ng-if="!tournament.double_league_match") Solo un partido en Liga 
+		span(ng-if="tournament.double_playoff_match") Ida y Vuelta en Eliminatoria
+br
