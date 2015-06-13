@@ -12,6 +12,14 @@ module.exports = function(app){
 		});
 	});
 
+	app.get('/api/zoneByMatchday/:id', function(req, res, next){
+		var models = Models(req.tenant);
+		models.zone.findOne({'matchdays._id':req.params.id}).exec( function(err, zone){
+			if (err) throw err;
+			res.send({'zone_id' :zone._id});
+		});
+	});
+
 	app.get('/api/getZones', function(req, res, next){
 		var models = Models(req.tenant);
 		var excluded = [];
@@ -145,7 +153,16 @@ module.exports = function(app){
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
 			req.body.data.dispute_day = new Date(req.body.data.dispute_day).toISOString();
-			res.send(req.body.data);
+			var callback2 = function(err, numAffected, status){
+				if(err) throw err;
+				console.log(numAffected)
+				req.body.data.dispute_day = new Date(req.body.data.dispute_day).toISOString();
+				res.send(req.body.data);
+			}
+			models.match.update(
+			    { "matchday": req.body.data.matchdayId}, 
+			    {$set: {"start_datetime" : req.body.data.dispute_day}},{multi:true}, callback2
+			)
 		}
 		models.zone.update(
 		    { "matchdays._id": req.body.data.matchdayId}, 
@@ -192,12 +209,12 @@ module.exports = function(app){
 				    	num_matchdays = participations.length - 1;
 				    }
 				    for (var j = 0; j < num_matchdays; j++) {
-					    var matchday = new MatchdayModel();
+					    var matchday = new models.matchday();
 					    matchday.matchday_number = j+1;
 					    var today = new Date();
 					   	matchday.dispute_day =  today.setDate(today.getDate()+(7*(j+1)));
 					    for (var i = 0; i < num_matches; i++) {
-				            var match = new MatchModel();
+				            var match = new models.match();
 				            match.visitor_team = participations[num_matchdays-i].team;
 				            match.local_team = participations[i].team;
 				            match.local_team_name = participations[i].team_name;
@@ -253,6 +270,14 @@ module.exports = function(app){
 					if(zone.matchdays.length > 0){
 						res.send({'error':'Esta zona ya tiene fixture'})
 					}else{
+						var callback = function(err, numAffected, status){
+							if(err) throw err;
+							console.log(numAffected);
+							console.log('Saved participations in playoff')
+						}
+						models.zone.update(
+						    { _id: zone._id }, 
+						    {$pushAll: {'participations': classiffied_teams}}, callback)
 						var match_list = [];
 						var participations = classiffied_teams;
 						var num_matches, num_matchdays;
@@ -283,8 +308,8 @@ module.exports = function(app){
 					    for (var i = 0; i < num_matches; i++) {
 				            var match = new models.match();
 
-				            match.visitor_team = participations[participations.length-i-1].team_id;
-				            match.local_team = participations[i].team_id;
+				            match.visitor_team = participations[participations.length-i-1].team;
+				            match.local_team = participations[i].team;
 				            match.local_team_name = participations[i].team_name;
 				            match.visitor_team_name = participations[participations.length-i-1].team_name;
 				            match.matchday = matchday._id
@@ -292,9 +317,6 @@ module.exports = function(app){
 
 				            match.save(function(err){
 				            	if(err) throw err;
-
-				            	console.log("match")
-				            	console.log(match)
 				            });
 					    	matchday.matches.push(match._id);
 					    	
@@ -309,7 +331,7 @@ module.exports = function(app){
 						    }
 						    round_number++;
 						    var matchday = new models.matchday();
-						    var round = (num_matches / 2 )+ 'De final';
+						    var round = num_matches + 'De final';
 						    if(num_matches == 16){
 						    	round = '16vos de final';
 						    }else if(num_matches == 8){
@@ -326,13 +348,19 @@ module.exports = function(app){
 						    var today = new Date();
 						   	matchday.dispute_day =  today.setDate(today.getDate()+(7*(round_number+1)));
 						   	var new_match_list = [];
+							console.log('Lista');
+					        console.log(match_list);
 						    for (var i = 0; i < num_matches; i++) {
 					            var match = new models.match();
 					            if( match_list[i*2]){
 					            	match.visitor_son = match_list[i*2];
+					            	console.log('Match');
+					            	console.log(match_list[i*2]);
 					            }
 					            if( match_list[(i*2) +1 ]){
 					            	match.local_son = match_list[(i*2) +1 ];
+					            	console.log('Match');
+					            	console.log(match_list[(i*2) +1]);
 					            }
 					            new_match_list.push(match._id);
 					            match.matchday = matchday._id
@@ -343,7 +371,6 @@ module.exports = function(app){
 						    	matchday.matches.push(match._id);
 						    	
 						    }
-						    console.log(match_list);
 						    match_list = new_match_list;
 						    zone.matchdays.push(matchday);
 						    
@@ -418,7 +445,7 @@ module.exports = function(app){
 		var matchdays = zone.matchdays;
 		console.log(matchdays.length)
 		console.log('Participant'+participant_id)
-		models.match.find({ "lost_for_both": false, "matchday" : {$in :  matchdays }, $or: [ {"visitor_team" : participant_id } , {"local_team" : participant_id }]}).exec( function(err, matches){
+		models.match.find({ 'played':true, "lost_for_both": false, "matchday" : {$in :  matchdays }, $or: [ {"visitor_team" : participant_id } , {"local_team" : participant_id }]}).exec( function(err, matches){
 			if (err) throw err;
 			console.log(matches.length)
 			var points = 0;
@@ -453,7 +480,8 @@ module.exports = function(app){
 			}
 
 			models.zone.update(
-			    { "participations.team": participant_id}, 
+			    { '_id': zone._id,
+			    	"participations.team": participant_id}, 
 			    {
 			    	$set: {
 			    		"participations.$.won" : won_matches,

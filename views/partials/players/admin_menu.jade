@@ -5,7 +5,7 @@ div(class="btn-group pull-right")
 		span(class="caret")
 	ul(class="dropdown-menu admin_menu", role="menu")
 		li
-			a(data-target="#editPlayer",data-toggle="modal") Editar
+			a(data-target="#editPlayer",data-toggle="modal", ng-click="editPlayer(player)") Editar
 		-model = "player" 
 		li(ng-repeat="type in imageTypes.#{model}")
 			a(href="/images/add/#{model}/{{player._id}}/{{type}}") Agregar imagen {{type}}

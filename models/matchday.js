@@ -8,8 +8,7 @@ var MatchdaySchema  =  exports.MatchdaySchema = new mongoose.Schema({
 				required:true
             },
      matchday_name   : { 
-                type: String,
-                required:true
+                type: String
             },
     dispute_day     : {type: Date, default: Date.now },
     matches     : [{type: mongoose.Schema.ObjectId, ref: 'Match' }],

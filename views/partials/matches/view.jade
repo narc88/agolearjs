@@ -1,4 +1,5 @@
 include admin_menu
+a(ng-href="/matches?matchday={{match.matchday}}") Ir a la fecha
 div(class="panel panel-default  col-md-12 pull-right")
 	div(class="panel-body")
 		include partial_view.jade
@@ -96,9 +97,11 @@ if(RolesHelper.admin(user))
 div(class="col-md-12")
 	div(class="col-md-6 pull-left")
 		h4 Horario y Cancha
-		div(class="time")
+		div(ng-if="!match.turn[0]")
+			p No establecido
+		div(class="time" ng-if="match.turn[0]")
 			span {{match.turn[0].field[0].name}}
-		div(class="hour")
+		div(class="hour" ng-if="match.turn[0]")
 			span {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
 	div(class="col-md-6  pull-right")
 		h4 Jugador del Partido
@@ -112,6 +115,8 @@ div(class="col-md-12")
 	div(class="players")
 		div(class="local col-md-6")
 			ul
+				li(ng-if="match.local_players.length == 0")
+					a(ng-click="addPlayers(match.local_team._id, match._id, match.matchday, 'local')") Agregar Jugadores de la Lista de buena fe
 				li(ng-repeat="player in match.local_players")
 					a(href="/players/{{player._id}}")
 						span {{player.name}} {{player.last_name}}
@@ -119,6 +124,8 @@ div(class="col-md-12")
 						span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="removePlayer('local' , player._id)")
 		div(class="visitor col-md-6")
 			ul
+				li(ng-if="match.visitor_players.length == 0")
+					a(ng-click="addPlayers(match.visitor_team._id, match._id, match.matchday, 'visitor')") Agregar Jugadores de la Lista de buena fe
 				li(ng-repeat="player in match.visitor_players")
 					a(href="/players/{{player._id}}")
 						span {{player.name}} {{player.last_name}}

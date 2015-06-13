@@ -8,7 +8,7 @@ if(RolesHelper.admin(user))
 			li
 				a(href='/chronicles?zone={{zone._id}}') Crónicas
 			li(ng-if="zone.matchdays.length == 0")
-				a(href='/zones/{{zone._id}}/create_fixture') Crear Fixture
+				a(ng-click="generateFixture(zone)") Crear Fixture
 			li()
 				a(href='/zones/{{zone.tournament}}/classified') Ver clasificados
 			li(ng-if="zone.participations.length == 0")

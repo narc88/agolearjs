@@ -15,6 +15,14 @@ module.exports = function(app){
 		});
 	});
 
+	app.get('/api/advertisings/admin', function(req, res, next){
+		var models = Models('admin');
+		models.advertising.find(req.query).exec( function(err, advertisings){
+			if (err) throw err;
+			res.send(advertisings);
+		});
+	});
+
 	app.get('/api/advertisings/:id', function(req, res, next){
 		var models = Models(req.tenant);
 		models.advertising.findOne({ _id: req.params.id }).exec( function(err, advertising){

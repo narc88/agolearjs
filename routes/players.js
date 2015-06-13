@@ -18,11 +18,13 @@ module.exports = function(app){
 		var models = Models(req.tenant);
 
 		var queryArray = req.query._id.split(',');
-		if(typeof queryArray === 'Array'){
+		if(req.query._id.length > 10){
 			models.player.find({"_id" : {$in:  queryArray} }, 'name last_name').exec( function(err, players){
 				if (err) throw err;
 				res.send(players);
 			});
+		}else{
+			res.send([])
 		}
 		
 	});

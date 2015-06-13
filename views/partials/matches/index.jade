@@ -1,3 +1,4 @@
+a(ng-if="matches.length > 0", ng-click="getZone()") Ir a la zona
 div(ng-repeat="match in matches") 
 	div(class="panel panel-default")
 		div(class="panel-heading")
@@ -10,15 +11,15 @@ div(ng-repeat="match in matches")
 					a(href="/teams/{{match.local_team._id}}", class="content_valign") {{match.local_team.name}} 
 				div(class="col-md-4")
 					a(href="#", class="thumbnail")
-						img(ng-if="!isUndefinedOrNull(player.logo_image)", ng-src="/photos/team/{{match.local_team._id}}/{{team.logo_image.filename}}", width="100px" ,style="width:100px,max-height:100px;")
-						img(ng-if="isUndefinedOrNull(player.logo_image)", ng-src="/img/logoteam.png", width="100px" ,style="width:100px,max-height:100px;")
+						img(ng-if="!isUndefinedOrNull(match.local_team.logo_image)", ng-src="/photos/team/{{match.local_team._id}}/{{match.local_team.logo_image.filename}}", width="100px" ,style="width:100px,max-height:100px;")
+						img(ng-if="isUndefinedOrNull(match.local_team.logo_image)", ng-src="/img/logoteam.png", width="100px" ,style="width:100px,max-height:100px;")
 			div(class="col-md-2 v-center")
 				div(class="content_valign")
 					a(href="/matches/{{match._id}}") {{match.local_goals.length}} - {{match.visitor_goals.length}} 
 			div(class="col-md-5 visitor_team")
 				div(class="col-md-4")
 					a(href="#", class="thumbnail")
-						img(ng-if="!isUndefinedOrNull(player.logo_image)",ng-src="/photos/team/{{match.visitor_team._id}}/{{team.logo_image.filename}}", width="100px" ,style="width:100px,max-height:100px;")
-						img(ng-if="isUndefinedOrNull(player.logo_image)", ng-src="/img/logoteam.png", width="100px" ,style="width:100px,max-height:100px;")
+						img(ng-if="!isUndefinedOrNull(match.visitor_team.logo_image)",ng-src="/photos/team/{{match.visitor_team._id}}/{{match.visitor_team.logo_image.filename}}", width="100px" ,style="width:100px,max-height:100px;")
+						img(ng-if="isUndefinedOrNull(match.visitor_team.logo_image)", ng-src="/img/logoteam.png", width="100px" ,style="width:100px,max-height:100px;")
 				div(class="col-md-8 v-center")
 					a(href="/teams/{{match.visitor_team._id}}", class="content_valign") {{match.visitor_team.name}}

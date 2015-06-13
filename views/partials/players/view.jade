@@ -13,14 +13,14 @@ div(ng-show="player", class="col-md-12")
 				h4
 					a(href="/players/{{player._id}}") {{player.last_name}} {{player.name}}
 				p
-					span Fecha de nacimiento: {{player.birthdate | date:'yyyy-MM-dd'}}
-					span Dni: {{player.dni}}
-					span Grupo Sanguíneo: {{player.blood_type }}
+					p Fecha de nacimiento: {{player.birthdate | date:'yyyy-MM-dd' || '-'}}
+					p Dni: {{player.dni || '-'}}
+					p Grupo Sanguíneo: {{player.blood_type || '-'}}
 div(class="col-md-7 pull-left")
 	table(class="table table-responsive table-striped" , style="text-align:center")
 		tr
 			th Goles
-			td aaaaa
+			td {{player.goals.length}}
 		tr
 			th Jugador del Partido
 			td {{mvps.length}}

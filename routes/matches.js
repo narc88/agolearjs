@@ -174,13 +174,14 @@ module.exports = function(app){
 						if(players_suspensions.indexOf(suspensions[i].player)<0){
 							if(suspensions[i].matches.indexOf(match._id) < 0){
 								suspensions[i].matches.push(match._id);
+								console.log(suspensions[i].player + 'Acumula nuevo partido a su suspension')
 								if(suspensions[i].matches.length >= suspensions[i].number_of_matches){
 									suspensions[i].accomplished = true;
 								}
 								players_suspensions.push(suspensions[i].player)
 								suspensions[i].save(function(err){
 									if(err) throw err;
-									console.log('Suspension')
+									console.log('Suspension updated for player ')
 								});
 							}
 						}
@@ -188,7 +189,40 @@ module.exports = function(app){
 					match.played = true;
 					match.save(function(err){
 						if(err) throw err;
-						res.send(match);
+						models.match.findOne({$or :[{ 'visitor_son': match._id },{ 'local_son': match._id}]}).exec( function(err, playoff_match){
+							if (err) throw err;
+							if(!playoff_match){
+								res.send(match)
+							}else{
+								var winner_id = '';
+								var winner_name = '';
+
+								if(match.winner){
+									if( match.winner.equals(match.visitor_team)){
+										winner_id = match.visitor_team;
+										winner_name = match.visitor_team_name;
+									}else if(match.winner.equals(match.local_team)){
+										winner_id = match.local_team;
+										winner_name = match.local_team_name;
+									}
+									
+									if( playoff_match.visitor_son.equals(match._id)){
+										playoff_match.visitor_team = winner_id;
+										playoff_match.visitor_team_name = winner_name;
+									}
+									if( playoff_match.local_son.equals(match._id)){
+										playoff_match.local_team = winner_id;
+										playoff_match.local_team_name = winner_name;
+									}
+
+								}
+								playoff_match.save(function(err){
+									if(err) throw err;
+									res.send(match)
+								});
+							}
+							
+						});
 					});
 				});
 				
@@ -305,8 +339,11 @@ module.exports = function(app){
 					if(err) throw err;
 					res.send(match);
 				}
-				models.player.update({'_id': goal.player}, {$push: { 'goals' : goal}}, callback)
-				
+				if(goal.own_goal){
+					res.send(match);
+				}else{
+					models.player.update({'_id': goal.player}, {$push: { 'goals' : goal}}, callback)
+				}
 			})
 		
 		});
@@ -394,7 +431,7 @@ module.exports = function(app){
 						};
 						console.log("Tarjetas amarillas en el torneo" + yellow_card)
 						if(((yellow_card > 0) && (yellow_card % tournament.yellow_card_limit) === 0 )|| ((incident.incident_type == "Expulsión") || (incident.incident_type == "Doble Amonestación")) ){
-							var suspension = new SuspensionModel();
+							var suspension = new models.suspension();
 							suspension.player = incident.player;
 							suspension.match = match._id;
 							suspension.reason = incident.incident_type;
@@ -508,5 +545,49 @@ module.exports = function(app){
 			}
 		}
 		
+	});
+
+	app.post('/sapi/matches/addPlayers', function(req, res){
+		//{"team_id" : team_id,"match_id" : match_id,"matchday_id" : matchday_id,"role" : role}
+		console.log(req.body)
+		var models = Models(req.tenant);
+		
+		models.zone.findOne({'matchdays._id': req.body.matchday_id}).exec( function(err, playoff_zone){
+			if(err) throw err;
+			console.log(playoff_zone)
+			console.log('tournament'+playoff_zone.tournament)
+			models.zone.findOne({'tournament' :playoff_zone.tournament, 'participations.team': req.body.team_id}).exec( function(err, zone){
+				if(err) throw err;
+				console.log(zone)
+				var team_id = mongoose.Types.ObjectId(req.body.team_id);
+				var players = [];
+				for (var i = 0; i < zone.participations.length; i++) {
+					console.log(team_id)
+					console.log(zone.participations[i].team)
+					if(zone.participations[i].team == req.body.team_id){
+						players = zone.participations[i].players;
+						console.log(players)
+					}
+				};
+				var callback = function(err, numAffected, status){
+					if(err) throw err;
+					console.log(numAffected)
+					res.send(players);
+				}
+
+				if(req.body.role === "local"){
+					models.match.update(
+				    { _id: req.body.match_id}, 
+				    {$addToSet: {'local_players':{$each: players}}}, callback)
+				}else{
+					if(req.body.role === "visitor"){
+						models.match.update(
+					    { _id: req.body.match_id}, 
+					    {$addToSet: {'visitor_players':{$each: players}}}, callback)
+					}			
+				}
+					
+			});
+		});
 	});
 }

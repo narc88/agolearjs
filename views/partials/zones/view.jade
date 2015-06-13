@@ -39,7 +39,6 @@ div(class="tab-content")
 			table.table.table-condensed.table-hover
 				tr
 					th Estado
-					th Fecha Numero
 					th Fecha de disputa
 					th Ver partidos
 					if(RolesHelper.admin(user))
@@ -54,7 +53,6 @@ div(class="tab-content")
 					td {{ matchday.dispute_day | date:'yyyy-MM-dd' }}
 						if(RolesHelper.admin(user))
 							button(ng-if="!matchday.closed", ng-click="selectMatchday(matchday._id)",data-toggle="modal",data-target="#submitMatchdayDisputeDay") Cambiar
-					td {{matchday.matchday_number}}
 					td
 						a(ng-click="openMatchday(matchday)",data-toggle="modal",data-target="#openMatchday") Ver Partidos
 					if(RolesHelper.admin(user))
@@ -91,7 +89,7 @@ div(class="tab-content")
 	div(role="tabpanel", class="tab-pane" ,id="participations")
 		include ../participations/index.jade
 include ../socials/shareBar.jade
-div(class="modal fade", tabindex="-1", role="dialog", id="openMatchday", aria-hidden="true" )
+div(class="modal", tabindex="-1", role="dialog", id="openMatchday", aria-hidden="true" )
 	div(class="modal-dialog")
 		div(class="modal-content")
 			div(class="modal-header")

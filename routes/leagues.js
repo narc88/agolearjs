@@ -21,10 +21,11 @@ module.exports = function(app){
 		});
 	});
 
-	app.get('/api/myleague/', function(req, res, next){
+	app.get('/api/myleague', function(req, res, next){
 		var models = Models(req.tenant);
-		models.league.findOne({ 'slug': req.tenant }).exec( function(err, league){
+		models.league.findOne({ 'slug': 'ligaaltosdelparacao' }).exec( function(err, league){
 			if (err) throw err;
+			console.log(league)
 			res.send(league);
 		});
 	});

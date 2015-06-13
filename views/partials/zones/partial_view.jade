@@ -3,13 +3,13 @@ div(class="panel panel-default")
 		a(href="/zones/{{zone._id}}") Zona: {{zone.name}}
 	div(class="panel-body")
 		span {{zone.participations.length}} Equipos | {{zone.matchdays.length}} Fechas
-		button(class="btn btn-info pull-right",data-target="#selectTurns",type="button",data-toggle="modal",ng-click="selectTurnsForZone(zone)")
-			span Seleccionar Horarios
-		button(class="btn btn-info pull-right",ng-click="generateFixture(zone)", ng-if="zone.matchdays.length == 0")
-			span Generar fixture
-		button(class="btn btn-info pull-right",ng-click="getClassified(zone.tournament)", ng-if="(canClassiffy()) && (zone.zone_type == 'Eliminatoria')")
-			span Obtener clasificados
-		
+		if(RolesHelper.admin(user))
+			button(class="btn btn-info pull-right",data-target="#selectTurns",type="button",data-toggle="modal",ng-click="selectTurnsForZone(zone)")
+				span Seleccionar Horarios
+			button(class="btn btn-info pull-right",ng-click="generateFixture(zone)", ng-if="zone.matchdays.length == 0")
+				span Generar fixture
+			button(class="btn btn-info pull-right",ng-click="getClassified(zone.tournament)", ng-if="(canClassiffy()) && (zone.zone_type == 'Eliminatoria')")
+				span Obtener clasificados
 		button(class="btn btn-default pull-right", ng-if="zone.matchdays.length == 0")
 			a(href="/zones/{{zone._id}}")
 				span Ver Zona

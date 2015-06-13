@@ -22,7 +22,7 @@ form( name="addPlayer", ng-submit="submitPlayer(form)")
 	.form-group
 		label(for="birthdate") Fecha de nacimiento (Ejemplo: 1999-06-25 / AAAA-MM-DD)
 		.div(class='input-group date', id='datetimepicker1')
-			input(ng-model='form.player.birthdate',type='date', class="form-control")
+			input(ng-model='form.player.birthdate',type="text", pick-a-date="date",pick-a-date-options="datePickerOptions", class="form-control")
 			span(class="input-group-addon")
 				span(class="glyphicon glyphicon-calendar")
 	.form-group

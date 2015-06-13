@@ -79,7 +79,7 @@ module.exports = function(app){
 		models.match.findOne({ _id: req.params.id }).exec( function(err, match){
 			if (err) throw err;
 			if(match){
-				var suspension = new SuspensionModel(req.body);
+				var suspension = new models.suspension(req.body);
 				suspension.match = match._id;
 				if(match_role === "local_suspension"){
 					match.local_suspensions.push(suspension._id);
