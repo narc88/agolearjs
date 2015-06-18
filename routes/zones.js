@@ -113,7 +113,7 @@ module.exports = function(app){
 		var replacer = mongoose.Types.ObjectId(req.body.data.replacer_team);
 		models.team.findOne({ _id: replacer }).exec( function(err, team){
 			if (err) throw err;
-			var participation = new ParticipationModel();
+			var participation = new models.participation();
 			participation.team = team._id;
 			participation.team_name = team.name;
 
@@ -148,7 +148,7 @@ module.exports = function(app){
 		});
 	});
 
-	app.post('/api/zones/matchdays/dispute_day',function(req, res, next){
+	app.post('/sapi/zones/matchdays/dispute_day',function(req, res, next){
 		var models = Models(req.tenant);
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
@@ -188,7 +188,7 @@ module.exports = function(app){
 	});
 
 	//Create matchdays (tournament structure)
-	app.post('/api/zones/:id/create_league_fixture', function(req, res){
+	app.post('/sapi/zones/:id/create_league_fixture', function(req, res){
 		var models = Models(req.tenant);
 		models.tournament.findById(req.body.tournament_id).exec( function(err, tournament){
 			models.zone.findById(req.params.id).exec( function(err, zone){
@@ -255,7 +255,7 @@ module.exports = function(app){
 		});
 	});
 	//Create playoff fixture
-	app.post('/api/zones/:id/create_playoff_fixture', function(req, res){
+	app.post('/sapi/zones/:id/create_playoff_fixture', function(req, res){
 		
 		//Lista de id de equpos clasificados.
 		//req.body.classiffied_teams
@@ -544,6 +544,32 @@ module.exports = function(app){
 				    });
 			
 		});
+	});
+
+	app.put('/sapi/zones/setMatchdayAsClosed', function(req, res){
+		var models = Models(req.tenant);
+		var callback = function(err, numAffected, status){
+			if(err) throw err;
+			console.log(numAffected)
+			res.send(true);
+		}
+		var query = req.body.status
+		models.zone.update(
+		    { 'matchdays._id': req.body.matchday_id}, 
+		    {$set: {"matchdays.$.closed" : query}}, callback)	
+	});
+
+	app.put('/sapi/zones/setMatchdayAsPlayed', function(req, res){
+		var models = Models(req.tenant);
+		var callback = function(err, numAffected, status){
+			if(err) throw err;
+			console.log(numAffected)
+			res.send(true);
+		}
+		var query = req.body.status
+		models.zone.update(
+		    { 'matchdays._id': req.body.matchday_id}, 
+		    {$set: {"matchdays.$.played" : query}}, callback)	
 	});
 
 

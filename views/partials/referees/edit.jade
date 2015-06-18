@@ -1,0 +1,12 @@
+h3 Editar Arbitro
+form(name="addReferee", ng-submit="editReferee(addreferee)")
+	.form-group
+		label(for="name") Nombre
+		input(ng-model='form.referee.name', name='name', id="name", type='text', value="{{form.referee.name}}").form-control
+		div(ng-show="addreferee['name'].$error.mongoose", style="color: red") {{addreferee.name.$error.mongoose}}
+	.form-group
+		label(for="last_name") Apellido
+		input(ng-model='form.referee.last_name', name='last_name', id="last_name", type='text', value="{{form.referee.last_name}}").form-control
+		div(ng-show="addreferee['last_name'].$error.mongoose", style="color: red") {{addreferee.last_name.$error.mongoose}}
+	.form-group
+		input(type="submit", value="Guardar").btn.btn-primary

@@ -17,7 +17,7 @@
 		"cropit": "0.2",
 		"angular-sanitize": "~1.2.x",
 		"angular-bootstrap": "~0.12.1",
-		"angular-native-picker": "1.0.2",
+		"angularjs-datepicker": "*",
 		"html2canvas" : "*"
 	}
 }

@@ -1,9 +1,12 @@
 div(ng-repeat="match in selected_matchday.matches | orderBy:['turn[0].hour', 'turn[0].minute', 'turn[0].field[0].name']") 
 	div(class="panel panel-default")
 		div(class="panel-heading")
-			span(ng-if="match.turn[0]" , class="label")
-				a( href="/fields/{{match.turn[0].field[0]._id}}") {{match.turn[0].field[0].name}}
-			span(ng-if="match.turn[0]" , class="label label-primary") {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
+			span(ng-if="selected_matchday.closed")
+				span(ng-if="match.turn[0]" , class="label label-primary")
+					{{match.start_datetime | date:'yyyy-MM-dd' }}
+				span(ng-if="match.turn[0]" , class="label")
+					a( href="/fields/{{match.turn[0].field[0]._id}}") {{match.turn[0].field[0].name}}
+				span(ng-if="match.turn[0]" , class="label label-primary") {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
 		div(class="panel-body")
 			div(class="col-md-5 local_team v-center")
 				a(href="/teams/{{match.local_team._id}}", class="content_valign") {{match.local_team.name}} 
@@ -16,4 +19,17 @@ div(ng-repeat="match in selected_matchday.matches | orderBy:['turn[0].hour', 'tu
 				a(href="/teams/{{match.visitor_team._id}}", class="content_valign") {{match.visitor_team.name}}
 				img(ng-if="!isUndefinedOrNull(match.visitor_team.logo_image)", class="content_valign",ng-src="/photos/team/{{match.visitor_team._id}}/{{match.visitor_team.logo_image.filename}}", width="50px" ,style="width:50px,max-height:100px;")
 				img(ng-if="isUndefinedOrNull(match.visitor_team.logo_image)", class="content_valign", ng-src="/img/logoteam.png", width="50px" ,style="width:50px,max-height:50px;")
-				
+			if(RolesHelper.admin(user))
+				button(class="btn btn-primary", type="button", data-toggle="collapse", data-target="#matchCollapse{{match._id}}", aria-expanded="false", aria-controls="collapseExample") Cambiar Dia
+				div(class="collapse" id="matchCollapse{{match._id}}")
+					form( name="matchdispteday", ng-submit="submitMatchStartDate(match, matchdispteday)")
+						datepicker
+							input(type="text" ng-model="matchdispteday.dispute_day") 
+						.form-group
+							input(type="submit", value="Guardar").btn.btn-primary.btn-xs
+				button(class="btn btn-primary", type="button", data-toggle="collapse", data-target="#matchRefereeCollapse{{match._id}}", aria-expanded="false", aria-controls="collapseExample") Cambiar Dia
+				div(class="collapse" id="matchRefereeCollapse{{match._id}}")
+					form( name="referee", ng-submit="submitReferee(match, referee)")
+						input(type="text" ng-model="referee.referee_id") 
+						.form-group
+							input(type="submit", value="Guardar").btn.btn-primary.btn-xs

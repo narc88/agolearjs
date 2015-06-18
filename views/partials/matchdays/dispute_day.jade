@@ -6,9 +6,9 @@ div(class="modal fade", tabindex="-1", role="dialog", id="submitMatchdayDisputeD
 					span(aria-hidden="true")&times;
 				h4(class="modal-title", id="myModalLabel") Seleccionar nuevo día
 			div(class="modal-body")
-				form( name="changeDisputeDay", ng-submit="submitMatchdayDisputeDay(changeDisputeDay)")
-					input(type="text" pick-a-date="date" ng-model="dispute_day" pick-a-date-options="datePickerOptions") 
-					span {{ date }}
+				form( name="changeDisputeDay", ng-submit="submitMatchdayDisputeDay(match)")
+					datepicker
+						input(type="text" ng-model="dispute_day") 
 					.form-group
 						input(type="submit", value="Guardar").btn.btn-primary.btn-xs
 						button(type="button", class="btn btn-default btn-xs", data-dismiss="modal") Close

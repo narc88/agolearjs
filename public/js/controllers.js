@@ -222,8 +222,22 @@ function zones_add($scope, $http, $location) {
   };
 }
 
-function zones_view($scope, $http, $routeParams, $rootScope, $location) {
+function zones_view($scope, $http, $routeParams, $rootScope,$route, $location) {
  
+   $scope.setMatchdayAsClosed = function (matchday) {
+      $http.put('/sapi/zones/setMatchdayAsClosed', {"matchday_id" : matchday._id, 'status': matchday.closed}).
+        success(function(data) {
+        
+        });
+    };
+
+    $scope.setMatchdayAsPlayed = function (matchday) {
+      $http.put('/sapi/zones/setMatchdayAsPlayed', {"matchday_id" : matchday._id,  'status': matchday.played}).
+        success(function(data) {
+        
+        });
+    };
+
   
   $scope.generateFixture = function(zone){
     //Function to generate de fixture
@@ -359,7 +373,7 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
   };
 
   $scope.openMatchday = function(matchday){
-    $scope.selected_matchday = {};
+    $scope.selected_matchday = matchday;
 
     $http.get('/api/matches?matchday='+matchday._id).
       success(function(matches) {
@@ -392,10 +406,15 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
   
   $scope.removeTeamSuspension = function(team_id){
     if(confirm("¿Confirma que desea borrar la suspensión?")){
-       $http.delete('/sapi/teams/'+team_id+'/suspension/').
-      success(function(data) {
-        var index = $scope.zone.team_suspensions.indexOf(data);
-        $scope.zone.team_suspensions.splice(index, 1);
+      var participator = $.grep($scope.zone.participations, function(e){ return e.team == $scope.selected_team.team_id; })[0];
+      var players = [];
+      for (var i = 0; i < participator.players.length; i++) {
+        players.push( participator.players[i]._id);
+      };
+      $http.delete('/sapi/teams/'+team_id+'/suspension').
+        success(function(data) {
+          var index = $scope.zone.team_suspensions.indexOf(data);
+          $scope.zone.team_suspensions.splice(index, 1);
       });
     }
   };
@@ -404,21 +423,21 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
     if(confirm("¿Confirma que desea reemplazar el equipo? Esto modificará todos los partidos donde interviene el equipo a reemplazar, para esta zona.")){
        $http.post('/api/zones/'+$scope.zone._id+'/participations/replace', {"data":{'team_id' : $scope.selected_team.team_id, 'replacer_team': $scope.selected_team.replacer_team}}).
         success(function(data) {
-          var index = $scope.zone.team_suspensions.indexOf(data);
-          $scope.zone.team_suspensions.splice(index, 1);
           $('#replaceTeam').modal('hide');
+           $route.reload();
            $location.url('/zones/'+ $scope.zone._id);
         });
     }
   };
 
   $scope.selectMatchday = function(matchdayId){
+    $scope.dispute_day = null;
     $scope.selected_matchday = matchdayId;
   };
 
   $scope.submitMatchdayDisputeDay = function(){
     if(confirm("¿Confirma que desea cambiar el dia de disputa?")){
-       $http.post('/api/zones/matchdays/dispute_day', {"data":{'matchdayId' : $scope.selected_matchday , 'dispute_day': $scope.dispute_day}}).
+       $http.post('/sapi/zones/matchdays/dispute_day', {"data":{'matchdayId' : $scope.selected_matchday , 'dispute_day': $scope.dispute_day}}).
         success(function(data) {
           for (var i = 0; i < $scope.zone.matchdays.length; i++) {
             if($scope.zone.matchdays[i]._id == data.matchdayId){
@@ -427,6 +446,22 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
           };
         });
     }
+  };
+
+  $scope.submitMatchStartDate = function(match, matchdispteday){
+    if(confirm("¿Confirma que desea cambiar el dia de disputa?")){
+       $http.post('/sapi/zones/matches/startDate', {"data":{'match_id' : match._id , 'dispute_day': matchdispteday.dispute_day}}).
+        success(function(data) {
+          $('#openMatchday').modal('hide');
+        });
+    }
+  };
+
+  $scope.submitMatchReferee = function(match, referee){
+     $http.post('/sapi/zones/matches/addReferee', {"data":{'match_id' : match._id , 'referee': referee.referee_id}}).
+      success(function(data) {
+        $('#openMatchday').modal('hide');
+      });
   };
 
   $scope.selectTeamToAddPlayers = function(participator){
@@ -449,13 +484,11 @@ function zones_view($scope, $http, $routeParams, $rootScope, $location) {
 
   $scope.submitAddPlayers = function(addPlayers){
     var ids = Object.keys(addPlayers.players);
-    $http.post('/api/zones/'+$scope.zone._id+'/participation/'+ $scope.selected_team.team_id +'/players', {"players": ids}).
+    $http.post('/sapi/zones/'+$scope.zone._id+'/participation/'+ $scope.selected_team.team_id +'/players', {"players": ids}).
         success(function(data) {
           for (var i = 0; i < $scope.zone.participations.length; i++) {
             if($scope.zone.participations[i].team == $scope.selected_team.team_id){
-              for (var i = 0; i < data.length; i++) {
-                $scope.zone.participations[i].players.push(data[i]);
-              };
+              $scope.zone.participations[i].players = $scope.zone.participations[i].players.concat(data);
             }
           };
           $('#addPlayersToParticipation').modal('hide');
@@ -796,7 +829,7 @@ function tournaments_classified($scope, $routeParams, $http) {
         for (var i = 0; i < $scope.tournament.cant_teams_for_next_round; i++) {
           classified_teams.push({'players': $scope.participators[i].participations.players ,'team':$scope.participators[i].participations.team, 'team_name':$scope.participators[i].participations.team_name, 'team_position': i});
         };
-        $http.post('/api/zones/'+$routeParams.tournament_id+'/create_playoff_fixture', {'classified' : classified_teams, 'tournament_id': $scope.tournament._id}).
+        $http.post('/sapi/zones/'+$routeParams.tournament_id+'/create_playoff_fixture', {'classified' : classified_teams, 'tournament_id': $scope.tournament._id}).
           success(function(data, status, headers, config) {
             $scope.tournaments = data;
           });
@@ -870,7 +903,7 @@ function tournaments_view($scope, $http, $routeParams, $rootScope, $location) {
 
   $scope.generateFixture = function(zone){
     //Function to generate de fixture
-    $http.post('/api/zones/'+zone._id+'/create_league_fixture', {"tournament_id": $scope.tournament._id}).
+    $http.post('/sapi/zones/'+zone._id+'/create_league_fixture', {"tournament_id": $scope.tournament._id}).
         success(function(data) {
           $location.url('/zones/' + zone._id);
         });
@@ -1613,6 +1646,56 @@ function turns_edit($scope, $http, $location, $routeParams) {
     $http.put('/sapi/turns/' + $routeParams.id, $scope.form.turn).
       success(function(data) {
         $location.url('/turns');
+      });
+  };
+}
+
+/*Referees*/
+function referees_index($scope, $http) {
+  $scope.days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+  $http.get('/api/referees').
+    success(function(data, status, headers, config) {
+      $scope.referees = data;
+    });
+}
+
+function referees_add($scope, $http, $location) {
+  $scope.form = {};
+  $scope.addReferee = function () {
+    $http.post('/sapi/referees', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+
+function referees_view($scope, $http, $routeParams, $rootScope, $location) {
+    $scope.days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+    $http.get('/api/referees/' + $routeParams.id).
+      success(function(data) {
+        $scope.referee = data;
+    });
+    $scope.deleteTurn = function () {
+    $http.delete('/sapi/referees/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+  
+}
+
+function referees_edit($scope, $http, $location, $routeParams) {
+  $scope.days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+  $scope.form = {};
+  $http.get('/api/referees/' + $routeParams.id).
+    success(function(data) {
+      $scope.form.referee = data;
+    });
+  $scope.editReferee = function (addTurn) {
+    $http.put('/sapi/referees/' + $routeParams.id, $scope.form.turn).
+      success(function(data) {
+        $location.url('/referees');
       });
   };
 }

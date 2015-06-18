@@ -547,6 +547,20 @@ module.exports = function(app){
 		
 	});
 
+	app.post('/sapi/zones/matches/startDate',function(req, res, next){
+		var models = Models(req.tenant);
+		var callback = function(err, numAffected, status){
+			if(err) throw err;
+			req.body.data.dispute_day = new Date(req.body.data.dispute_day).toISOString();
+			res.send(true)
+		}
+		console.log(req.body.data)
+		models.match.update(
+		    { "_id": req.body.data.match_id}, 
+		    {$set: {"start_datetime" : req.body.data.dispute_day}}, callback
+		)
+	});
+
 	app.post('/sapi/matches/addPlayers', function(req, res){
 		//{"team_id" : team_id,"match_id" : match_id,"matchday_id" : matchday_id,"role" : role}
 		console.log(req.body)

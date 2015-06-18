@@ -41,6 +41,8 @@ div(class="tab-content")
 					th Estado
 					th Fecha de disputa
 					th Ver partidos
+					th Cerrada
+					th Jugada
 					if(RolesHelper.admin(user))
 						th
 						th
@@ -55,6 +57,10 @@ div(class="tab-content")
 							button(ng-if="!matchday.closed", ng-click="selectMatchday(matchday._id)",data-toggle="modal",data-target="#submitMatchdayDisputeDay") Cambiar
 					td
 						a(ng-click="openMatchday(matchday)",data-toggle="modal",data-target="#openMatchday") Ver Partidos
+					td
+						input(class="", ng-model='matchday.closed', ng-change="setMatchdayAsClosed(matchday)", name='closed', id="closed", type='checkbox')
+					td
+						input(class="", ng-model='matchday.played', ng-change="setMatchdayAsPlayed(matchday)", name='played', id="played", type='checkbox')
 					if(RolesHelper.admin(user))
 						td
 							a(href="/matchday/edit/{{matchday._id}}") Editar
@@ -82,9 +88,6 @@ div(class="tab-content")
 					td {{matchday.matchday_number}}
 					td
 						a(ng-click="openMatchday(matchday)",data-toggle="modal",data-target="#openMatchday") Ver Partidos
-					td
-						if(RolesHelper.admin(user))
-							a(href="/matchday/edit/{{matchday._id}}") Editar
 		include ../matchdays/dispute_day
 	div(role="tabpanel", class="tab-pane" ,id="participations")
 		include ../participations/index.jade

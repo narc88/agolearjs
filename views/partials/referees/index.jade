@@ -1,0 +1,10 @@
+h3 Lista de Arbitros
+
+a(href="/referees/add") Crear Arbitro
+
+table(class="table table-responsive table-striped")
+	tr
+		th Nombre
+		th Apellido
+	tr(ng-repeat="referee in referees | orderBy:['name', 'last_name']") 
+			include partial_view

@@ -40,6 +40,7 @@ module.exports = function(app){
 				chronicle.title = req.body.chronicle.title;
 				chronicle.summary = req.body.chronicle.summary;
 				chronicle.content = req.body.chronicle.content;
+				chronicle.outstanding = req.body.chronicle.outstanding;
 				chronicle.modified = new Date();
 				chronicle.save(function(err){
 					if (err) throw err;

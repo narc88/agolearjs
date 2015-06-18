@@ -1,0 +1,20 @@
+h3 Crear Horario
+form(name="addTurn", ng-submit="addTurn(addTurn)")
+	.form-group
+		label(for="hour") Hora
+		input(ng-model='form.turn.hour', name='hour', id="hour", type='text', value="{{form.turn.hour}}").form-control
+		div(ng-show="addTurn['hour'].$error.mongoose", style="color: red") {{addTurn.hour.$error.mongoose}}
+	.form-group
+		label(for="minute") Minutos
+		input(ng-model='form.turn.minute', name='minute', id="minute", type='text', value="{{form.turn.minute}}").form-control
+		div(ng-show="addTurn['minute'].$error.mongoose", style="color: red") {{addTurn.minute.$error.mongoose}}
+	.form-group
+		label(for="day") Dia
+		select(ng-model='form.turn.day', name='day', id="day", type='text', value="{{form.turn.hour}}").form-control
+			option(ng-repeat="day in days", value="{{$index}}") {{day}}
+	.form-group
+		label(for="field") Cancha
+		select(ng-model='form.turn.field', name='field', id="field", type='text', value="{{form.turn.field}}").form-control
+			option(ng-repeat="field in fields", value="{{field._id}}") {{field.name}}
+	.form-group
+		input(type="submit", value="Guardar").btn.btn-primary

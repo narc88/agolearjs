@@ -1,6 +1,6 @@
 'use strict';
 // Declare app level module which depends on filters, and services
-var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike', 'angular-datepicker']).run([
+var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike',  '720kb.datepicker']).run([
       '$rootScope', function ($rootScope) {
           $rootScope.facebookAppId = '202443209924902'; // set your facebook app id here
       }
@@ -203,9 +203,25 @@ var agolear = angular.module('agolear', ['ngRoute','ngSanitize', 'angulike', 'an
         templateUrl: '/partials/turns/index.jade',
         controller: turns_index
       }).
+      when('/turns/add', {
+        templateUrl: '/partials/turns/add.jade',
+        controller: turns_add
+      }).
       when('/turns/edit/:id', {
         templateUrl: '/partials/turns/edit.jade',
         controller: turns_edit
+      }).
+      when('/referees', {
+        templateUrl: '/partials/referees/index.jade',
+        controller: referees_index
+      }).
+      when('/referees/add', {
+        templateUrl: '/partials/referees/add.jade',
+        controller: referees_add
+      }).
+      when('/referees/edit/:id', {
+        templateUrl: '/partials/referees/edit.jade',
+        controller: referees_edit
       }).
       when('/matches/updateTurn/:id', {
         templateUrl: '/partials/matches/change_turn.jade',

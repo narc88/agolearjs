@@ -68,7 +68,7 @@ module.exports = function(app){
 		});
 	});
 
-	app.delete('/api/teams/:id', function(req, res, next){
+	app.delete('/sapi/teams/:id', function(req, res, next){
 		var models = Models(req.tenant);
 		models.team.remove({ _id: req.params.id }).exec( function(err, team){
 			if (err) {
@@ -80,7 +80,7 @@ module.exports = function(app){
 	//End of RESTful routes
 
 	//Prohibition for all players and team
-	app.post('/api/teams/:id/suspension', function(req, res){
+	app.post('/sapi/teams/:id/suspension', function(req, res){
 		var models = Models(req.tenant);
 		console.log(req.body.reason)
 		var players = req.body.players;
@@ -89,9 +89,10 @@ module.exports = function(app){
 			res.send(players);
 		}
 		for (var i = 0; i < players.length; i++) {
-			var suspension = new SuspensionModel();
+			var suspension = new models.suspension();
 			suspension.reason = req.body.reason;
 			suspension.undetermined_time = true;
+			suspension.player_team = req.params.id;
 			suspension.player = players[i];
 			suspension.save(function(err){
 				console.log("Suspension for player"+suspension.player);
@@ -106,16 +107,22 @@ module.exports = function(app){
 		)
 	});
 
-	app.delete('/api/teams/:team_id/suspension', function(req, res, next){
+	app.delete('/sapi/teams/:team_id/suspension', function(req, res, next){
 		var models = Models(req.tenant);
 		var callback = function(err, numAffected, status){
 			if(err) throw err;
 			res.send(req.params.team_id);
 		}
+		var callback2 = function(err, numAffected, status){
+			if(err) throw err;
+			models.suspension.update(
+			   { 'player_team': req.params.team_id, "suspensions.accomplished": false },
+			   { $set: { "suspensions.$.accomplished" : true } }, callback);
+		}
 		models.team.update(
-				   { _id: req.params.team_id, "suspensions.accomplished": false },
-				   { $set: { "suspensions.$.accomplished" : true } }, callback
-		)
+		   { _id: req.params.team_id, "suspensions.accomplished": false },
+		   { $set: { "suspensions.$.accomplished" : true } }, callback2);
+		
 	});
 
 }

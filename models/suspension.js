@@ -8,6 +8,7 @@ var SuspensionSchema = exports.Schema = new mongoose.Schema({
                 },
     player     : {type: mongoose.Schema.ObjectId, ref: 'Player' },
     //Matches he missed due to the suspension
+    player_team             : {type: mongoose.Schema.ObjectId, ref: 'Team' },
     match             : {type: mongoose.Schema.ObjectId, ref: 'Match' },
     matches             : [{type: mongoose.Schema.ObjectId, ref: 'Match' }],
     accomplished		: {
