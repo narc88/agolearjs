@@ -47,6 +47,27 @@ module.exports = function(app){
 		});
 	});
 
+	app.get('/api/zones/nextMatchdays', function(req, res){
+		var d = new Date();
+		var year = d.getFullYear();
+		var start = new Date(year, 0, 0);
+		var diff = d - start;
+		var oneDay = 1000 * 60 * 60 * 24;
+		var dayOfYear = Math.floor(diff / oneDay);
+		topDayOfYear = dayOfYear + 7;
+		var models = Models(req.tenant);
+		models.zone.aggregate(
+				{ $unwind : "$matchdays" },
+				{ $match: { "matchdays.closed": true, "matchdays.played": false}},
+				{ $project : { "matchdays" : 1, 'tournament' : 1 , "name" : 1 ,'dayOfYear': { $dayOfYear: "$matchdays.dispute_day" }, 'year': { $year: "$matchdays.dispute_day" }} },
+				{ $match: { "dayOfYear": {$lt : topDayOfYear },  "dayOfYear": {$gt : dayOfYear }, 'year':year}},
+				function (err, matchdays){
+					if (err) throw err;
+					console.log(matchdays)
+					res.send({ 'matchdays':matchdays})
+				});
+		
+	});
 
 	app.get('/api/zones/:id', function(req, res, next){
 		var models = Models(req.tenant);
@@ -75,6 +96,21 @@ module.exports = function(app){
 				zone.save(function(err){
 					if (err) throw err;
 					res.send(zone);
+				});
+			}
+		});
+	});
+
+	app.put('/api/zones/:id/markAsClosed', function(req, res, next){
+		var models = Models(req.tenant);
+		models.zone.findOne({ _id: req.params.id }).exec( function(err, zone){
+			if (err) throw err;
+			if(zone){
+				zone.closed = true;
+				zone.modified = new Date();
+				zone.save(function(err){
+					if (err) throw err;
+					res.send(true);
 				});
 			}
 		});
@@ -571,6 +607,22 @@ module.exports = function(app){
 		    { 'matchdays._id': req.body.matchday_id}, 
 		    {$set: {"matchdays.$.played" : query}}, callback)	
 	});
+
+	app.put('/sapi/zones/:zone_id/changePoints/:team_id', function(req, res){
+		var models = Models(req.tenant);
+		var callback = function(err, numAffected, status){
+			if(err) throw err;
+			console.log(numAffected)
+			res.send(true);
+		}
+		var query = req.body.status
+		models.zone.update(
+		    { '_id': req.params.zone_id, 'participations.team' : req.params.team_id}, 
+		    {$inc: {"participations.$.initial_points" : req.body.points}}, callback)	
+	});
+
+
+	
 
 
 	

@@ -13,5 +13,5 @@ if(RolesHelper.admin(user))
 				a(href='/zones/{{zone.tournament}}/classified') Ver clasificados
 			li(ng-if="zone.participations.length == 0")
 				a(href='/tournaments/{{tournament._id}}/teams') Seleccionar equipos
-			li
-				a(href='/zones/{{zone._id}}/close') Finalizar zona
+			li(ng-if="!zone.closed")
+				a(ng-click="setZoneAsClosed()") Finalizar zona

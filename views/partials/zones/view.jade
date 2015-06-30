@@ -6,6 +6,8 @@ ul(class="nav nav-tabs")
 		a(data-target="#matchdays", aria-controls="matchdays", role="tab", data-toggle="tab") Fechas
 	li(role="participations")
 		a(data-target="#participations", aria-controls="participations", role="tab", data-toggle="tab") Participantes
+	li(role="fairPlay")
+		a(data-target="#fairPlay", aria-controls="fairPlay", role="tab", data-toggle="tab" , ng-click="loadFairPlayTable()") Fair Play
 div(class="tab-content")
 	div(role="tabpanel", class="tab-pane active" ,id="table")
 		div(ng-if="zone.zone_type !== 'Playoff'")
@@ -21,7 +23,7 @@ div(class="tab-content")
 					td GC
 					td DG
 					td Puntos
-				tr(ng-repeat="participator in zone.participations | orderBy:['-points','-own_goals', 'other_goals', 'own_goals-other_goals' ,'-won']")
+				tr(ng-repeat="participator in zone.participations | orderBy:['-(points+initial_points)','-own_goals', 'other_goals', 'own_goals-other_goals' ,'-won']")
 					td {{$index + 1}}
 					td 
 						a(href="/teams/{{participator.team}}") {{participator.team_name}}
@@ -32,7 +34,8 @@ div(class="tab-content")
 					td {{participator.own_goals}}
 					td {{participator.other_goals}}
 					td {{participator.own_goals-participator.other_goals}}
-					td {{participator.points}}
+					td {{participator.points + participator.initial_points}} 
+						span(ng-if="participator.initial_points > 0") ({{participator.initial_points}})
 	div(role="tabpanel", class="tab-pane" ,id="matchdays")
 		div(ng-if="zone.zone_type !== 'Playoff'")
 			h4 Avance
@@ -44,7 +47,6 @@ div(class="tab-content")
 					th Cerrada
 					th Jugada
 					if(RolesHelper.admin(user))
-						th
 						th
 				tr(ng-repeat="matchday in zone.matchdays | orderBy:['number']") 
 					td
@@ -62,8 +64,6 @@ div(class="tab-content")
 					td
 						input(class="", ng-model='matchday.played', ng-change="setMatchdayAsPlayed(matchday)", name='played', id="played", type='checkbox')
 					if(RolesHelper.admin(user))
-						td
-							a(href="/matchday/edit/{{matchday._id}}") Editar
 						td
 							a(ng-click="loadMatchesToRenderList(matchday)") Generar Panillas
 		div(ng-if="zone.zone_type === 'Playoff'")
@@ -91,6 +91,8 @@ div(class="tab-content")
 		include ../matchdays/dispute_day
 	div(role="tabpanel", class="tab-pane" ,id="participations")
 		include ../participations/index.jade
+	div(role="tabpanel", class="tab-pane" ,id="fairPlay" )
+		include ../zones/fairPlay.jade
 include ../socials/shareBar.jade
 div(class="modal", tabindex="-1", role="dialog", id="openMatchday", aria-hidden="true" )
 	div(class="modal-dialog")

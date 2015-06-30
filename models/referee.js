@@ -1,7 +1,7 @@
 // Creación de la Conexión
 var mongoose = require('mongoose');
 
-var RefereeSchema = new mongoose.Schema({
+var RefereeSchema = exports.RefereeSchema = new mongoose.Schema({
 	name		:{ type: String, required: true},
 	last_name   :{ type: String, required: true},
 	created     :{ type: Date, default: Date.now },

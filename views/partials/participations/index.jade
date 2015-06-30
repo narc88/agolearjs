@@ -9,6 +9,8 @@ div(class="panel-group", id="participationsAccordion", role="tablist", aria-mult
 							strong (Suspendido)
 				if(RolesHelper.admin(user))
 					div(class="btn-group pull-right", role="group")
+						button(ng-click="selectTeam(participator.team)",type="button",data-toggle="modal",data-target="#changePoints", class="btn btn-sm", title="Quitar / Agregar puntos") 
+							span(class="glyphicon glyphicon-equalizer", aria-hidden="true")
 						button(ng-click="selectTeamToAddPlayers(participator)",type="button",data-toggle="modal",data-target="#addPlayersToParticipation", class="btn btn-sm", title="Agregar Jugadores") 
 							span(class="glyphicon glyphicon-plus-sign", aria-hidden="true")
 						button(ng-if="zone.team_suspensions.indexOf(participator.team) < 0",ng-click="selectTeam(participator.team)",type="button",data-toggle="modal", title="Suspender equipo completo",data-target="#teamSuspension", class="btn btn-sm")
@@ -102,6 +104,33 @@ div(class="modal fade", tabindex="-1", role="dialog", id="addPlayersToParticipat
 									input( type="checkbox",ng-model="addPlayers.players[player._id]", value="{{player._id}}")
 								td
 									span {{player.name}} {{player.last_name}} - Dni: {{player.dni}}
+					.form-group
+						input(type="submit", value="Guardar").btn.btn-primary.btn-xs
+						button(type="button", class="btn btn-default btn-xs", data-dismiss="modal") Close
+div(class="modal fade", tabindex="-1", role="dialog", id="changePoints", aria-hidden="true" )
+	div(class="modal-dialog")
+		div(class="modal-content")
+			div(class="modal-header")
+				button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+					span(aria-hidden="true")&times;
+				h4(class="modal-title", id="myModalLabel") Cambiar puntaje
+			div(class="modal-body")
+				form(name="changePoints", ng-submit="submitChangePoints(changePoints)")
+					.form-group
+						input(type="hidden", ng-value="selected_team" ,ng-model='selected_team.team_id')
+						label(for="points") Agregar o quitar puntos.
+						select(ng-model='selected_team.points', name='points', id="points", type='text').form-control.input-sm
+							option( value="-5") -5
+							option( value="-4") -4
+							option( value="-3") -3
+							option( value="-2") -2
+							option( value="-1") -1
+							option( value="0", selected) 0
+							option( value="1") 1
+							option( value="2") 2
+							option( value="3") 3
+							option( value="4") 4
+							option( value="5") 5
 					.form-group
 						input(type="submit", value="Guardar").btn.btn-primary.btn-xs
 						button(type="button", class="btn btn-default btn-xs", data-dismiss="modal") Close

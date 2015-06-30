@@ -42,6 +42,7 @@ module.exports = function(app){
 		models.referee.findOne({ _id: req.params.id }).exec( function(err, referee){
 			if (err) throw err;
 			if(referee){
+				console.log(req.body.referee)
 				referee.name = req.body.referee.name;
 				referee.last_name = req.body.referee.last_name;
 				referee.modified = new Date();

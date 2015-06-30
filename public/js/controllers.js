@@ -9,12 +9,23 @@ function router_controller($scope, $http, $location, $routeParams, $rootScope) {
 }
 
 /*Main*/
-function main($rootScope,$scope, $http) {
+function main($rootScope, $scope, $http, $window) {
  /* $http.get('/api/countries').
     success(function(data, status, headers, config) {
       $scope.countries = data;
       $scope.default_country = data[0];
     });*/
+  $rootScope.imageHelper = {};
+  $rootScope.imageHelper.getImage = function(images, type){
+    if(images.length == 0 ){
+      return undefined;
+    }
+    for (var i = images.length - 1; i >= 0; i--) {
+      if(images[i].type === type){
+        return images[i];
+      }
+    };  
+  }
   $rootScope.days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
   $rootScope.locationBeforeImage = '';
   $rootScope.tournament_stats = {};
@@ -34,28 +45,40 @@ function main($rootScope,$scope, $http) {
   $http.get('/api/myleague/').
     success(function(data, status, headers, config) {
      $rootScope.league = data;
+     $rootScope.league.logo_image = $rootScope.imageHelper.getImage(data.images, 'logo');
     });
-  
+
+
+
+  $scope.openMatchday = function(matchday){
+    $scope.selected_matchday = matchday;
+    $http.get('/api/matches?matchday='+matchday._id).
+      success(function(matches) {
+        for (var i = 0; i < matches.length; i++) {
+          matches[i].visitor_team.logo_image = $rootScope.imageHelper.getImage( matches[i].visitor_team.images, "escudo");
+          matches[i].local_team.logo_image = $rootScope.imageHelper.getImage( matches[i].local_team.images, "escudo");
+        };
+        $scope.selected_matchday.matches = matches;
+      })
+  };
 
   $scope.datePickerOptions = {
     format: 'yyyy-mm-dd', // ISO formatted date
     onClose: function(e) {
       // do something when the picker closes   
     }
+  };
+
+  $scope.account = function(){
+    if($window.sessionStorage.token){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   $rootScope.tournament_types = ['Liga' , 'Liga y Playoff', 'Liga y Liguilla'];
-  $rootScope.imageHelper = {};
-  $rootScope.imageHelper.getImage = function(images, type){
-    if(images.length == 0 ){
-      return undefined;
-    }
-    for (var i = images.length - 1; i >= 0; i--) {
-      if(images[i].type === type){
-        return images[i];
-      }
-    };  
-  }
+  
 
   $rootScope.isUndefinedOrNull = function(val) {
     return angular.isUndefined(val) || val === null 
@@ -66,8 +89,15 @@ function main($rootScope,$scope, $http) {
       $rootScope.menu.tournaments = data.tournaments;
       for (var i = 0; i < $rootScope.menu.tournaments.length; i++) {
         $rootScope.menu.tournaments[i].zones = $.grep(data.zones, function(e){ return e.tournament == $rootScope.menu.tournaments[i]._id; });
-
       };
+      $http.get('/api/zones/nextMatchdays').
+          success(function(data, status, headers, config) {
+            $rootScope.nextMatchdays = data.matchdays;
+            for (var i = 0; i < $rootScope.nextMatchdays.length; i++) {
+              $rootScope.nextMatchdays[i].tournament = $.grep($rootScope.menu.tournaments, function(e){ return e._id == $rootScope.nextMatchdays[i].tournament; })[0];
+            };
+            var a = 0;
+          });
     });
 
 }
@@ -163,12 +193,24 @@ function leagues_add($scope, $http, $location) {
   };
 }
 
-function leagues_view($scope, $http, $routeParams) {
+function leagues_view($scope, $http, $routeParams, $sce, $rootScope, $location) {
+
   $http.get('/api/leagues/' + $routeParams.id).
     success(function(data) {
       $scope.league = data;
+      $scope.league.league_introduction = $sce.trustAsHtml($scope.league.introduction);
+      $scope.league.league_description = $sce.trustAsHtml($scope.league.description);
       $rootScope.locationBeforeImage = '/leagues/'+$routeParams.id;
+      $location.url($rootScope.locationBeforeImage);
     });
+
+  
+  $scope.removeImage = function(image_id){
+    $http.delete('/sapi/images/league/'+$scope.league._id + '/'+ image_id).
+      success(function(data) {
+        $scope.league.images = $scope.league.images.filter(function(img) { return img._id == image_id; });
+      });
+  };
 }
 
 function leagues_edit($scope, $http, $location, $routeParams) {
@@ -176,14 +218,20 @@ function leagues_edit($scope, $http, $location, $routeParams) {
   $http.get('/api/leagues/' + $routeParams.id).
     success(function(data) {
       $scope.league = data;
+      $(".leagueintro #contentarea").html($scope.league.introduction);
+      $(".leaguedesc #contentarea").html($scope.league.description);
+      
     });
 
-  $scope.editLeague = function () {
-    $http.put('/sapi/leagues/' + $routeParams.id, $scope.league).
+  $scope.submitLeague = function (addLeague) {    
+    $scope.league.description  = $(".leaguedesc #contentarea").html();
+    $scope.league.introduction  = $(".leagueintro #contentarea").html();
+    $http.put('/sapi/leagues/' + $routeParams.id, {'league' : $scope.league } ).
       success(function(data) {
-        $location.url('/leagues/' + $routeParams.id);
+        $location.path('/leagues/'+$routeParams.id);
       });
   };
+
 }
 
 function league_delete($scope, $http, $location, $routeParams) {
@@ -222,6 +270,7 @@ function zones_add($scope, $http, $location) {
   };
 }
 
+
 function zones_view($scope, $http, $routeParams, $rootScope,$route, $location) {
  
    $scope.setMatchdayAsClosed = function (matchday) {
@@ -238,7 +287,77 @@ function zones_view($scope, $http, $routeParams, $rootScope,$route, $location) {
         });
     };
 
-  
+    $scope.loadFairPlayTable = function (){
+      var countAppearances = function(list, value,  value2){
+        var count= 0;
+        for (var i = 0; i < list.length; i++) {
+          if((list[i]._id.team === value) && (list[i]._id.type === value2) ){
+            count = count + list[i].total;
+          }
+        };
+        return count;
+      };
+      var getMonthPoints = function(list, team,  month){
+        var count= 0;
+        for (var i = 0; i < list.length; i++) {
+          if((list[i]._id.team === team) && (list[i]._id.month == month) ){
+            if(list[i]._id.type == "Amonestación"){
+              count++;
+            }else if(list[i]._id.type == "Doble Amonestación"){
+              count += 3;
+            }else if(list[i]._id.type == "Expulsión"){
+              count += 5;
+            }
+          }
+        };
+        return count;
+      };
+      var getPoints = function(list, team){
+        var count= 0;
+        for (var i = 0; i < list.length; i++) {
+          if((list[i]._id.team === team) ){
+            if(list[i]._id.type == "Amonestación"){
+              count++;
+            }else if(list[i]._id.type == "Doble Amonestación"){
+              count += 3;
+            }else if(list[i]._id.type == "Expulsión"){
+              count += 5;
+            }
+          }
+        };
+        return count;
+      };
+      $http.get('/api/tournaments/'+$scope.zone._id+'/fairPlayTable').
+        success(function(data) {
+         $scope.fairplay_incidents = data.fairPlay;
+
+         var today = new Date();
+         for (var i = 0; i < $scope.zone.participations.length; i++) {
+            var participation = $scope.zone.participations[i];
+            for (var j = 0; j < $scope.fairplay_incidents.length; j++) {
+              if($scope.fairplay_incidents[j].team == participation.team){
+                var fairPlay = $scope.fairplay_incidents[j];
+                $scope.zone.participations[i].total_double_yellow_cards = fairPlay.total_double_yellow_cards;
+                $scope.zone.participations[i].total_red_cards = fairPlay.total_red_cards;
+                $scope.zone.participations[i].total_yellow_cards = fairPlay.total_yellow_cards;
+                $scope.zone.participations[i].this_month_points = fairPlay.this_month_points; 
+                $scope.zone.participations[i].last_month_points = fairPlay.last_month_points;
+                $scope.zone.participations[i].total_points = fairPlay.total_points;
+              }
+            };
+           
+         };
+         var a = 0;
+        });
+    };
+
+  $scope.setZoneAsClosed = function(){
+    $http.put('/api/zones/'+$scope.zone._id+'/markAsClosed').
+          success(function(data) {
+            $location.url('/zones/' + $scope.zone._id);
+          });
+  }
+
   $scope.generateFixture = function(zone){
     //Function to generate de fixture
       $http.post('/api/zones/'+zone._id+'/create_league_fixture', {"tournament_id": zone.tournament}).
@@ -256,6 +375,13 @@ function zones_view($scope, $http, $routeParams, $rootScope,$route, $location) {
     $scope.list_matchday.pretty_date = matchday_dispute_day.getDay() +'/'+ (matchday_dispute_day.getMonth()+1) +'/'+ matchday_dispute_day.getFullYear();
     
     var teamTable = function( players , doc, headers){
+      var size = 12;
+      if(players.length > 28){
+        size = 12 - ((players.length - 28) / 4) * 2;
+      }else{
+        size = 12;
+      }
+      doc.setFontSize(Math.round(size));
       var processed_players = [];
       for (var i = 0; i < players.length; i++) {
         var new_player = {};
@@ -314,7 +440,15 @@ function zones_view($scope, $http, $routeParams, $rootScope,$route, $location) {
       doc.text('Fecha numero: '+$scope.list_matchday.matchday_number, 40,70);
       doc.text('Dia: '+$scope.list_matchday.pretty_date, 200, 70);
       doc.text('Partido: '+ match.local_team_name + ' vs ' + match.visitor_team_name, 40, 90);
-      doc.text('Cancha: '+ match.turn[0].field[0].name +' '+ match.turn[0].hour +':'+ match.turn[0].minute +' Hs.' , 40, 110);
+      if(match.turn[0] && match.turn[0].field[0]){
+        var arbitro;
+        if(match.referees[0]){
+          arbitro = match.referees[0].name +' '+match.referees[0].last_name;
+        }else{
+          arbitro = ' No asignado';
+        }
+        doc.text('Cancha: '+ match.turn[0].field[0].name +' '+ match.turn[0].hour +':'+ match.turn[0].minute +' Hs.| Arbitro: '+ arbitro , 40, 110);
+      }
       teamTable(match.visitor_team.players , doc, headers);
       doc.addPage();
       doc.setFontSize(14);
@@ -323,7 +457,16 @@ function zones_view($scope, $http, $routeParams, $rootScope,$route, $location) {
       doc.text('Fecha numero : '+$scope.list_matchday.matchday_number, 40, 70);
       doc.text('Dia : '+$scope.list_matchday.pretty_date, 200, 70);
       doc.text('Partido: '+ match.local_team_name + ' vs ' + match.visitor_team_name, 40, 90);
-      doc.text('Cancha: '+ match.turn[0].field[0].name +' '+ match.turn[0].hour +':'+ match.turn[0].minute +' Hs.' , 40, 110);
+      if(match.turn[0] && match.turn[0].field[0]){
+        var arbitro;
+        if(match.referees[0]){
+          arbitro = match.referees[0].name +' '+match.referees[0].last_name;
+        }else{
+          arbitro = ' No asignado';
+        }
+        doc.text('Cancha: '+ match.turn[0].field[0].name +' '+ match.turn[0].hour +':'+ match.turn[0].minute +' Hs.| Arbitro: '+ arbitro , 40, 110);
+      }
+      
       teamTable(match.visitor_team.players , doc, headers);
     };
 
@@ -374,7 +517,10 @@ function zones_view($scope, $http, $routeParams, $rootScope,$route, $location) {
 
   $scope.openMatchday = function(matchday){
     $scope.selected_matchday = matchday;
-
+    $http.get('/api/referees').
+      success(function(referees) {
+        $scope.referees = referees;
+      });
     $http.get('/api/matches?matchday='+matchday._id).
       success(function(matches) {
         for (var i = 0; i < matches.length; i++) {
@@ -396,6 +542,18 @@ function zones_view($scope, $http, $routeParams, $rootScope,$route, $location) {
         $scope.zone.suspensions = $scope.zone.suspensions.concat(data);
         $scope.zone.team_suspensions.push($scope.selected_team.team_id);
         $('#teamSuspension').modal('hide');
+      });
+  };
+
+  $scope.submitChangePoints = function(form){
+    $http.put('/sapi/zones/'+$scope.zone._id+'/changePoints/'+$scope.selected_team.team_id, {'points' : form.points.$modelValue}).
+      success(function(data) {
+        $('#changePoints').modal('hide');
+        for (var i = 0; i < $zone.participations.length; i++) {
+          if($zone.participations[i].team == $scope.selected_team.team_id){
+            $zone.participations[i].initial_points = $zone.participations[i].initial_points + (form.points);
+          }
+        };
       });
   };
 
@@ -458,7 +616,7 @@ function zones_view($scope, $http, $routeParams, $rootScope,$route, $location) {
   };
 
   $scope.submitMatchReferee = function(match, referee){
-     $http.post('/sapi/zones/matches/addReferee', {"data":{'match_id' : match._id , 'referee': referee.referee_id}}).
+     $http.post('/sapi/zones/matches/addReferee', {"data":{'match_id' : match._id , 'referee': referee.referee}}).
       success(function(data) {
         $('#openMatchday').modal('hide');
       });
@@ -900,7 +1058,12 @@ function tournaments_view($scope, $http, $routeParams, $rootScope, $location) {
         });
     });
  
-
+  $scope.setTournamentAsClosed = function(){
+    $http.put('/api/tournaments/'+$scope.tournament._id+'/markAsClosed').
+          success(function(data) {
+            $location.url('/tournaments/' + $scope.tournament._id);
+          });
+  }
   $scope.generateFixture = function(zone){
     //Function to generate de fixture
     $http.post('/sapi/zones/'+zone._id+'/create_league_fixture', {"tournament_id": $scope.tournament._id}).
@@ -1138,7 +1301,13 @@ function matches_view($scope, $http, $routeParams, $rootScope) {
         if( ($scope.incident.incident_type === "Amonestación") && (hasYellowCard($scope.incident.player)) ){
           alert("Este jugador ya posee una amonestación")
         }
-        $http.post('/sapi/matches/incidents/'+role+"/"+$scope.match._id+"/"+$scope.match.matchday, $scope.incident).
+        var team_id;
+        if(role == "local"){
+          team_id = $scope.match.local_team;
+        }else if(role == "visitor"){
+          team_id = $scope.match.visitor_team;
+        }
+        $http.post('/sapi/matches/incidents/'+role+"/"+$scope.match._id+"/"+$scope.match.matchday+'/'+team_id, $scope.incident).
           success(function(data) {
             if (data.error) {
               for (var object in data.error.errors) {
@@ -1664,7 +1833,7 @@ function referees_add($scope, $http, $location) {
   $scope.addReferee = function () {
     $http.post('/sapi/referees', $scope.form).
       success(function(data) {
-        $location.path('/');
+        $location.url('/referees');
       });
   };
 }
@@ -1676,10 +1845,10 @@ function referees_view($scope, $http, $routeParams, $rootScope, $location) {
       success(function(data) {
         $scope.referee = data;
     });
-    $scope.deleteTurn = function () {
+    $scope.deleteReferee = function () {
     $http.delete('/sapi/referees/' + $routeParams.id).
       success(function(data) {
-        $location.url('/');
+        $location.url('/referees');
       });
   };
   
@@ -1693,7 +1862,7 @@ function referees_edit($scope, $http, $location, $routeParams) {
       $scope.form.referee = data;
     });
   $scope.editReferee = function (addTurn) {
-    $http.put('/sapi/referees/' + $routeParams.id, $scope.form.turn).
+    $http.put('/sapi/referees/' + $routeParams.id, $scope.form).
       success(function(data) {
         $location.url('/referees');
       });

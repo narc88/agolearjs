@@ -12,6 +12,7 @@ div(class="incidents match_summary col-md-12")
 				span 
 					img(src="/img/pelota.png", style="width:20px")
 					span {{goal.player.name}} {{goal.player.last_name}}
+						span(ng-if="goal.minute > 0") ({{goal.minute}})
 						span(ng-if="goal.own_goal") (ec)
 					span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true", ng-click="removeGoal('local', goal._id)")
 			li(ng-repeat="incident in match.local_incidents")
@@ -36,6 +37,7 @@ div(class="incidents match_summary col-md-12")
 				span 
 					img(src="/img/pelota.png", style="width:15px")
 					span {{goal.player.name}} {{goal.player.last_name}}
+						span(ng-if="goal.minute > 0") ({{goal.minute}})
 						span(ng-if="goal.own_goal") (ec)
 					span(class="glyphicon glyphicon-remove pull-right", aria-hidden="true" , ng-click="removeGoal('visitor', goal._id)")
 			li(ng-repeat="incident in match.visitor_incidents")
@@ -96,13 +98,15 @@ if(RolesHelper.admin(user))
 				include ../suspensions/form.jade
 div(class="col-md-12")
 	div(class="col-md-6 pull-left")
-		h4 Horario y Cancha
+		h4 Cancha, Horario, Arbitro
 		div(ng-if="!match.turn[0]")
 			p No establecido
 		div(class="time" ng-if="match.turn[0]")
 			span {{match.turn[0].field[0].name}}
 		div(class="hour" ng-if="match.turn[0]")
 			span {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
+		div(class="referee" ng-if="match.referees[0]")
+			span {{match.referees[0].name}} {{match.referees[0].last_name}}
 	div(class="col-md-6  pull-right")
 		h4 Jugador del Partido
 		span(ng-if="mvp_player.cara_image")

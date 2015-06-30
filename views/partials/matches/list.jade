@@ -7,6 +7,8 @@ div(ng-repeat="match in selected_matchday.matches | orderBy:['turn[0].hour', 'tu
 				span(ng-if="match.turn[0]" , class="label")
 					a( href="/fields/{{match.turn[0].field[0]._id}}") {{match.turn[0].field[0].name}}
 				span(ng-if="match.turn[0]" , class="label label-primary") {{match.turn[0].hour}} : {{match.turn[0].minute}} Hs.
+			span(ng-if="match.referees[0]" class="pull-right")
+				span Arbitro: {{match.referees[0].name}} {{match.referees[0].last_name}}
 		div(class="panel-body")
 			div(class="col-md-5 local_team v-center")
 				a(href="/teams/{{match.local_team._id}}", class="content_valign") {{match.local_team.name}} 
@@ -27,9 +29,10 @@ div(ng-repeat="match in selected_matchday.matches | orderBy:['turn[0].hour', 'tu
 							input(type="text" ng-model="matchdispteday.dispute_day") 
 						.form-group
 							input(type="submit", value="Guardar").btn.btn-primary.btn-xs
-				button(class="btn btn-primary", type="button", data-toggle="collapse", data-target="#matchRefereeCollapse{{match._id}}", aria-expanded="false", aria-controls="collapseExample") Cambiar Dia
+				button(class="btn btn-primary", type="button", data-toggle="collapse", data-target="#matchRefereeCollapse{{match._id}}", aria-expanded="false", aria-controls="collapseExample") Elegir árbitro
 				div(class="collapse" id="matchRefereeCollapse{{match._id}}")
-					form( name="referee", ng-submit="submitReferee(match, referee)")
-						input(type="text" ng-model="referee.referee_id") 
+					form( name="refereeform", ng-submit="submitMatchReferee(match,refereeform)")
+						select(type="text" ng-model="refereeform.referee") 
+							option(ng-repeat="referee in referees", value="{{referee._id}}") {{referee.name}} {{referee.last_name}}
 						.form-group
 							input(type="submit", value="Guardar").btn.btn-primary.btn-xs

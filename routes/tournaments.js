@@ -14,6 +14,69 @@ module.exports = function(app){
 		});
 	});
 
+	app.get('/api/tournaments/:zone_id/fairPlayTable', function(req, res, next){
+
+		var countAppearances = function(list, value,  value2){
+        var count= 0;
+        for (var i = 0; i < list.length; i++) {
+          if((list[i]._id.team.equals(value)) && (list[i]._id.type === value2) ){
+            count = count + list[i].total;
+          }
+        };
+        return count;
+      };
+      var getMonthPoints = function(list, team,  month){
+        var count= 0;
+        for (var i = 0; i < list.length; i++) {
+          if((list[i]._id.team.equals(team)) && (list[i]._id.month == month) ){
+          	console.log(list[i]._id.type)
+            if(list[i]._id.type === 'Amonestación'){
+              count++;
+            }else if(list[i]._id.type === 'Doble Amonestación'){
+              count += 3;
+            }else if(list[i]._id.type === 'Expulsión'){
+              count += 5;
+            }
+          }
+        };
+        return count;
+      };
+
+		var d = new Date();
+		var year = d.getMonth()+1;
+		var models = Models(req.tenant);
+		
+		models.zone.findOne({ _id: req.params.zone_id }).exec( function(err, zone){
+			var tournament_id = mongoose.Types.ObjectId(zone.tournament);
+			models.player.aggregate(
+				{ $unwind : "$incidents" },
+				{ $match: { 'incidents.tournament': tournament_id }},
+				{ $project: { 'month' : { $month: '$incidents.created'}, 'incidents._id': 1,  'incidents.player':1, 'incidents.team':1, 'incidents.incident_type':1,  'incidents.tournament':1}},
+				{ $group : { '_id' : { 'month' : '$month', 'team' : '$incidents.team', 'type' : '$incidents.incident_type'} ,
+							 'total' : { $sum: 1}
+							}
+				},
+				function (err, incidents){
+					if (err) throw err;
+					var today = new Date();
+					var participants_fairplay = [];
+			        for (var i = 0; i < zone.participations.length; i++) {
+			           	var participation = zone.participations[i];
+			           	var fairPlay = {};
+			           	fairPlay.team = zone.participations[i].team;
+			            fairPlay.total_double_yellow_cards = countAppearances( incidents , participation.team, 'Doble Amonestación');
+			            fairPlay.total_red_cards = countAppearances( incidents , participation.team,  'Expulsión');
+			            fairPlay.total_yellow_cards = countAppearances( incidents , participation.team,  'Amonestación');
+						fairPlay.this_month_points = getMonthPoints( incidents, participation.team, today.getMonth()+1 ); 
+			         	fairPlay.last_month_points = getMonthPoints( incidents, participation.team, today.getMonth() );
+			           	fairPlay.total_points = fairPlay.total_double_yellow_cards*3 + fairPlay.total_red_cards*5  +fairPlay.total_yellow_cards;
+			           	participants_fairplay.push(fairPlay);
+			        };
+					res.send({'fairPlay': participants_fairplay})
+				});
+			});
+	});
+
 	app.get('/api/tournaments/:id', function(req, res, next){
 		var models = Models(req.tenant);
 		models.tournament.findOne({ _id: req.params.id }).exec( function(err, tournament){
@@ -106,6 +169,21 @@ module.exports = function(app){
 	});
 	//End of RESTful routes
 
+
+	app.put('/api/tournaments/:id/markAsClosed', function(req, res, next){
+		var models = Models(req.tenant);
+		models.tournament.findOne({ _id: req.params.id }).exec( function(err, tournament){
+			if (err) throw err;
+			if(tournament){
+				tournament.closed = true;
+				tournament.modified = new Date();
+				tournament.save(function(err){
+					if (err) throw err;
+					res.send(true);
+				});
+			}
+		});
+	});
 
 	app.post('/sapi/tournaments/:tournament_id/teams', function(req, res, next){
 		var models = Models(req.tenant);

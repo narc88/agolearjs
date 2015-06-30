@@ -17,5 +17,5 @@ if(RolesHelper.admin(user))
 				a(ng-if='!tournament.rule', href='/rules/add/{{tournament._id}}') Agregar Reglamento
 			li(nf-if="canClassiffy()")
 				a(href='/tournaments/select_teams/{{tournament._id}}') Clasificar a playoff
-			li
+			li(ng-if="!tournament.closed")
 				a(href='/zones/{{tournament._id}}/end_tournament') Finalizar torneo

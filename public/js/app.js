@@ -258,7 +258,6 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
           .success(function (data, status, headers, config) {
             $window.sessionStorage.token = data.token;
             $scope.message = 'Welcome';
-            $rootScope.account = data.token;
           })
           .error(function (data, status, headers, config) {
             // Erase the token if the user fails to log in
@@ -284,10 +283,13 @@ agolear.factory('authInterceptor', function ($rootScope, $q, $window) {
           };
           $scope.advertisings = data;
         });
-    }).controller('LeagueController', function ($scope, $http, $window, $rootScope) {
-     $http.get('/api/myleague').
+    }).controller('AdminSidebarAdvertisingsController', function ($scope, $http, $window, $rootScope) {
+     $http.get('/admin/api/advertisings?type=lateral').
         success(function(data) {
-         // data.logo_image = $rootScope.imageHelper.getImage(data.images, "logo");
+         for (var i = 0; i < data.length; i++) {
+            data[i].preview_image = $rootScope.imageHelper.getImage(data[i].images, "lateral");
+          };
+          $scope.advertisings = data;
         });
     }).controller('ScorersAndOthersController', function ($scope, $http, $window, $rootScope) {
       var playersString = function(players){

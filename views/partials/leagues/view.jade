@@ -1,7 +1,11 @@
 include admin_menu
 h3
 	a(href="/leagues/edit/{{league._id}}") {{league.name}}
+p Slogan:
 p {{league.slogan}} 
+p E-mail:
 p {{league.email}} 
-p {{league.information}} 
-p {{league.description}} 
+p Introducción:
+p(ng-bind-html="league.league_introduction")
+p Descripción:
+p(ng-bind-html="league.league_description")

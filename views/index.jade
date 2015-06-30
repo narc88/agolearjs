@@ -21,8 +21,8 @@ block body
 								span Noticias
 						li
 							a(id="myLeague", href="/leagues/{{league._id}}")
-								span Mi Liga
-						li(class="dropdown", ng-if="account")
+								span La Liga
+						li(class="dropdown", ng-if="account()")
 							a(id="dropAdmin", href="#", class="dropdown-toggle", data-toggle="dropdown", aria-haspopup="true", role="button", aria-expanded="false")
 								span Administracion
 								span(class="caret")
@@ -46,20 +46,34 @@ block body
 								li(role="presentation")
 									a(role="menuitem" tabindex="-1" href="/advertisings") Publicidades
 					ul(class="nav navbar-nav navbar-right")
-						li(ng-if="!account")
+						li(ng-if="!account()")
 							a(id="chroniclesButton", href="/login")
 								span Entrar
-	div(ng-controller="LeagueController", class="page_header col-md-6")
-		div(class="col-md-4 ")
+	div(class="modal", tabindex="-1", role="dialog", id="openIndexMatchday", aria-hidden="true" )
+		div(class="modal-dialog")
+			div(class="modal-content")
+				div(class="modal-header")
+					button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+						span(aria-hidden="true")&times;
+					h4(class="modal-title", id="myModalLabel") Fecha
+				div(class="modal-body")
+					include partials/matches/list.jade
+	div(class="page_header col-md-6")
+		div(class="col-md-3")
 			img(ng-if="league.logo_image", class="media-object" src="/photos/league/{{league._id}}/{{league.logo_image.filename}}" alt="Copa" style="max-width:100px;max-height:100px;")
 			img(ng-if="!league.logo_image", class="media-object" src="/img/agolear.png" alt="Agolear.com" style="max-width:100px;max-height:100px;")
-		div(class="col-md-8 ") 
+		div(class="col-md-9") 
 			h3 {{league.name}} 
 			p {{league.slogan}} 
 	div(class="col-md-6 col-xs-10 page_header" , class="pull-right")
 		div(ng-controller="HeaderAdvertisingsController", id="header_advertisings")
 			include partials/advertisings/header.jade
 	div(class="col-md-3")
+		span Próximas fechas
+		ul(class="list-group")
+			li( ng-repeat="matchday in nextMatchdays" , class="list-group-item")
+				div {{matchday.tournament.name}} 
+				a(data-target="#openIndexMatchday",data-toggle="modal", ng-click="openMatchday(matchday.matchdays)") Zona: {{matchday.name}} Fecha: {{matchday.matchdays.matchday_number}} - {{matchday.matchdays.dispute_day | date:'yyyy-MM-dd'}}
 		div(ng-show="tournament_stats.id", ng-controller="ScorersAndOthersController")
 			ul(class="nav nav-tabs")
 				li(role="presentation", class="active")
@@ -92,6 +106,7 @@ block body
 			include partials/advertisings/sidebar.jade
 	div(class="col-md-7")
 		div(ng-view)
+	
 
 	include partials/loading.jade
 

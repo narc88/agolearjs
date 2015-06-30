@@ -1,0 +1,19 @@
+div(ng-repeat="fp_incident in fairplay_incidents")
+table.table.table-condensed.table-hover(class="table table-responsive table-striped")
+	tr
+		th Equipo
+		td Amarilla
+		td Doble Amonestacion
+		td Expulsión
+		td Mes anterior
+		td Mes actual
+		td Puntos Totales
+	tr(ng-repeat="participator in zone.participations | orderBy:['total_points']")
+		td 
+			a(href="/teams/{{participator.team}}") {{participator.team_name}}
+		td {{participator.total_yellow_cards}}
+		td {{participator.total_double_yellow_cards}}
+		td {{participator.total_red_cards}}
+		td {{participator.last_month_points}}
+		td {{participator.this_month_points}}
+		td {{participator.total_points}}

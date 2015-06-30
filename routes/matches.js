@@ -101,10 +101,17 @@ module.exports = function(app){
 						var match = matches[i];
 						mvps.push(match.mvp);
 						for (var j = match.local_goals.length - 1; j >= 0; j--) {
-							goals.push(match.local_goals[j].player)
+							var temp_goals = match.local_goals[j];
+							if(!temp_goals.own_goal){
+								goals.push(temp_goals.player)
+							}
+							
 						};
 						for (var j = match.visitor_goals.length - 1; j >= 0; j--) {
-							goals.push(match.visitor_goals[j].player)
+							var temp_goals = match.visitor_goals[j];
+							if(!temp_goals.own_goal){
+								goals.push(temp_goals.player)
+							}
 						};
 						for (var j = match.local_incidents.length - 1; j >= 0; j--) {
 
@@ -388,7 +395,7 @@ module.exports = function(app){
 		
 	});
 
-	app.post('/sapi/matches/incidents/:team_role/:id/:matchday_id', function(req, res){
+	app.post('/sapi/matches/incidents/:team_role/:id/:matchday_id/:team_id', function(req, res){
 		var models = Models(req.tenant);
 		var team_role = ""
 		var incident = new models.incident(req.body);
@@ -397,7 +404,9 @@ module.exports = function(app){
 			if (err) throw err;
 			models.zone.findOne({"matchdays._id": req.params.matchday_id}).exec( function(err, zone){
 				if (err) throw err;
+				incident.created = match.dispute_day;
 				incident.tournament = zone.tournament;
+				incident.team = req.params.team_id
 				if(req.params.team_role === "local"){
 					match.local_incidents.push(incident);
 				}else{			
@@ -559,6 +568,34 @@ module.exports = function(app){
 		    { "_id": req.body.data.match_id}, 
 		    {$set: {"start_datetime" : req.body.data.dispute_day}}, callback
 		)
+	});
+
+	app.post('/sapi/zones/matches/addReferee',function(req, res, next){
+		var models = Models(req.tenant);
+		console.log(req.body.data)
+		models.referee.findOne({_id : req.body.data.referee}).exec(function(err, referee){
+			if(err) throw err;
+			console.log(referee)
+			var callback = function(err, numAffected, status){
+				if(err) throw err;
+				console.log(numAffected)
+				res.send(referee)
+			}
+			var callback2 = function(err, numAffected, status){
+				if(err) throw err;
+				console.log(numAffected)
+				models.match.update(
+				    { "_id": req.body.data.match_id}, 
+				    {$push: {"referees" : referee }}, callback
+				)
+			}
+			models.match.update(
+			    { "_id": req.body.data.match_id}, 
+			    {$set: {"referees" : [] }}, callback2
+			)
+			
+		});
+		
 	});
 
 	app.post('/sapi/matches/addPlayers', function(req, res){

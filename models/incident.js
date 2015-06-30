@@ -5,6 +5,7 @@ var IncidentSchema = new mongoose.Schema({
     minute              : {type: Number},
     player     			: {type: mongoose.Schema.ObjectId, ref: 'Player' },
     tournament          : {type: mongoose.Schema.ObjectId, ref: 'Tournament' },
+    team          : {type: mongoose.Schema.ObjectId, ref: 'Team' },
     incident_type		: {
                				 type: String
                			 },

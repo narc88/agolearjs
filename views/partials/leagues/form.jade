@@ -1,27 +1,32 @@
-form(name="addLeague", ng-submit="editLeague(addLeague)")
+link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
+script 
+	$('#leagueintro').Editor();
+script 
+	$('#leaguedesc').Editor();
+form(name="addLeague", ng-submit="submitLeague(addLeague)")
 	.form-group
 		label(for="name") Nombre
-		input(ng-model='league.name', name='name',value="{{league.name}}", id="name", type='text').form-control.input-sm
+		input(ng-model='league.name', name='name', id="name", type='text').form-control.input-sm
 		div(ng-show="addLeague['name'].$error.mongoose", style="color: red") {{addLeague.name.$error.mongoose}}
 	.form-group
 		label(for="slug") Nombre Abreviado
-		input(ng-model='league.slug', name='slug',value="{{league.slug}}", id="slug", type='text').form-control.input-sm
+		input(ng-model='league.slug', name='slug',id="slug", type='text').form-control.input-sm
 		div(ng-show="addLeague['slug'].$error.mongoose", style="color: red") {{addLeague.last_name.$error.mongoose}}
 	.form-group
 		label(for="slogan") Slogan
-		input(ng-model='league.slogan', name='slogan', value="{{league.slogan}}", id="slogan", type='text').form-control.input-sm
+		input(ng-model='league.slogan', name='slogan', id="slogan", type='text').form-control.input-sm
 		div(ng-show="addLeague['slogan'].$error.mongoose", style="color: red") {{addLeague.slogan.$error.mongoose}}
 	.form-group
 		label(for="email") Email
-		input(ng-model='league.email', name='email', value="{{league.email}}",  id="email", type='text').form-control.input-sm
+		input(ng-model='league.email', name='email',  id="email", type='text').form-control.input-sm
 		div(ng-show="addLeague['email'].$error.mongoose", style="color: red") {{addLeague.email.$error.mongoose}}
-	.form-group
+	.form-group.leagueintro
 		label(for="introduction") Introducción a la liga
-		textarea(ng-model='league.introduction',value="{{league.introduction}}", name='introduction', id="introduction", type='text').form-control.input-sm
+		textarea(ng-model='league.introduction', name='introduction', id="leagueintro", type='text').form-control.input-sm
 		div(ng-show="addLeague['introduction'].$error.mongoose", style="color: red") {{addLeague.introduction.$error.mongoose}}
-	.form-group
+	.form-group.leaguedesc
 		label(for="description") Descripción
-		textarea(ng-model='league.description', value="{{league.description}}",name='description', id="description", type='text').form-control.input-sm
+		textarea(ng-model='league.description', name='description', id="leaguedesc", type='text').form-control.input-sm
 		div(ng-show="addLeague['description'].$error.mongoose", style="color: red") {{addLeague.description.$error.mongoose}}
 	.form-group
 		input(type="Submit", value="Guardar").btn.btn-primary
